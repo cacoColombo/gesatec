@@ -9,104 +9,83 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-public class DAO 
-{
+public class DAO {
+
     private static DAO instance;
     protected EntityManager entityManager;
 
-    public DAO() 
-    {
+    public DAO() {
         entityManager = getEntityManager();
     }
-    
-    public static DAO getInstance() 
-    {
-        if (instance == null) 
-        {
+
+    public static DAO getInstance() {
+        if (instance == null) {
             instance = new DAO();
         }
-        
+
         return instance;
     }
 
-    private EntityManager getEntityManager() 
-    {
+    private EntityManager getEntityManager() {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("crudHibernatePU");
-        
-        if (entityManager == null) 
-        {
+
+        if (entityManager == null) {
             entityManager = factory.createEntityManager();
         }
-        
+
         return entityManager;
     }
 
-    public Object getById(Object object, final int id) 
-    {
+    public Object getById(Object object, final int id) {
         return entityManager.find(object.getClass(), id);
     }
 
     @SuppressWarnings("unchecked")
-    public List<Object> findAll(Object object) 
-    {
+    public List<Object> findAll(Object object) {
         return entityManager.createQuery("FROM " + object.getClass().getName()).getResultList();
     }
 
-    public void persist(Object object) 
-    {
-        try 
-        {
+    public void persist(Object object) {
+        try {
             entityManager.getTransaction().begin();
             entityManager.persist(object);
             entityManager.getTransaction().commit();
-        } 
-        catch (Exception ex) 
-        {
+            entityManager.close();
+        } catch (Exception ex) {
             ex.printStackTrace();
             entityManager.getTransaction().rollback();
         }
     }
 
-    public void merge(Object object) 
-    {
-        try 
-        {
+    public void merge(Object object) {
+        try {
             entityManager.getTransaction().begin();
             entityManager.merge(object);
             entityManager.getTransaction().commit();
-        } 
-        catch (Exception ex) 
-        {
+            entityManager.close();
+        } catch (Exception ex) {
             ex.printStackTrace();
             entityManager.getTransaction().rollback();
         }
     }
 
-    public void remove(Object object) 
-    {
-        try 
-        {
+    public void remove(Object object) {
+        try {
             entityManager.getTransaction().begin();
             object = entityManager.find(object.getClass(), object.getClass().getMethod("getId").invoke(object));
             entityManager.remove(object);
             entityManager.getTransaction().commit();
-        } 
-        catch (Exception ex) 
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
             entityManager.getTransaction().rollback();
         }
     }
 
-    public void removeById(Object object, final int id) 
-    {
-        try 
-        {
-            Object objectRm = getById(object, id);            
+    public void removeById(Object object, final int id) {
+        try {
+            Object objectRm = getById(object, id);
             remove(objectRm);
-        } 
-        catch (Exception ex) 
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }

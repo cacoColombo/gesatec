@@ -4,9 +4,17 @@
  */
 package modulo.cadastro.visao;
 
+import java.util.List;
 import modulo.sistema.visao.*;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import modulo.cadastro.dao.AtendenteDAO;
+import modulo.cadastro.negocio.Atendente;
+import modulo.cadastro.negocio.Pessoa;
 
 /**
  *
@@ -14,13 +22,26 @@ import javax.swing.JDialog;
  */
 public class AtendenteBusca extends javax.swing.JInternalFrame {
 
-    public static JDialog form;
+    public static AtendenteFormulario form;
     
     /**
      * Creates new form ModeloBusca
      */
     public AtendenteBusca() {
         initComponents();
+        
+        tabela.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+            public void valueChanged(ListSelectionEvent event) {
+                if(tabela.getSelectedRow() > tabela.getRowCount()){
+                    botaoEditar.setEnabled(false);
+                    botaoExcluir.setEnabled(false);
+                }
+                else{
+                    botaoExcluir.setEnabled(true);
+                    botaoEditar.setEnabled(true);
+                }
+            }
+        });
         
         setTitle("Atendente");
         this.setBorder(null);
@@ -85,6 +106,11 @@ public class AtendenteBusca extends javax.swing.JInternalFrame {
         botaoEditar.setFocusable(false);
         botaoEditar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         botaoEditar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        botaoEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoEditarActionPerformed(evt);
+            }
+        });
         toolbar.add(botaoEditar);
 
         botaoExcluir.setText("Excluir");
@@ -99,13 +125,14 @@ public class AtendenteBusca extends javax.swing.JInternalFrame {
         botaoAtualizar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolbar.add(botaoAtualizar);
 
-        jPanel1.setBackground(java.awt.SystemColor.controlLtHighlight);
+        botaoBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoBuscarActionPerformed(evt);
+            }
+        });
 
         tabela.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
@@ -179,6 +206,42 @@ public class AtendenteBusca extends javax.swing.JInternalFrame {
         form.setLocationRelativeTo(null);
         form.setVisible(true);
     }//GEN-LAST:event_botaoNovoActionPerformed
+
+    private void botaoBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBuscarActionPerformed
+        List<Atendente> atendentes = AtendenteDAO.getInstance().find(campoBusca.getText());
+        DefaultTableModel model = new DefaultTableModel(new Object[]
+        {"ID","Nome","Data Nascimento","Sexo","Email","CPF","RG","Obs.","Tel. Celular", "Tel. Residencial", "Tel. Trabalho", "Cidade", "CEP", "Bairro", "Endereço", "Número", "Complemento"}, 0);
+        for(Pessoa a : atendentes){
+            model.addRow(new Object[]{
+                a.getId(),
+                a.getNome(),
+                a.getDataNascimento().toString(),
+                a.getSexo()=='M'?"Masculino":"Feminino",
+                a.getEmail(),
+                a.getCpf(),
+                a.getRg(),
+                a.getObservacao(),
+                a.getTelefoneCelular(),
+                a.getTelefoneResidencial(),
+                a.getTelefoneTrabalho(),
+                a.getCidade()!=null?"Hey!":"Oops!",
+                a.getCep(),
+                a.getBairro(),
+                a.getEndereco(),
+                a.getNumero(),
+                a.getComplemento()
+            });
+        }
+        tabela.setModel(model);
+    }//GEN-LAST:event_botaoBuscarActionPerformed
+
+    private void botaoEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEditarActionPerformed
+        form = new AtendenteFormulario(this, true);
+        form.setLocationRelativeTo(null);
+        form.setObejtoEditado(Long.parseLong(tabela.getValueAt(tabela.getSelectedRow(), 0).toString()));
+        form.setVisible(true);
+        
+    }//GEN-LAST:event_botaoEditarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoAtualizar;
