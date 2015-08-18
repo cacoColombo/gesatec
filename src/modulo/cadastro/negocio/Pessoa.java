@@ -76,8 +76,8 @@ public class Pessoa implements Serializable {
     @Column(length = 45)
     protected String complemento;
     
-    @Column(length = 45, columnDefinition = "VARCHAR(45) NOT NULL DEFAULT 'pessoa'")
-    protected String tipo;
+    @Column(length = 45, columnDefinition = "VARCHAR(45) DEFAULT 'pessoa'")
+    protected String tipo = "pessoa";
     
     public Long getId() {
         return id;
