@@ -5,6 +5,7 @@
 package modulo.administrativo.negocio;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,7 +24,7 @@ public class Usuario implements Serializable {
     @Column(unique = true, nullable = false)
     private int id;
     
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     private Pessoa pessoa;
     
     @Column(nullable = false, length = 45)

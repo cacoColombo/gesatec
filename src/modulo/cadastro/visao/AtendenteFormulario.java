@@ -7,8 +7,25 @@ package modulo.cadastro.visao;
 import modulo.sistema.visao.*;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JFormattedTextField;
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.MaskFormatter;
+import modulo.administrativo.negocio.Usuario;
+import modulo.cadastro.dao.AtendenteDAO;
+import modulo.cadastro.dao.PessoaDAO;
+import modulo.cadastro.dao.UsuarioDAO;
+import modulo.cadastro.negocio.Atendente;
+import modulo.cadastro.negocio.Pessoa;
 
 /**
  *
@@ -17,6 +34,7 @@ import javax.swing.JInternalFrame;
 public class AtendenteFormulario extends javax.swing.JDialog {
 
     public static JInternalFrame parent;
+    private String message;
     
     /**
      * Creates new form AtendenteFormulario
@@ -27,6 +45,14 @@ public class AtendenteFormulario extends javax.swing.JDialog {
         this.setLocation(600, 530);
         initComponents();
         
+        MaskFormatter msk = null;
+        try { 
+            cpf.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("###.###.###-##")));
+            dataNascimento.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("##/##/####")));
+        } catch (ParseException ex) {
+            Logger.getLogger(AtendenteFormulario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        cpf = new JFormattedTextField(msk);
         botaoSalvar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/salvar.png")));
         botaoCancelar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/cancelar.png")));
         
@@ -58,19 +84,19 @@ public class AtendenteFormulario extends javax.swing.JDialog {
         sexoM = new javax.swing.JRadioButton();
         sexoF = new javax.swing.JRadioButton();
         jLabel5 = new javax.swing.JLabel();
-        cpf = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        dataNascimento = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         login = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        senha = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        observacao = new javax.swing.JTextArea();
+        senha = new javax.swing.JPasswordField();
+        cpf = new javax.swing.JFormattedTextField();
+        dataNascimento = new javax.swing.JFormattedTextField();
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
@@ -109,6 +135,11 @@ public class AtendenteFormulario extends javax.swing.JDialog {
         botaoSalvar.setFocusable(false);
         botaoSalvar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         botaoSalvar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        botaoSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoSalvarActionPerformed(evt);
+            }
+        });
         toolbar.add(botaoSalvar);
 
         botaoCancelar.setText("Cancelar");
@@ -122,8 +153,6 @@ public class AtendenteFormulario extends javax.swing.JDialog {
         });
         toolbar.add(botaoCancelar);
 
-        labelsPainel.setBackground(java.awt.SystemColor.controlLtHighlight);
-
         jLabel1.setText("Nome:");
 
         jLabel2.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
@@ -136,7 +165,6 @@ public class AtendenteFormulario extends javax.swing.JDialog {
 
         jLabel4.setText("RG:");
 
-        sexoM.setBackground(java.awt.SystemColor.controlLtHighlight);
         sexoM.setSelected(true);
         sexoM.setText("Masculino");
         sexoM.addActionListener(new java.awt.event.ActionListener() {
@@ -145,7 +173,6 @@ public class AtendenteFormulario extends javax.swing.JDialog {
             }
         });
 
-        sexoF.setBackground(java.awt.SystemColor.controlLtHighlight);
         sexoF.setText("Feminino");
         sexoF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -173,9 +200,21 @@ public class AtendenteFormulario extends javax.swing.JDialog {
 
         jLabel21.setText("Observação:");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        observacao.setColumns(20);
+        observacao.setRows(5);
+        jScrollPane1.setViewportView(observacao);
+
+        senha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                senhaActionPerformed(evt);
+            }
+        });
+
+        cpf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cpfActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout labelsPainelLayout = new javax.swing.GroupLayout(labelsPainel);
         labelsPainel.setLayout(labelsPainelLayout);
@@ -184,23 +223,6 @@ public class AtendenteFormulario extends javax.swing.JDialog {
             .addGroup(labelsPainelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(labelsPainelLayout.createSequentialGroup()
-                        .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, labelsPainelLayout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel8))
-                            .addGroup(labelsPainelLayout.createSequentialGroup()
-                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(senha, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel10)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())
                     .addGroup(labelsPainelLayout.createSequentialGroup()
                         .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -215,8 +237,7 @@ public class AtendenteFormulario extends javax.swing.JDialog {
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                             .addComponent(id, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel2)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                                    .addComponent(jLabel2))
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, labelsPainelLayout.createSequentialGroup()
                                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -228,20 +249,35 @@ public class AtendenteFormulario extends javax.swing.JDialog {
                                 .addComponent(sexoM)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(sexoF))
-                            .addGroup(labelsPainelLayout.createSequentialGroup()
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cpf, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, labelsPainelLayout.createSequentialGroup()
                                     .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jScrollPane1))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE))
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, labelsPainelLayout.createSequentialGroup()
-                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(dataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                                    .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(dataNascimento)
+                                        .addComponent(cpf)))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, labelsPainelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24))
+                    .addGroup(labelsPainelLayout.createSequentialGroup()
+                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(senha, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel10)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         labelsPainelLayout.setVerticalGroup(
             labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -286,14 +322,14 @@ public class AtendenteFormulario extends javax.swing.JDialog {
                     .addComponent(jLabel11)
                     .addComponent(jLabel10)
                     .addComponent(senha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(100, Short.MAX_VALUE))
+                .addContainerGap(111, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(labelsPainel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(labelsPainel, javax.swing.GroupLayout.PREFERRED_SIZE, 592, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -301,8 +337,6 @@ public class AtendenteFormulario extends javax.swing.JDialog {
         );
 
         jTabbedPane1.addTab("Dados pessoais", jPanel2);
-
-        jPanel3.setBackground(java.awt.SystemColor.controlLtHighlight);
 
         jLabel12.setText("País:");
 
@@ -418,8 +452,6 @@ public class AtendenteFormulario extends javax.swing.JDialog {
 
         jTabbedPane1.addTab("Endereço", jPanel1);
 
-        jPanel5.setBackground(java.awt.SystemColor.controlLtHighlight);
-
         jLabel20.setText("E-mail:");
 
         jLabel22.setText("Telefone celular:");
@@ -439,13 +471,14 @@ public class AtendenteFormulario extends javax.swing.JDialog {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                    .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(telefoneCelular, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel23))
+                        .addComponent(jLabel23)
+                        .addGap(24, 24, 24))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel5Layout.createSequentialGroup()
@@ -460,8 +493,7 @@ public class AtendenteFormulario extends javax.swing.JDialog {
                                 .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(telefoneTrabalho, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -490,7 +522,7 @@ public class AtendenteFormulario extends javax.swing.JDialog {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 592, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -521,12 +553,152 @@ public class AtendenteFormulario extends javax.swing.JDialog {
         this.setVisible(false);
     }//GEN-LAST:event_botaoCancelarActionPerformed
 
-    private void sexoMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sexoMActionPerformed
-        sexoF.setSelected(false);
-        sexoF.setEnabled(true);
-        sexoM.setSelected(true);
-        sexoM.setEnabled(false);
-    }//GEN-LAST:event_sexoMActionPerformed
+    private boolean checkFields(){
+        boolean ok = true;
+        message = "Os seguintes erros ocorreram\n\n";
+        if(nome.getText().isEmpty()){
+            ok = false;
+            message += "* Campo Nome deve ser preenchido\n";
+        }
+        if(login.getText().isEmpty()){
+            ok = false;
+            message += "* Campo Login deve ser preenchido\n";
+        }
+        if(senha.getText().isEmpty()){
+            ok = false;
+            message += "* Campo Senha deve ser preenchido\n";
+        }
+        else {
+            if(senha.getText().length() < 8){
+                ok = false;
+                message += "* Campo Senha deve ter no mínimo 8 caracteres\n";
+            }
+        }
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        java.util.Date date = new Date((long) 0);
+        try {
+            System.out.println("" + dataNascimento.getText());
+            if(!dataNascimento.getText().trim().startsWith("/")){
+                date = format.parse(dataNascimento.getText());
+                java.util.Date hoje = new java.util.Date();
+
+                if(date.after(hoje)){
+                    ok = false;
+                    message += "* Data inválida\n";
+                }
+            }
+        } catch (ParseException ex) {
+            ok = false;
+            message += "* Data inválida\n";
+        }
+        try{
+            if(!numero.getText().isEmpty())
+                Integer.parseInt(numero.getText());
+        }
+        catch(NumberFormatException e){
+            ok = false;
+            message += "* Numero do endereço inválido\n";
+        }
+        if(telefoneCelular.getText().isEmpty()){
+            ok = false;
+            message += "* Campo Telefone Celular deve ser preenchido\n";
+        }
+        return ok;
+    }
+    
+    public void setObejtoEditado(long id) {
+        System.out.println("Hmmmm?");
+        Atendente atendente =  new Atendente();
+        atendente =  AtendenteDAO.getInstance().getById(atendente, id);
+        
+        Usuario usuario =  new Usuario();
+        usuario = (Usuario)UsuarioDAO.getInstance().getById(usuario, (int) id);
+        
+        System.out.println("nOME ->" + atendente.getNome());
+        
+        this.id.setText("" + atendente.getId());
+        nome.setText(atendente.getNome());
+        rg.setText(atendente.getRg());
+        cpf.setText(atendente.getCpf());
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        if(atendente.getDataNascimento() != null)
+            dataNascimento.setText(format.format(atendente.getDataNascimento()));
+        if(atendente.getSexo() == 'M'){
+            sexoMActionPerformed(null);
+        }
+        else{
+            sexoFActionPerformed(null);
+        }
+        observacao.setText(atendente.getObservacao());
+        login.setText(usuario.getLogin());
+        senha.setText(usuario.getSenha());
+        cep.setText(atendente.getCep());
+        bairro.setText(atendente.getBairro());
+        endereco.setText(atendente.getEndereco());
+        numero.setText(atendente.getNumero() + "");
+        complemento.setText(atendente.getComplemento());
+        email.setText(atendente.getEmail());
+        telefoneCelular.setText(atendente.getTelefoneCelular());
+        telefoneResidencial.setText(atendente.getTelefoneResidencial());
+        telefoneTrabalho.setText(atendente.getTelefoneTrabalho());
+    }
+    
+    private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
+        Atendente atendente = new Atendente();
+        Usuario usuario = new Usuario();
+        
+        if(!checkFields()){
+            JOptionPane.showMessageDialog(null, message);
+            return;
+        }
+        
+        if(!id.getText().isEmpty())
+            atendente.setId(Long.parseLong(id.getText()));
+        atendente.setNome(nome.getText());
+        atendente.setRg(rg.getText());
+        atendente.setCpf(cpf.getText());
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        java.util.Date date = new Date((long) 0);
+        try {
+            date = format.parse(dataNascimento.getText());
+        } catch (ParseException ex) {
+            Logger.getLogger(AtendenteFormulario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        atendente.setDataNascimento(new Date(date.getTime()));
+        atendente.setSexo(sexoM.isSelected()?'M':'F');
+        atendente.setObservacao(observacao.getText());
+        atendente.setCidade(null);
+        atendente.setCep(cep.getText());
+        atendente.setBairro(bairro.getText());
+        atendente.setEndereco(endereco.getText());
+        atendente.setComplemento(complemento.getText());
+        try{
+            atendente.setNumero(Integer.parseInt(numero.getText()));
+        }
+        catch(NumberFormatException e){
+            atendente.setNumero(0);
+        }
+        atendente.setTelefoneCelular(telefoneCelular.getText());
+        atendente.setTelefoneResidencial(telefoneResidencial.getText());
+        atendente.setTelefoneTrabalho(telefoneTrabalho.getText());
+        atendente.setEmail(email.getText());
+        
+        usuario.setPessoa(atendente);
+        usuario.setAtivo(true);
+        usuario.setLogin(login.getText());
+        usuario.setSenha(senha.getText());
+        
+        UsuarioDAO.getInstance().merge(usuario);
+        this.setVisible(false);
+    }//GEN-LAST:event_botaoSalvarActionPerformed
+
+    private void cpfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cpfActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cpfActionPerformed
+
+    private void senhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_senhaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_senhaActionPerformed
 
     private void sexoFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sexoFActionPerformed
         sexoM.setSelected(false);
@@ -534,6 +706,13 @@ public class AtendenteFormulario extends javax.swing.JDialog {
         sexoF.setSelected(true);
         sexoF.setEnabled(false);
     }//GEN-LAST:event_sexoFActionPerformed
+
+    private void sexoMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sexoMActionPerformed
+        sexoF.setSelected(false);
+        sexoF.setEnabled(true);
+        sexoM.setSelected(true);
+        sexoM.setEnabled(false);
+    }//GEN-LAST:event_sexoMActionPerformed
 
     /**
      * @param args the command line arguments
@@ -583,8 +762,8 @@ public class AtendenteFormulario extends javax.swing.JDialog {
     private javax.swing.JTextField cep;
     private javax.swing.JComboBox cidade;
     private javax.swing.JTextField complemento;
-    private javax.swing.JTextField cpf;
-    private javax.swing.JTextField dataNascimento;
+    private javax.swing.JFormattedTextField cpf;
+    private javax.swing.JFormattedTextField dataNascimento;
     private javax.swing.JTextField email;
     private javax.swing.JTextField endereco;
     private javax.swing.JComboBox estado;
@@ -621,14 +800,14 @@ public class AtendenteFormulario extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JPanel labelsPainel;
     private javax.swing.JTextField login;
     private javax.swing.JTextField nome;
     private javax.swing.JTextField numero;
+    private javax.swing.JTextArea observacao;
     private javax.swing.JComboBox pais;
     private javax.swing.JTextField rg;
-    private javax.swing.JTextField senha;
+    private javax.swing.JPasswordField senha;
     private javax.swing.JRadioButton sexoF;
     private javax.swing.JRadioButton sexoM;
     private javax.swing.JTextField telefoneCelular;
