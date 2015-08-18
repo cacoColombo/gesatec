@@ -4,9 +4,16 @@
  */
 package modulo.cadastro.visao;
 
-import modulo.sistema.visao.*;
+import java.util.Iterator;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import modulo.cadastro.dao.CertificacaoDAO;
+import modulo.cadastro.negocio.Certificacao;
 
 /**
  *
@@ -14,7 +21,7 @@ import javax.swing.JDialog;
  */
 public class CertificacaoBusca extends javax.swing.JInternalFrame {
 
-    public static JDialog form;
+    public static CertificacaoFormulario form;
     
     /**
      * Creates new form ModeloBusca
@@ -24,7 +31,6 @@ public class CertificacaoBusca extends javax.swing.JInternalFrame {
         
         setTitle("Nome da tela");
         this.setBorder(null);
-        this.desabilitaAcoesDeEdicaoEExclusao();
         tabela.setSelectionBackground(new java.awt.Color(22, 160, 133));
 
         botaoNovo.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/novo.png")));
@@ -32,16 +38,56 @@ public class CertificacaoBusca extends javax.swing.JInternalFrame {
         botaoExcluir.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/excluir.png")));
         botaoAtualizar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/atualizar.png")));
         botaoBuscar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/buscar.png")));
+        
+        this.atualizarGrid(-1);
+        
+        tabela.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+            public void valueChanged(ListSelectionEvent event) {
+                if(tabela.getSelectedRow() > tabela.getRowCount()){
+                    botaoEditar.setEnabled(false);
+                    botaoExcluir.setEnabled(false);
+                }
+                else{
+                    botaoExcluir.setEnabled(true);
+                    botaoEditar.setEnabled(true);
+                }
+            }
+        });
     }
-
-    private void abilitaAcoesDeEdicaoEExclusao() {
-        botaoEditar.setEnabled(true);
-        botaoExcluir.setEnabled(true);
-    }
-
-    private void desabilitaAcoesDeEdicaoEExclusao() {
-        botaoEditar.setEnabled(false);
-        botaoExcluir.setEnabled(false);
+    
+    /**
+     * Recebe o id do registro que deverá ser selecionado automáticamente.
+     * Se receber -1, não selecionará registro algum.
+     * 
+     * @param selecionar 
+     */
+    public final void atualizarGrid(int selecionar) {
+        try {
+            
+            List<Object> certificacoes = CertificacaoDAO.getInstance().findAll(new Certificacao());
+            DefaultTableModel modelo = (DefaultTableModel) tabela.getModel();
+            modelo.setNumRows(0);
+            
+            for ( int i = 0; i < certificacoes.size(); i ++ ) {
+                Certificacao certificacao = (Certificacao) certificacoes.get(i);
+                modelo.addRow(new Object[]{certificacao.getId(), certificacao.getNome()});
+                
+                // Verifica item a selecionar
+                if ( certificacao.getId() == selecionar )
+                {
+                    tabela.addRowSelectionInterval(i, i);
+                }
+            }
+            
+            if ( selecionar == -1 )
+            {
+                botaoEditar.setEnabled(false);
+                botaoExcluir.setEnabled(false);
+            }
+            
+        } catch (Exception err) {
+            JOptionPane.showMessageDialog(this, "Erro ao atualizar grid: " + err.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
@@ -85,33 +131,60 @@ public class CertificacaoBusca extends javax.swing.JInternalFrame {
         botaoEditar.setFocusable(false);
         botaoEditar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         botaoEditar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        botaoEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoEditarActionPerformed(evt);
+            }
+        });
         toolbar.add(botaoEditar);
 
         botaoExcluir.setText("Excluir");
         botaoExcluir.setFocusable(false);
         botaoExcluir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         botaoExcluir.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        botaoExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoExcluirActionPerformed(evt);
+            }
+        });
         toolbar.add(botaoExcluir);
 
         botaoAtualizar.setText("Atualizar");
         botaoAtualizar.setFocusable(false);
         botaoAtualizar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         botaoAtualizar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        botaoAtualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoAtualizarActionPerformed(evt);
+            }
+        });
         toolbar.add(botaoAtualizar);
 
         jPanel1.setBackground(java.awt.SystemColor.controlLtHighlight);
 
         tabela.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "Nome"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tabela);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -137,7 +210,7 @@ public class CertificacaoBusca extends javax.swing.JInternalFrame {
                     .addComponent(botaoBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(campoBusca, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -160,10 +233,42 @@ public class CertificacaoBusca extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoNovoActionPerformed
-        form = new ModeloFormulario(this, true);
+        form = new CertificacaoFormulario(this, true);
         form.setLocationRelativeTo(null);
         form.setVisible(true);
     }//GEN-LAST:event_botaoNovoActionPerformed
+
+    private void botaoAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAtualizarActionPerformed
+        this.atualizarGrid(-1);
+    }//GEN-LAST:event_botaoAtualizarActionPerformed
+
+    private void botaoEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEditarActionPerformed
+        int selected = tabela.getSelectedRow();
+        Object registro = tabela.getValueAt(selected, 0);
+        int certificacao_id = Integer.parseInt(registro.toString());
+        
+        Object certificacao = CertificacaoDAO.getInstance().getById(new Certificacao(), certificacao_id);
+        
+        form = new CertificacaoFormulario(this, true);
+        form.popularCampos((Certificacao) certificacao);
+        form.setLocationRelativeTo(null);
+        form.setVisible(true);
+    }//GEN-LAST:event_botaoEditarActionPerformed
+
+    private void botaoExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoExcluirActionPerformed
+        int selected = tabela.getSelectedRow();
+        Object registro = tabela.getValueAt(selected, 0);
+        int certificacao_id = Integer.parseInt(registro.toString());
+        
+        int escolha = JOptionPane.showConfirmDialog(null, "Você têm certeza que deseja excluir este registro?", "Atenção!", JOptionPane.YES_NO_OPTION);
+            
+        if ( escolha == JOptionPane.YES_OPTION ) 
+        {
+            CertificacaoDAO.getInstance().removeById(new Certificacao(), certificacao_id);
+            this.atualizarGrid(-1);
+            JOptionPane.showMessageDialog(this, "Registro excluído com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_botaoExcluirActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoAtualizar;

@@ -4,11 +4,13 @@
  */
 package modulo.cadastro.visao;
 
+import java.util.List;
 import modulo.sistema.visao.*;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
+import modulo.cadastro.dao.CertificacaoDAO;
+import modulo.cadastro.negocio.Certificacao;
 
 /**
  *
@@ -16,12 +18,12 @@ import javax.swing.JInternalFrame;
  */
 public class CertificacaoFormulario extends javax.swing.JDialog {
 
-    public static JInternalFrame parent;
+    public static CertificacaoBusca parent;
     
     /**
      * Creates new form AtendenteFormulario
      */
-    public CertificacaoFormulario(JInternalFrame parent, boolean modal) {
+    public CertificacaoFormulario(CertificacaoBusca parent, boolean modal) {
         this.parent = parent;
         this.setModal(modal);
         this.setLocation(600, 530);
@@ -29,6 +31,24 @@ public class CertificacaoFormulario extends javax.swing.JDialog {
         
         botaoSalvar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/salvar.png")));
         botaoCancelar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/cancelar.png")));
+    }
+    
+    public void popularCampos(Certificacao certificacao) {
+        id.setText(Integer.toString(certificacao.getId()));
+        nome.setText(certificacao.getNome());
+    }
+    
+    public boolean validarCampos() {
+        try {
+            if ( !(nome.getText().length() > 0) ) {
+                throw new Exception("O campo 'Nome' é requerido!");
+            }
+            
+            return true;
+        } catch (Exception err) {
+            JOptionPane.showMessageDialog(this, err.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
     }
 
     /**
@@ -47,8 +67,10 @@ public class CertificacaoFormulario extends javax.swing.JDialog {
         jPanel2 = new javax.swing.JPanel();
         labelsPainel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        nome = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        id = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -58,6 +80,11 @@ public class CertificacaoFormulario extends javax.swing.JDialog {
         botaoSalvar.setFocusable(false);
         botaoSalvar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         botaoSalvar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        botaoSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoSalvarActionPerformed(evt);
+            }
+        });
         toolbar.add(botaoSalvar);
 
         botaoCancelar.setText("Cancelar");
@@ -73,13 +100,15 @@ public class CertificacaoFormulario extends javax.swing.JDialog {
 
         labelsPainel.setBackground(java.awt.SystemColor.controlLtHighlight);
 
-        jLabel1.setText("Label left, tamanho 200:");
+        jLabel1.setText("ID:");
 
-        jLabel2.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
-        jLabel2.setForeground(java.awt.Color.red);
-        jLabel2.setText("*");
+        jLabel3.setText("Nome:");
 
-        jTextField1.setText("Input left, tamanho 336");
+        jLabel4.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        jLabel4.setForeground(java.awt.Color.red);
+        jLabel4.setText("*");
+
+        id.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
 
         javax.swing.GroupLayout labelsPainelLayout = new javax.swing.GroupLayout(labelsPainel);
         labelsPainel.setLayout(labelsPainelLayout);
@@ -87,22 +116,32 @@ public class CertificacaoFormulario extends javax.swing.JDialog {
             labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(labelsPainelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(labelsPainelLayout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(id, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, labelsPainelLayout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nome, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
+                .addComponent(jLabel4)
                 .addContainerGap())
         );
         labelsPainelLayout.setVerticalGroup(
             labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(labelsPainelLayout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(id, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(417, Short.MAX_VALUE))
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(nome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(394, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -116,7 +155,7 @@ public class CertificacaoFormulario extends javax.swing.JDialog {
             .addComponent(labelsPainel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Título do formulário", jPanel2);
+        jTabbedPane1.addTab("Certificação", jPanel2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -130,7 +169,7 @@ public class CertificacaoFormulario extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(toolbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 493, Short.MAX_VALUE))
+                .addComponent(jTabbedPane1))
         );
 
         pack();
@@ -139,6 +178,23 @@ public class CertificacaoFormulario extends javax.swing.JDialog {
     private void botaoCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCancelarActionPerformed
         this.setVisible(false);
     }//GEN-LAST:event_botaoCancelarActionPerformed
+
+    private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
+        if ( this.validarCampos() )
+        {
+            Certificacao certificacao = new Certificacao();
+            if ( id.getText().length() > 0 )
+            {
+                certificacao.setId(Integer.parseInt(id.getText()));
+            }
+            certificacao.setNome(nome.getText());
+            CertificacaoDAO.getInstance().merge(certificacao);
+
+            JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+            parent.atualizarGrid(certificacao.getId());
+            this.setVisible(false);
+        }
+    }//GEN-LAST:event_botaoSalvarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -184,12 +240,14 @@ public class CertificacaoFormulario extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoCancelar;
     private javax.swing.JButton botaoSalvar;
+    private javax.swing.JLabel id;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel labelsPainel;
+    private javax.swing.JTextField nome;
     private javax.swing.JToolBar toolbar;
     // End of variables declaration//GEN-END:variables
 }

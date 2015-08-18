@@ -50,7 +50,6 @@ public class DAO {
             entityManager.getTransaction().begin();
             entityManager.persist(object);
             entityManager.getTransaction().commit();
-            entityManager.close();
         } catch (Exception ex) {
             ex.printStackTrace();
             entityManager.getTransaction().rollback();
@@ -62,7 +61,6 @@ public class DAO {
             entityManager.getTransaction().begin();
             entityManager.merge(object);
             entityManager.getTransaction().commit();
-            entityManager.close();
         } catch (Exception ex) {
             ex.printStackTrace();
             entityManager.getTransaction().rollback();

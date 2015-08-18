@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import modulo.cadastro.visao.AtendenteBusca;
+import modulo.cadastro.visao.CertificacaoBusca;
 
 /**
  *
@@ -95,7 +96,7 @@ public class SistemaVisao extends javax.swing.JFrame {
         );
         panelConteudoLayout.setVerticalGroup(
             panelConteudoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 517, Short.MAX_VALUE)
+            .addGap(0, 525, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -122,6 +123,11 @@ public class SistemaVisao extends javax.swing.JFrame {
         submenuCadastros.add(submenuAtendente);
 
         submenuCertificacao.setText("Certificação");
+        submenuCertificacao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submenuCertificacaoActionPerformed(evt);
+            }
+        });
         submenuCadastros.add(submenuCertificacao);
 
         submenuCliente.setText("Cliente");
@@ -251,6 +257,24 @@ public class SistemaVisao extends javax.swing.JFrame {
         }
         */
     }//GEN-LAST:event_submenuLogoutActionPerformed
+
+    private void submenuCertificacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submenuCertificacaoActionPerformed
+        CertificacaoBusca certificacaoBusca = new CertificacaoBusca(); 
+        
+        panelConteudo.removeAll();
+        panelConteudo.add(certificacaoBusca);
+        
+        try 
+        {
+            certificacaoBusca.setMaximum(true);
+        } 
+        catch (PropertyVetoException ex) 
+        {
+            Logger.getLogger(SistemaVisao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        certificacaoBusca.setVisible(true);
+    }//GEN-LAST:event_submenuCertificacaoActionPerformed
 
     /**
      * @param args the command line arguments
