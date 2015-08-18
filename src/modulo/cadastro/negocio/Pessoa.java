@@ -75,7 +75,10 @@ public class Pessoa implements Serializable {
     
     @Column(length = 45)
     protected String complemento;
-
+    
+    @Column(length = 45, columnDefinition = "VARCHAR(45) NOT NULL DEFAULT 'pessoa'")
+    protected String tipo;
+    
     public Long getId() {
         return id;
     }
@@ -210,5 +213,13 @@ public class Pessoa implements Serializable {
 
     public void setComplemento(String complemento) {
         this.complemento = complemento;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 }
