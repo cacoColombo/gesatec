@@ -6,6 +6,7 @@ package modulo.cadastro.negocio;
 
 import java.io.Serializable;
 import java.sql.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,7 +16,9 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import modulo.administrativo.negocio.Usuario;
 
 @Entity
 @Table(name = "pessoa")
@@ -25,7 +28,7 @@ public class Pessoa implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)
-    protected Long id;
+    protected int id;
     
     @Column(nullable = false)
     protected String nome;
@@ -76,14 +79,17 @@ public class Pessoa implements Serializable {
     @Column(length = 45)
     protected String complemento;
     
+    @OneToOne(cascade = {CascadeType.ALL})
+    protected Usuario usuario;
+    
     @Column(length = 45, columnDefinition = "VARCHAR(45) DEFAULT 'pessoa'")
     protected String tipo = "pessoa";
     
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -213,6 +219,14 @@ public class Pessoa implements Serializable {
 
     public void setComplemento(String complemento) {
         this.complemento = complemento;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public String getTipo() {
