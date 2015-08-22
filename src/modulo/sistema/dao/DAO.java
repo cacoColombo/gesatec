@@ -49,6 +49,7 @@ public class DAO {
         try {
             entityManager.getTransaction().begin();
             entityManager.persist(object);
+            entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -60,6 +61,7 @@ public class DAO {
         try {
             entityManager.getTransaction().begin();
             entityManager.merge(object);
+            entityManager.flush();
             entityManager.getTransaction().commit();
         } catch (Exception ex) {
             ex.printStackTrace();

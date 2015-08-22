@@ -10,6 +10,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
+import javax.swing.JInternalFrame;
+import javax.swing.JMenuBar;
+import modulo.administrativo.visao.GrupoDeUsuariosBusca;
 import modulo.cadastro.visao.AtendenteBusca;
 import modulo.cadastro.visao.CertificacaoBusca;
 
@@ -49,6 +52,32 @@ public class SistemaVisao extends javax.swing.JFrame {
         submenuLogout.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/logout.png")));
         submenuGrupoDeUsuarios.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/grupoDeUsuarios.png")));
         submenuUsuario.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/usuario.png")));
+    }
+    
+    public JMenuBar getMenu() {
+        return this.menu;
+    }
+    
+    /**
+     * Carrega o frame selecionado, no sistema.
+     * 
+     * @param frame 
+     */
+    public void carregarFrame(JInternalFrame frame)
+    {
+        panelConteudo.removeAll();
+        panelConteudo.add(frame);
+        
+        try 
+        {
+            frame.setMaximum(true);
+        } 
+        catch (PropertyVetoException ex) 
+        {
+            Logger.getLogger(SistemaVisao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        frame.setVisible(true);
     }
 
     /**
@@ -96,7 +125,7 @@ public class SistemaVisao extends javax.swing.JFrame {
         );
         panelConteudoLayout.setVerticalGroup(
             panelConteudoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 525, Short.MAX_VALUE)
+            .addGap(0, 533, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -113,8 +142,10 @@ public class SistemaVisao extends javax.swing.JFrame {
         menu.setFont(new java.awt.Font("Ubuntu", 1, 16)); // NOI18N
 
         submenuCadastros.setText("Cadastros");
+        submenuCadastros.setName("cadastros"); // NOI18N
 
         submenuAtendente.setText("Atendente");
+        submenuAtendente.setName("atendente"); // NOI18N
         submenuAtendente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 submenuAtendenteActionPerformed(evt);
@@ -123,6 +154,7 @@ public class SistemaVisao extends javax.swing.JFrame {
         submenuCadastros.add(submenuAtendente);
 
         submenuCertificacao.setText("Certificação");
+        submenuCertificacao.setName("certificacao"); // NOI18N
         submenuCertificacao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 submenuCertificacaoActionPerformed(evt);
@@ -131,19 +163,24 @@ public class SistemaVisao extends javax.swing.JFrame {
         submenuCadastros.add(submenuCertificacao);
 
         submenuCliente.setText("Cliente");
+        submenuCliente.setName("cliente"); // NOI18N
         submenuCadastros.add(submenuCliente);
 
         submenuEspecializacao.setText("Especialização");
+        submenuEspecializacao.setName("especializacao"); // NOI18N
         submenuCadastros.add(submenuEspecializacao);
 
         submenuProfissional.setText("Profissional");
+        submenuProfissional.setName("profissional"); // NOI18N
         submenuCadastros.add(submenuProfissional);
 
         menu.add(submenuCadastros);
 
         menuProcessos.setText("Processos");
+        menuProcessos.setName("processos"); // NOI18N
 
         submenuAgenda.setText("Agenda");
+        submenuAgenda.setName("agenda"); // NOI18N
         submenuAgenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 submenuAgendaActionPerformed(evt);
@@ -152,29 +189,37 @@ public class SistemaVisao extends javax.swing.JFrame {
         menuProcessos.add(submenuAgenda);
 
         submenuAtendimento.setText("Atendimento");
+        submenuAtendimento.setName("atendimento"); // NOI18N
         menuProcessos.add(submenuAtendimento);
 
         submenuProntuario.setText("Prontuário");
+        submenuProntuario.setName("prontuario"); // NOI18N
         menuProcessos.add(submenuProntuario);
 
         menu.add(menuProcessos);
 
         menuConfiguracoes.setText("Configurações");
+        menuConfiguracoes.setName("configuracoes"); // NOI18N
 
         submenuPadraoDeAtendimento.setText("Padrão de atendimento");
+        submenuPadraoDeAtendimento.setName("padraodeatendimento"); // NOI18N
         menuConfiguracoes.add(submenuPadraoDeAtendimento);
 
         submenuTipoDeAtendimento.setText("Tipo de atendimento");
+        submenuTipoDeAtendimento.setName("tipodeatendimento"); // NOI18N
         menuConfiguracoes.add(submenuTipoDeAtendimento);
 
         submenuTipoDeProntuario.setText("Tipo de prontuário");
+        submenuTipoDeProntuario.setName("tipodeprontuario"); // NOI18N
         menuConfiguracoes.add(submenuTipoDeProntuario);
 
         menu.add(menuConfiguracoes);
 
         menuAdministrativo.setText("Administrativo");
+        menuAdministrativo.setName("administrativo"); // NOI18N
 
         submenuLogout.setText("Efetuar logout");
+        submenuLogout.setName("efetuarlogout"); // NOI18N
         submenuLogout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 submenuLogoutActionPerformed(evt);
@@ -183,9 +228,16 @@ public class SistemaVisao extends javax.swing.JFrame {
         menuAdministrativo.add(submenuLogout);
 
         submenuGrupoDeUsuarios.setText("Grupo de usuários");
+        submenuGrupoDeUsuarios.setName("grupodeusuarios"); // NOI18N
+        submenuGrupoDeUsuarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submenuGrupoDeUsuariosActionPerformed(evt);
+            }
+        });
         menuAdministrativo.add(submenuGrupoDeUsuarios);
 
         submenuUsuario.setText("Usuário");
+        submenuUsuario.setName("usuario"); // NOI18N
         menuAdministrativo.add(submenuUsuario);
 
         menu.add(menuAdministrativo);
@@ -226,22 +278,8 @@ public class SistemaVisao extends javax.swing.JFrame {
     }//GEN-LAST:event_submenuAgendaActionPerformed
 
     private void submenuAtendenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submenuAtendenteActionPerformed
-        
         AtendenteBusca atendenteBusca = new AtendenteBusca(); 
-        
-        panelConteudo.removeAll();
-        panelConteudo.add(atendenteBusca);
-        
-        try 
-        {
-            atendenteBusca.setMaximum(true);
-        } 
-        catch (PropertyVetoException ex) 
-        {
-            Logger.getLogger(SistemaVisao.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        atendenteBusca.setVisible(true);
+        this.carregarFrame(atendenteBusca);
     }//GEN-LAST:event_submenuAtendenteActionPerformed
 
     private void submenuLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submenuLogoutActionPerformed
@@ -260,21 +298,13 @@ public class SistemaVisao extends javax.swing.JFrame {
 
     private void submenuCertificacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submenuCertificacaoActionPerformed
         CertificacaoBusca certificacaoBusca = new CertificacaoBusca(); 
-        
-        panelConteudo.removeAll();
-        panelConteudo.add(certificacaoBusca);
-        
-        try 
-        {
-            certificacaoBusca.setMaximum(true);
-        } 
-        catch (PropertyVetoException ex) 
-        {
-            Logger.getLogger(SistemaVisao.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        certificacaoBusca.setVisible(true);
+        this.carregarFrame(certificacaoBusca);
     }//GEN-LAST:event_submenuCertificacaoActionPerformed
+
+    private void submenuGrupoDeUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submenuGrupoDeUsuariosActionPerformed
+        GrupoDeUsuariosBusca grupoDeUsuariosBusca = new GrupoDeUsuariosBusca(); 
+        this.carregarFrame(grupoDeUsuariosBusca);
+    }//GEN-LAST:event_submenuGrupoDeUsuariosActionPerformed
 
     /**
      * @param args the command line arguments

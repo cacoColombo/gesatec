@@ -7,42 +7,47 @@ package modulo.administrativo.negocio;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "permissaodogrupodeusuarios")
+@Table(name = "permissaodogrupodeusuarios", uniqueConstraints = {
+    @UniqueConstraint(columnNames={"id", "grupodeusuarios_id"})
+})
 public class PermissaoDoGrupoDeUsuarios implements Serializable {
     
-    final char PERMISSAO_INSERIR = 'I';
-    final char PERMISSAO_ATUALIZAR = 'A';
-    final char PERMISSAO_EXCLUIR = 'E';
-    final char PERMISSAO_LISTAR = 'L';
-    
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true, nullable = false)
-    private int id;
+    @Column(length = 45, nullable = false)
+    private String id; // nome da tela 'name'.
     
     @ManyToOne
     @JoinColumn(name = "grupodeusuarios_id", referencedColumnName = "id", nullable = false)
     private GrupoDeUsuarios grupoDeUsuarios;
     
-    @Column(nullable = false, length = 45)
-    private String tela; // ex.: Cliente, Agenda...
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE", nullable = false)
+    private boolean visualizar;
     
-    @Column(length = 45)
-    private String permissoes; // ex. 'I;U;D;L'
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE", nullable = false)
+    private boolean inserir;
+    
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE", nullable = false)
+    private boolean atualizar;
+    
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE", nullable = false)
+    private boolean excluir;
+    
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE", nullable = false)
+    private boolean admin;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -54,19 +59,43 @@ public class PermissaoDoGrupoDeUsuarios implements Serializable {
         this.grupoDeUsuarios = grupoDeUsuarios;
     }
 
-    public String getTela() {
-        return tela;
+    public boolean isVisualizar() {
+        return visualizar;
     }
 
-    public void setTela(String tela) {
-        this.tela = tela;
+    public void setVisualizar(boolean visualizar) {
+        this.visualizar = visualizar;
     }
 
-    public String getPermissoes() {
-        return permissoes;
+    public boolean isInserir() {
+        return inserir;
     }
 
-    public void setPermissoes(String permissoes) {
-        this.permissoes = permissoes;
+    public void setInserir(boolean inserir) {
+        this.inserir = inserir;
+    }
+
+    public boolean isAtualizar() {
+        return atualizar;
+    }
+
+    public void setAtualizar(boolean atualizar) {
+        this.atualizar = atualizar;
+    }
+
+    public boolean isExcluir() {
+        return excluir;
+    }
+
+    public void setExcluir(boolean excluir) {
+        this.excluir = excluir;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 }

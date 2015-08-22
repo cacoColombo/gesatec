@@ -23,7 +23,7 @@ import javax.swing.text.MaskFormatter;
 import modulo.administrativo.negocio.Usuario;
 import modulo.cadastro.dao.AtendenteDAO;
 import modulo.cadastro.dao.PessoaDAO;
-import modulo.cadastro.dao.UsuarioDAO;
+import modulo.administrativo.dao.UsuarioDAO;
 import modulo.cadastro.negocio.Atendente;
 import modulo.cadastro.negocio.Pessoa;
 

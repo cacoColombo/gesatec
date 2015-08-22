@@ -12,11 +12,13 @@
         <Menu class="javax.swing.JMenu" name="submenuCadastros">
           <Properties>
             <Property name="text" type="java.lang.String" value="Cadastros"/>
+            <Property name="name" type="java.lang.String" value="cadastros" noResource="true"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="submenuAtendente">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Atendente"/>
+                <Property name="name" type="java.lang.String" value="atendente" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="submenuAtendenteActionPerformed"/>
@@ -25,6 +27,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="submenuCertificacao">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Certifica&#xe7;&#xe3;o"/>
+                <Property name="name" type="java.lang.String" value="certificacao" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="submenuCertificacaoActionPerformed"/>
@@ -33,16 +36,19 @@
             <MenuItem class="javax.swing.JMenuItem" name="submenuCliente">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Cliente"/>
+                <Property name="name" type="java.lang.String" value="cliente" noResource="true"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="submenuEspecializacao">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Especializa&#xe7;&#xe3;o"/>
+                <Property name="name" type="java.lang.String" value="especializacao" noResource="true"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="submenuProfissional">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Profissional"/>
+                <Property name="name" type="java.lang.String" value="profissional" noResource="true"/>
               </Properties>
             </MenuItem>
           </SubComponents>
@@ -50,11 +56,13 @@
         <Menu class="javax.swing.JMenu" name="menuProcessos">
           <Properties>
             <Property name="text" type="java.lang.String" value="Processos"/>
+            <Property name="name" type="java.lang.String" value="processos" noResource="true"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="submenuAgenda">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Agenda"/>
+                <Property name="name" type="java.lang.String" value="agenda" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="submenuAgendaActionPerformed"/>
@@ -63,11 +71,13 @@
             <MenuItem class="javax.swing.JMenuItem" name="submenuAtendimento">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Atendimento"/>
+                <Property name="name" type="java.lang.String" value="atendimento" noResource="true"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="submenuProntuario">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Prontu&#xe1;rio"/>
+                <Property name="name" type="java.lang.String" value="prontuario" noResource="true"/>
               </Properties>
             </MenuItem>
           </SubComponents>
@@ -75,21 +85,25 @@
         <Menu class="javax.swing.JMenu" name="menuConfiguracoes">
           <Properties>
             <Property name="text" type="java.lang.String" value="Configura&#xe7;&#xf5;es"/>
+            <Property name="name" type="java.lang.String" value="configuracoes" noResource="true"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="submenuPadraoDeAtendimento">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Padr&#xe3;o de atendimento"/>
+                <Property name="name" type="java.lang.String" value="padraodeatendimento" noResource="true"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="submenuTipoDeAtendimento">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Tipo de atendimento"/>
+                <Property name="name" type="java.lang.String" value="tipodeatendimento" noResource="true"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="submenuTipoDeProntuario">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Tipo de prontu&#xe1;rio"/>
+                <Property name="name" type="java.lang.String" value="tipodeprontuario" noResource="true"/>
               </Properties>
             </MenuItem>
           </SubComponents>
@@ -97,11 +111,13 @@
         <Menu class="javax.swing.JMenu" name="menuAdministrativo">
           <Properties>
             <Property name="text" type="java.lang.String" value="Administrativo"/>
+            <Property name="name" type="java.lang.String" value="administrativo" noResource="true"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="submenuLogout">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Efetuar logout"/>
+                <Property name="name" type="java.lang.String" value="efetuarlogout" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="submenuLogoutActionPerformed"/>
@@ -110,11 +126,16 @@
             <MenuItem class="javax.swing.JMenuItem" name="submenuGrupoDeUsuarios">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Grupo de usu&#xe1;rios"/>
+                <Property name="name" type="java.lang.String" value="grupodeusuarios" noResource="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="submenuGrupoDeUsuariosActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="submenuUsuario">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Usu&#xe1;rio"/>
+                <Property name="name" type="java.lang.String" value="usuario" noResource="true"/>
               </Properties>
             </MenuItem>
           </SubComponents>
@@ -189,7 +210,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="525" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="533" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>

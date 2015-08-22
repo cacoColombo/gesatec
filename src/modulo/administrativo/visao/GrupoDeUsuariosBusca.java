@@ -2,34 +2,32 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package modulo.cadastro.visao;
+package modulo.administrativo.visao;
 
-import java.util.Iterator;
 import java.util.List;
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import modulo.cadastro.dao.CertificacaoDAO;
-import modulo.cadastro.negocio.Certificacao;
+import modulo.administrativo.dao.GrupoDeUsuariosDAO;
+import modulo.administrativo.negocio.GrupoDeUsuarios;
 
 /**
  *
  * @author augusto
  */
-public class CertificacaoBusca extends javax.swing.JInternalFrame {
+public class GrupoDeUsuariosBusca extends javax.swing.JInternalFrame {
 
-    public static CertificacaoFormulario form;
+    public static GrupoDeUsuariosFormulario form;
     
     /**
      * Creates new form ModeloBusca
      */
-    public CertificacaoBusca() {
+    public GrupoDeUsuariosBusca() {
         initComponents();
         
-        setTitle("Certificação");
+        setTitle("Grupo de usuários");
         this.setBorder(null);
         tabela.setSelectionBackground(new java.awt.Color(22, 160, 133));
 
@@ -64,16 +62,16 @@ public class CertificacaoBusca extends javax.swing.JInternalFrame {
     public final void atualizarGrid(int selecionar) {
         try {
             
-            List<Object> certificacoes = CertificacaoDAO.getInstance().findAll(new Certificacao());
+            List<Object> grupoDeUsuarios = GrupoDeUsuariosDAO.getInstance().findAll(new GrupoDeUsuarios());
             DefaultTableModel modelo = (DefaultTableModel) tabela.getModel();
             modelo.setNumRows(0);
             
-            for ( int i = 0; i < certificacoes.size(); i ++ ) {
-                Certificacao certificacao = (Certificacao) certificacoes.get(i);
-                modelo.addRow(new Object[]{certificacao.getId(), certificacao.getNome()});
+            for ( int i = 0; i < grupoDeUsuarios.size(); i ++ ) {
+                GrupoDeUsuarios gruposDeUsuarios = (GrupoDeUsuarios) grupoDeUsuarios.get(i);
+                modelo.addRow(new Object[]{gruposDeUsuarios.getId(), gruposDeUsuarios.getNome()});
                 
                 // Verifica item a selecionar
-                if ( certificacao.getId() == selecionar )
+                if ( gruposDeUsuarios.getId() == selecionar )
                 {
                     tabela.addRowSelectionInterval(i, i);
                 }
@@ -233,7 +231,7 @@ public class CertificacaoBusca extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoNovoActionPerformed
-        form = new CertificacaoFormulario(this, true);
+        form = new GrupoDeUsuariosFormulario(this, true);
         form.setLocationRelativeTo(null);
         form.setVisible(true);
     }//GEN-LAST:event_botaoNovoActionPerformed
@@ -245,12 +243,12 @@ public class CertificacaoBusca extends javax.swing.JInternalFrame {
     private void botaoEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEditarActionPerformed
         int selected = tabela.getSelectedRow();
         Object registro = tabela.getValueAt(selected, 0);
-        int certificacao_id = Integer.parseInt(registro.toString());
+        int grupodeusuarios_id = Integer.parseInt(registro.toString());
         
-        Object certificacao = CertificacaoDAO.getInstance().getById(new Certificacao(), certificacao_id);
+        Object grupoDeUsuarios = GrupoDeUsuariosDAO.getInstance().getById(new GrupoDeUsuarios(), grupodeusuarios_id);
         
-        form = new CertificacaoFormulario(this, true);
-        form.popularCampos((Certificacao) certificacao);
+        form = new GrupoDeUsuariosFormulario(this, true);
+        form.popularCampos((GrupoDeUsuarios) grupoDeUsuarios);
         form.setLocationRelativeTo(null);
         form.setVisible(true);
     }//GEN-LAST:event_botaoEditarActionPerformed
@@ -258,13 +256,13 @@ public class CertificacaoBusca extends javax.swing.JInternalFrame {
     private void botaoExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoExcluirActionPerformed
         int selected = tabela.getSelectedRow();
         Object registro = tabela.getValueAt(selected, 0);
-        int certificacao_id = Integer.parseInt(registro.toString());
+        int grupodeusuarios_id = Integer.parseInt(registro.toString());
         
         int escolha = JOptionPane.showConfirmDialog(null, "Você têm certeza que deseja excluir este registro?", "Atenção!", JOptionPane.YES_NO_OPTION);
             
         if ( escolha == JOptionPane.YES_OPTION ) 
         {
-            CertificacaoDAO.getInstance().removeById(new Certificacao(), certificacao_id);
+            GrupoDeUsuariosDAO.getInstance().removeById(new GrupoDeUsuarios(), grupodeusuarios_id);
             this.atualizarGrid(-1);
             JOptionPane.showMessageDialog(this, "Registro excluído com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
         }
