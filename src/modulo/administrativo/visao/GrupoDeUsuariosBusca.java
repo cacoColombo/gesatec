@@ -232,6 +232,7 @@ public class GrupoDeUsuariosBusca extends javax.swing.JInternalFrame {
 
     private void botaoNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoNovoActionPerformed
         form = new GrupoDeUsuariosFormulario(this, true);
+        form.atualizarGridPermissoes();
         form.setLocationRelativeTo(null);
         form.setVisible(true);
     }//GEN-LAST:event_botaoNovoActionPerformed

@@ -24,6 +24,7 @@ public class PermissaoDoGrupoDeUsuarios implements Serializable {
     @Column(length = 45, nullable = false)
     private String id; // nome da tela 'name'.
     
+    @Id
     @ManyToOne
     @JoinColumn(name = "grupodeusuarios_id", referencedColumnName = "id", nullable = false)
     private GrupoDeUsuarios grupoDeUsuarios;

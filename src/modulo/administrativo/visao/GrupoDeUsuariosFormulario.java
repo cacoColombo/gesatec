@@ -5,6 +5,8 @@
 package modulo.administrativo.visao;
 
 import java.awt.Component;
+import java.util.ArrayList;
+import java.util.List;
 import modulo.sistema.visao.*;
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
@@ -16,6 +18,8 @@ import modulo.administrativo.dao.GrupoDeUsuariosDAO;
 import modulo.administrativo.dao.PermissaoDoGrupoDeUsuariosDAO;
 import modulo.administrativo.negocio.GrupoDeUsuarios;
 import modulo.administrativo.negocio.PermissaoDoGrupoDeUsuarios;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -38,12 +42,12 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
         botaoCancelar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/cancelar.png")));
         
         tabelaPermissoes.setSelectionBackground(new java.awt.Color(22, 160, 133));
-        this.atualizarGridPermissoes();
     }
     
     public void popularCampos(GrupoDeUsuarios grupoDeUsuarios) {
         id.setText(Integer.toString(grupoDeUsuarios.getId()));
         nome.setText(grupoDeUsuarios.getNome());
+        this.atualizarGridPermissoes();
     }
     
     public boolean validarCampos() {
@@ -62,6 +66,17 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
     public void atualizarGridPermissoes()
     {
         try{
+            
+            List<Object> permissoes = new ArrayList();
+            
+            if ( id.getText().length() > 0 ) {
+                GrupoDeUsuarios grupoDeusuarios = new GrupoDeUsuarios();
+                grupoDeusuarios.setId(Integer.parseInt(id.getText()));
+
+                Criterion[] criterions = {Restrictions.eq("grupoDeUsuarios", grupoDeusuarios)};
+                permissoes = PermissaoDoGrupoDeUsuariosDAO.getInstance().findByCriteria(new PermissaoDoGrupoDeUsuarios(), criterions);
+            }            
+            
             DefaultTableModel modelo = (DefaultTableModel) tabelaPermissoes.getModel();
             modelo.setNumRows(0);
             
@@ -81,16 +96,39 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
                     for ( int t = 0; t < telas.length; t ++ ) {
                         if ( telas[t] instanceof JMenuItem )
                         {
+                            // Por padrão, todos itens desmarcados.
                             JMenuItem tela = (JMenuItem) telas[t];
+                            boolean visualizar = false;
+                            boolean inserir = false;
+                            boolean atualizar = false;
+                            boolean excluir = false;
+                            boolean admin = false;
+                            
+                            // Verifica se o grupo já possui registro na permissão, e popula conforme registros.
+                            for (int p = 0; p < permissoes.size(); p ++) {
+                                PermissaoDoGrupoDeUsuarios permissaoDoGrupoDeUsuarios = (PermissaoDoGrupoDeUsuarios) permissoes.get(p);
+                                
+                                if ( permissaoDoGrupoDeUsuarios.getId().equals(tela.getName()) ) {
+                                    visualizar = permissaoDoGrupoDeUsuarios.isVisualizar();
+                                    inserir = permissaoDoGrupoDeUsuarios.isInserir();
+                                    atualizar = permissaoDoGrupoDeUsuarios.isAtualizar();
+                                    excluir = permissaoDoGrupoDeUsuarios.isExcluir();
+                                    admin = permissaoDoGrupoDeUsuarios.isAdmin();
+                                    
+                                    break;
+                                }
+                            }
+                            
+                            // Popula a grid com os itens do menu, de seus respectivos módulos.
                             modelo.addRow(new Object[]{
                                 tela.getName(), // ESTE É O ID DA TELA!!!
                                 modulo.getText(), 
                                 tela.getText(),
-                                false, // Visualizar
-                                false, // Inserir
-                                false, // Editar
-                                false, // Excluír
-                                false // Admin
+                                visualizar,
+                                inserir,
+                                atualizar,
+                                excluir,
+                                admin
                             });
                         }
                     }
@@ -292,7 +330,7 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
                 grupoDeUsuarios.setId(Integer.parseInt(id.getText()));
             }
             grupoDeUsuarios.setNome(nome.getText());
-            GrupoDeUsuariosDAO.getInstance().persist(grupoDeUsuarios);
+            GrupoDeUsuariosDAO.getInstance().merge(grupoDeUsuarios);
             
             // Obter lista de permissões marcadas.
             DefaultTableModel modelo = (DefaultTableModel) tabelaPermissoes.getModel();
@@ -305,8 +343,8 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
                 permissaoDoGrupoDeUsuarios.setInserir((boolean) modelo.getValueAt(c, 4));
                 permissaoDoGrupoDeUsuarios.setAtualizar((boolean) modelo.getValueAt(c, 5));
                 permissaoDoGrupoDeUsuarios.setExcluir((boolean) modelo.getValueAt(c, 6));
-                permissaoDoGrupoDeUsuarios.setAdmin((boolean) modelo.getValueAt(c, 7));
-                PermissaoDoGrupoDeUsuariosDAO.getInstance().persist(permissaoDoGrupoDeUsuarios);
+                permissaoDoGrupoDeUsuarios.setAdmin((boolean) modelo.getValueAt(c, 7));                
+                PermissaoDoGrupoDeUsuariosDAO.getInstance().merge(permissaoDoGrupoDeUsuarios);
             }
 
             JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
