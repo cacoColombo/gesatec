@@ -5,11 +5,15 @@
 package modulo.administrativo.negocio;
 
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -23,6 +27,9 @@ public class GrupoDeUsuarios implements Serializable {
     
     @Column(nullable = false)
     private String nome;
+    
+    @OneToMany(mappedBy = "grupoDeUsuarios", targetEntity = PermissaoDoGrupoDeUsuarios.class, cascade = CascadeType.REMOVE)
+    private List<PermissaoDoGrupoDeUsuarios> permissaoDoGrupoDeUsuarios;
 
     public int getId() {
         return id;
@@ -38,5 +45,13 @@ public class GrupoDeUsuarios implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public List<PermissaoDoGrupoDeUsuarios> getPermissaoDoGrupoDeUsuarios() {
+        return permissaoDoGrupoDeUsuarios;
+    }
+
+    public void setPermissaoDoGrupoDeUsuarios(List<PermissaoDoGrupoDeUsuarios> permissaoDoGrupoDeUsuarios) {
+        this.permissaoDoGrupoDeUsuarios = permissaoDoGrupoDeUsuarios;
     }
 }

@@ -11,7 +11,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import modulo.administrativo.dao.GrupoDeUsuariosDAO;
+import modulo.administrativo.dao.PermissaoDoGrupoDeUsuariosDAO;
 import modulo.administrativo.negocio.GrupoDeUsuarios;
+import modulo.administrativo.negocio.PermissaoDoGrupoDeUsuarios;
 
 /**
  *
@@ -263,7 +265,10 @@ public class GrupoDeUsuariosBusca extends javax.swing.JInternalFrame {
             
         if ( escolha == JOptionPane.YES_OPTION ) 
         {
-            GrupoDeUsuariosDAO.getInstance().removeById(new GrupoDeUsuarios(), grupodeusuarios_id);
+            GrupoDeUsuarios grupoDeUsuarios = new GrupoDeUsuarios();
+            grupoDeUsuarios.setId(grupodeusuarios_id);
+            GrupoDeUsuariosDAO.getInstance().remove(grupoDeUsuarios);
+            
             this.atualizarGrid(-1);
             JOptionPane.showMessageDialog(this, "Registro excluído com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
         }
