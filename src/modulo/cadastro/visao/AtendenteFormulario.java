@@ -5,8 +5,6 @@
 package modulo.cadastro.visao;
 
 import modulo.sistema.visao.*;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -16,16 +14,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFormattedTextField;
-import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
 import modulo.administrativo.negocio.Usuario;
 import modulo.cadastro.dao.AtendenteDAO;
-import modulo.cadastro.dao.PessoaDAO;
 import modulo.administrativo.dao.UsuarioDAO;
 import modulo.cadastro.negocio.Atendente;
-import modulo.cadastro.negocio.Pessoa;
 
 /**
  *
@@ -574,7 +569,7 @@ public class AtendenteFormulario extends javax.swing.JDialog {
         this.setVisible(false);
     }//GEN-LAST:event_botaoCancelarActionPerformed
 
-    private boolean checkFields(){
+    private boolean verificaCampos(){
         boolean ok = true;
         message = "Os seguintes erros ocorreram\n\n";
         if(nome.getText().isEmpty()){
@@ -627,7 +622,7 @@ public class AtendenteFormulario extends javax.swing.JDialog {
         return ok;
     }
     
-    public void setObejtoEditado(int id) {
+    public void populaCampos(int id) {
         System.out.println("Hmmmm?");
         Atendente atendente =  new Atendente();
         atendente =  (Atendente) AtendenteDAO.getInstance().getById(atendente, id);
@@ -665,7 +660,7 @@ public class AtendenteFormulario extends javax.swing.JDialog {
     }
     
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
-        if ( this.checkFields() )
+        if ( this.verificaCampos() )
         {
             Atendente atendente = new Atendente();
             

@@ -15,6 +15,7 @@ import javax.swing.JMenuBar;
 import modulo.administrativo.visao.GrupoDeUsuariosBusca;
 import modulo.cadastro.visao.AtendenteBusca;
 import modulo.cadastro.visao.CertificacaoBusca;
+import modulo.cadastro.visao.ClienteBusca;
 
 /**
  *
@@ -113,10 +114,6 @@ public class SistemaVisao extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(java.awt.SystemColor.controlLtHighlight);
-
-        panelConteudo.setBackground(java.awt.SystemColor.controlLtHighlight);
-
         javax.swing.GroupLayout panelConteudoLayout = new javax.swing.GroupLayout(panelConteudo);
         panelConteudo.setLayout(panelConteudoLayout);
         panelConteudoLayout.setHorizontalGroup(
@@ -164,6 +161,11 @@ public class SistemaVisao extends javax.swing.JFrame {
 
         submenuCliente.setText("Cliente");
         submenuCliente.setName("cliente"); // NOI18N
+        submenuCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submenuClienteActionPerformed(evt);
+            }
+        });
         submenuCadastros.add(submenuCliente);
 
         submenuEspecializacao.setText("Especialização");
@@ -305,6 +307,11 @@ public class SistemaVisao extends javax.swing.JFrame {
         GrupoDeUsuariosBusca grupoDeUsuariosBusca = new GrupoDeUsuariosBusca(); 
         this.carregarFrame(grupoDeUsuariosBusca);
     }//GEN-LAST:event_submenuGrupoDeUsuariosActionPerformed
+
+    private void submenuClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submenuClienteActionPerformed
+        ClienteBusca clienteBusca = new ClienteBusca(); 
+        this.carregarFrame(clienteBusca);
+    }//GEN-LAST:event_submenuClienteActionPerformed
 
     /**
      * @param args the command line arguments

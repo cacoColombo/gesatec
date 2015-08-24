@@ -6,4 +6,10 @@ package modulo.cadastro.dao;
 
 import modulo.sistema.dao.DAO;
 
-public class ClienteDAO extends DAO{}
+/**
+ *
+ * @author augusto
+ */
+public class EspecializacaoDAO extends DAO
+{
+}

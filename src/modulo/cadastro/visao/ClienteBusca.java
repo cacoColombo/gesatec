@@ -13,21 +13,22 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import modulo.cadastro.dao.AtendenteDAO;
+import modulo.cadastro.dao.ClienteDAO;
 import modulo.cadastro.negocio.Atendente;
+import modulo.cadastro.negocio.Cliente;
 
 /**
  *
  * @author augusto
  */
-public class AtendenteBusca extends javax.swing.JInternalFrame {
+public class ClienteBusca extends javax.swing.JInternalFrame {
 
-    public static AtendenteFormulario form;
+    public static ClienteFormulario form;
     
     /**
      * Creates new form ModeloBusca
      */
-    public AtendenteBusca() {
+    public ClienteBusca() {
         initComponents();
         
         tabela.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
@@ -43,7 +44,7 @@ public class AtendenteBusca extends javax.swing.JInternalFrame {
             }
         });
         
-        setTitle("Atendente");
+        setTitle("Cliente");
         this.setBorder(null);
         this.desabilitaAcoesDeEdicaoEExclusao();
         tabela.setSelectionBackground(new java.awt.Color(22, 160, 133)); 
@@ -66,45 +67,39 @@ public class AtendenteBusca extends javax.swing.JInternalFrame {
     public final void atualizarGrid(int selecionar) {
         try {
             
-            List<Object> certificacoes = AtendenteDAO.getInstance().findAll(new Atendente());
+            List<Object> certificacoes = ClienteDAO.getInstance().findAll(new Cliente());
             DefaultTableModel modelo = (DefaultTableModel) tabela.getModel();
             modelo.setNumRows(0);
-            DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-            System.out.println("################### 1");
-            for ( int i = 0; i < certificacoes.size(); i ++ ) {
-                Atendente atendente = (Atendente) certificacoes.get(i);
-                modelo.addRow(new Object[]{
-                    atendente.getId(), 
-                    atendente.getNome()!=null?atendente.getNome():"",
-                    atendente.getDataNascimento()!=null?format.format(atendente.getDataNascimento()):"",
-                    atendente.getSexo()=='M'?"Masculino":"Feminino",
-                    atendente.getEmail()!=null?atendente.getEmail():"",
-                    atendente.getCpf()!=null?atendente.getCpf():"",
-                    atendente.getRg()!=null?atendente.getRg():"",
-                    atendente.getObservacao()!=null?atendente.getObservacao():"",
-                    atendente.getTelefoneCelular()!=null?atendente.getTelefoneCelular():"",
-                    atendente.getTelefoneResidencial()!=null?atendente.getTelefoneResidencial():"",
-                    atendente.getTelefoneTrabalho()!=null?atendente.getTelefoneTrabalho():"",
-                    "",
-                    atendente.getCep()!=null?atendente.getCep():"",
-                    atendente.getBairro()!=null?atendente.getBairro():"",
-                    atendente.getEndereco()!=null?atendente.getEndereco():"",
-                    atendente.getNumero(),
-                    atendente.getComplemento()!=null?atendente.getComplemento():""
-                });
-                System.out.println("################### 2");
-                
-                // Verifica item a selecionar
-                if ( atendente.getId() == selecionar )
-                {
-                    tabela.addRowSelectionInterval(i, i);
-                }
-            }
             
-            if ( selecionar == -1 )
-            {
-                botaoEditar.setEnabled(false);
-                botaoExcluir.setEnabled(false);
+            DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+            for ( int i = 0; i < certificacoes.size(); i ++ ) {
+                Cliente cliente = (Cliente) certificacoes.get(i);
+                modelo.addRow(new Object[]{
+                    cliente.getId(), 
+                    cliente.getNome()!=null?cliente.getNome():"",
+                    cliente.getDataNascimento()!=null?format.format(cliente.getDataNascimento()):"",
+                    cliente.getSexo()=='M'?"Masculino":"Feminino",
+                    cliente.getEmail()!=null?cliente.getEmail():"",
+                    cliente.getCpf()!=null?cliente.getCpf():"",
+                    cliente.getRg()!=null?cliente.getRg():"",
+                    cliente.getObservacao()!=null?cliente.getObservacao():"",
+                    cliente.getTelefoneCelular()!=null?cliente.getTelefoneCelular():"",
+                    cliente.getTelefoneResidencial()!=null?cliente.getTelefoneResidencial():"",
+                    cliente.getTelefoneTrabalho()!=null?cliente.getTelefoneTrabalho():"",
+                    "",
+                    cliente.getCep()!=null?cliente.getCep():"",
+                    cliente.getBairro()!=null?cliente.getBairro():"",
+                    cliente.getEndereco()!=null?cliente.getEndereco():"",
+                    cliente.getNumero(),
+                    cliente.getComplemento()!=null?cliente.getComplemento():""
+                });
+            
+            
+                if ( selecionar == -1 )
+                {
+                    botaoEditar.setEnabled(false);
+                    botaoExcluir.setEnabled(false);
+                }
             }
             
         } catch (Exception err) {
@@ -237,7 +232,7 @@ public class AtendenteBusca extends javax.swing.JInternalFrame {
                     .addComponent(botaoBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(campoBusca, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -260,7 +255,7 @@ public class AtendenteBusca extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoNovoActionPerformed
-        form = new AtendenteFormulario(this, true);
+        form = new ClienteFormulario(this, true);
         form.setLocationRelativeTo(null);
         form.setVisible(true);
     }//GEN-LAST:event_botaoNovoActionPerformed
@@ -268,7 +263,7 @@ public class AtendenteBusca extends javax.swing.JInternalFrame {
     private void botaoBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBuscarActionPerformed
         
         /**
-        List<Atendente> atendentes = AtendenteDAO.getInstance().find(campoBusca.getText());
+        List<Cliente> atendentes = ClienteDAO.getInstance().find(campoBusca.getText());
         DefaultTableModel model = new DefaultTableModel(new Object[]
         {"ID","Nome","Data Nascimento","Sexo","Email","CPF","RG","Obs.","Tel. Celular", "Tel. Residencial", "Tel. Trabalho", "Cidade", "CEP", "Bairro", "Endereço", "Número", "Complemento"}, 0);
         for(Pessoa a : atendentes){
@@ -301,17 +296,17 @@ public class AtendenteBusca extends javax.swing.JInternalFrame {
         Object registro = tabela.getValueAt(selected, 0);
         int atendente_id = Integer.parseInt(registro.toString());
         
-        Object atendente = AtendenteDAO.getInstance().getById(new Atendente(), atendente_id);
+        Object atendente = ClienteDAO.getInstance().getById(new Cliente(), atendente_id);
         
-        form = new AtendenteFormulario(this, true);
-        form.popularCampos((Atendente) atendente);
+        form = new ClienteFormulario(this, true);
+        form.popularCampos((Cliente) atendente);
         form.setLocationRelativeTo(null);
         form.setVisible(true);
         
         
         
         /**
-        form = new AtendenteFormulario(this, true);
+        form = new ClienteFormulario(this, true);
         form.setLocationRelativeTo(null);
         form.setObejtoEditado(Long.parseLong(tabela.getValueAt(tabela.getSelectedRow(), 0).toString()));
         form.setVisible(true);

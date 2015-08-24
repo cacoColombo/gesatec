@@ -4,31 +4,41 @@
  */
 package modulo.cadastro.visao;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import modulo.cadastro.dao.AtendenteDAO;
-import modulo.cadastro.negocio.Atendente;
+import modulo.cadastro.dao.EspecializacaoDAO;
+import modulo.cadastro.negocio.Certificacao;
+import modulo.cadastro.negocio.Especializacao;
 
 /**
  *
  * @author augusto
  */
-public class AtendenteBusca extends javax.swing.JInternalFrame {
+public class EspecializacaoBusca extends javax.swing.JInternalFrame {
 
-    public static AtendenteFormulario form;
+    public static EspecializacaoFormulario form;
     
     /**
      * Creates new form ModeloBusca
      */
-    public AtendenteBusca() {
+    public EspecializacaoBusca() {
         initComponents();
+        
+        setTitle("Especializações");
+        this.setBorder(null);
+        tabela.setSelectionBackground(new java.awt.Color(22, 160, 133));
+
+        botaoNovo.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/novo.png")));
+        botaoEditar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/editar.png")));
+        botaoExcluir.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/excluir.png")));
+        botaoAtualizar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/atualizar.png")));
+        botaoBuscar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/buscar.png")));
+        
+        this.atualizarGrid(-1);
         
         tabela.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent event) {
@@ -42,19 +52,6 @@ public class AtendenteBusca extends javax.swing.JInternalFrame {
                 }
             }
         });
-        
-        setTitle("Atendente");
-        this.setBorder(null);
-        this.desabilitaAcoesDeEdicaoEExclusao();
-        tabela.setSelectionBackground(new java.awt.Color(22, 160, 133)); 
-        
-        this.atualizarGrid(-1);
-
-        botaoNovo.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/novo.png")));
-        botaoEditar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/editar.png")));
-        botaoExcluir.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/excluir.png")));
-        botaoAtualizar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/atualizar.png")));
-        botaoBuscar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/buscar.png")));
     }
     
     /**
@@ -66,36 +63,16 @@ public class AtendenteBusca extends javax.swing.JInternalFrame {
     public final void atualizarGrid(int selecionar) {
         try {
             
-            List<Object> certificacoes = AtendenteDAO.getInstance().findAll(new Atendente());
+            List<Object> especializacoes = EspecializacaoDAO.getInstance().findAll(new Especializacao());
             DefaultTableModel modelo = (DefaultTableModel) tabela.getModel();
             modelo.setNumRows(0);
-            DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-            System.out.println("################### 1");
-            for ( int i = 0; i < certificacoes.size(); i ++ ) {
-                Atendente atendente = (Atendente) certificacoes.get(i);
-                modelo.addRow(new Object[]{
-                    atendente.getId(), 
-                    atendente.getNome()!=null?atendente.getNome():"",
-                    atendente.getDataNascimento()!=null?format.format(atendente.getDataNascimento()):"",
-                    atendente.getSexo()=='M'?"Masculino":"Feminino",
-                    atendente.getEmail()!=null?atendente.getEmail():"",
-                    atendente.getCpf()!=null?atendente.getCpf():"",
-                    atendente.getRg()!=null?atendente.getRg():"",
-                    atendente.getObservacao()!=null?atendente.getObservacao():"",
-                    atendente.getTelefoneCelular()!=null?atendente.getTelefoneCelular():"",
-                    atendente.getTelefoneResidencial()!=null?atendente.getTelefoneResidencial():"",
-                    atendente.getTelefoneTrabalho()!=null?atendente.getTelefoneTrabalho():"",
-                    "",
-                    atendente.getCep()!=null?atendente.getCep():"",
-                    atendente.getBairro()!=null?atendente.getBairro():"",
-                    atendente.getEndereco()!=null?atendente.getEndereco():"",
-                    atendente.getNumero(),
-                    atendente.getComplemento()!=null?atendente.getComplemento():""
-                });
-                System.out.println("################### 2");
+            
+            for ( int i = 0; i < especializacoes.size(); i ++ ) {
+                Especializacao especializacao = (Especializacao) especializacoes.get(i);
+                modelo.addRow(new Object[]{especializacao.getId(), especializacao.getNome()});
                 
                 // Verifica item a selecionar
-                if ( atendente.getId() == selecionar )
+                if ( especializacao.getId() == selecionar )
                 {
                     tabela.addRowSelectionInterval(i, i);
                 }
@@ -110,17 +87,6 @@ public class AtendenteBusca extends javax.swing.JInternalFrame {
         } catch (Exception err) {
             JOptionPane.showMessageDialog(this, "Erro ao atualizar grid: " + err.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
         }
-    }
-    
-
-    private void abilitaAcoesDeEdicaoEExclusao() {
-        botaoEditar.setEnabled(true);
-        botaoExcluir.setEnabled(true);
-    }
-
-    private void desabilitaAcoesDeEdicaoEExclusao() {
-        botaoEditar.setEnabled(false);
-        botaoExcluir.setEnabled(false);
     }
 
     /**
@@ -145,7 +111,7 @@ public class AtendenteBusca extends javax.swing.JInternalFrame {
 
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
         setClosable(true);
-        setTitle("Atendente");
+        setTitle("Nome da tela");
 
         toolbar.setRollover(true);
 
@@ -175,33 +141,37 @@ public class AtendenteBusca extends javax.swing.JInternalFrame {
         botaoExcluir.setFocusable(false);
         botaoExcluir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         botaoExcluir.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        botaoExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoExcluirActionPerformed(evt);
+            }
+        });
         toolbar.add(botaoExcluir);
 
         botaoAtualizar.setText("Atualizar");
         botaoAtualizar.setFocusable(false);
         botaoAtualizar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         botaoAtualizar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolbar.add(botaoAtualizar);
-
-        botaoBuscar.addActionListener(new java.awt.event.ActionListener() {
+        botaoAtualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botaoBuscarActionPerformed(evt);
+                botaoAtualizarActionPerformed(evt);
             }
         });
+        toolbar.add(botaoAtualizar);
 
         tabela.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null}
+
             },
             new String [] {
-                "ID", "Nome", "Data de nascimento", "Sexo", "E-mail", "CPF", "RG", "Observação", "Telefone celular", "Telefone residencial", "Telefone de trabalho", "Cidade", "Cep", "Bairro", "Endereço", "Numero", "Complemento"
+                "ID", "Nome"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+                false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -237,7 +207,7 @@ public class AtendenteBusca extends javax.swing.JInternalFrame {
                     .addComponent(botaoBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(campoBusca, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -260,64 +230,42 @@ public class AtendenteBusca extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoNovoActionPerformed
-        form = new AtendenteFormulario(this, true);
+        form = new EspecializacaoFormulario(this, true);
         form.setLocationRelativeTo(null);
         form.setVisible(true);
     }//GEN-LAST:event_botaoNovoActionPerformed
 
-    private void botaoBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBuscarActionPerformed
-        
-        /**
-        List<Atendente> atendentes = AtendenteDAO.getInstance().find(campoBusca.getText());
-        DefaultTableModel model = new DefaultTableModel(new Object[]
-        {"ID","Nome","Data Nascimento","Sexo","Email","CPF","RG","Obs.","Tel. Celular", "Tel. Residencial", "Tel. Trabalho", "Cidade", "CEP", "Bairro", "Endereço", "Número", "Complemento"}, 0);
-        for(Pessoa a : atendentes){
-            model.addRow(new Object[]{
-                a.getId(),
-                a.getNome(),
-                a.getDataNascimento().toString(),
-                a.getSexo()=='M'?"Masculino":"Feminino",
-                a.getEmail(),
-                a.getCpf(),
-                a.getRg(),
-                a.getObservacao(),
-                a.getTelefoneCelular(),
-                a.getTelefoneResidencial(),
-                a.getTelefoneTrabalho(),
-                a.getCidade()!=null?"Hey!":"Oops!",
-                a.getCep(),
-                a.getBairro(),
-                a.getEndereco(),
-                a.getNumero(),
-                a.getComplemento()
-            });
-        }
-        tabela.setModel(model);
-        */
-    }//GEN-LAST:event_botaoBuscarActionPerformed
+    private void botaoAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAtualizarActionPerformed
+        this.atualizarGrid(-1);
+    }//GEN-LAST:event_botaoAtualizarActionPerformed
 
     private void botaoEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEditarActionPerformed
         int selected = tabela.getSelectedRow();
         Object registro = tabela.getValueAt(selected, 0);
-        int atendente_id = Integer.parseInt(registro.toString());
+        int especializacao_id = Integer.parseInt(registro.toString());
         
-        Object atendente = AtendenteDAO.getInstance().getById(new Atendente(), atendente_id);
+        Object especializacao = EspecializacaoDAO.getInstance().getById(new Certificacao(), especializacao_id);
         
-        form = new AtendenteFormulario(this, true);
-        form.popularCampos((Atendente) atendente);
+        form = new EspecializacaoFormulario(this, true);
+        form.popularCampos((Especializacao) especializacao);
         form.setLocationRelativeTo(null);
         form.setVisible(true);
-        
-        
-        
-        /**
-        form = new AtendenteFormulario(this, true);
-        form.setLocationRelativeTo(null);
-        form.setObejtoEditado(Long.parseLong(tabela.getValueAt(tabela.getSelectedRow(), 0).toString()));
-        form.setVisible(true);
-        */
-        
     }//GEN-LAST:event_botaoEditarActionPerformed
+
+    private void botaoExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoExcluirActionPerformed
+        int selected = tabela.getSelectedRow();
+        Object registro = tabela.getValueAt(selected, 0);
+        int especializacao_id = Integer.parseInt(registro.toString());
+        
+        int escolha = JOptionPane.showConfirmDialog(null, "Você têm certeza que deseja excluir este registro?", "Atenção!", JOptionPane.YES_NO_OPTION);
+            
+        if ( escolha == JOptionPane.YES_OPTION ) 
+        {
+            EspecializacaoDAO.getInstance().removeById(new Especializacao(), especializacao_id);
+            this.atualizarGrid(-1);
+            JOptionPane.showMessageDialog(this, "Registro excluído com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_botaoExcluirActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoAtualizar;
