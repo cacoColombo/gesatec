@@ -26,7 +26,7 @@ public class PermissaoDoGrupoDeUsuarios implements Serializable {
     private String id; // nome da tela 'name'.
     
     @Id
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "grupodeusuarios_id", referencedColumnName = "id", nullable = false)
     private GrupoDeUsuarios grupoDeUsuarios;
     

@@ -28,7 +28,7 @@ public class GrupoDeUsuarios implements Serializable {
     @Column(nullable = false)
     private String nome;
     
-    @OneToMany(mappedBy = "grupoDeUsuarios", targetEntity = PermissaoDoGrupoDeUsuarios.class, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "grupoDeUsuarios", targetEntity = PermissaoDoGrupoDeUsuarios.class, cascade = CascadeType.ALL)
     private List<PermissaoDoGrupoDeUsuarios> permissaoDoGrupoDeUsuarios;
 
     public int getId() {
