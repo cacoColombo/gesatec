@@ -4,6 +4,7 @@
  */
 package modulo.administrativo.visao;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -14,6 +15,8 @@ import modulo.administrativo.dao.GrupoDeUsuariosDAO;
 import modulo.administrativo.dao.PermissaoDoGrupoDeUsuariosDAO;
 import modulo.administrativo.negocio.GrupoDeUsuarios;
 import modulo.administrativo.negocio.PermissaoDoGrupoDeUsuarios;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -105,10 +108,10 @@ public class GrupoDeUsuariosBusca extends javax.swing.JInternalFrame {
         botaoExcluir = new javax.swing.JButton();
         botaoAtualizar = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        campoBusca = new javax.swing.JTextField();
-        botaoBuscar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabela = new javax.swing.JTable();
+        botaoBuscar = new javax.swing.JButton();
+        campoBusca = new javax.swing.JTextField();
 
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
         setClosable(true);
@@ -187,6 +190,12 @@ public class GrupoDeUsuariosBusca extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(tabela);
 
+        botaoBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoBuscarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -194,7 +203,7 @@ public class GrupoDeUsuariosBusca extends javax.swing.JInternalFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 668, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 685, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(campoBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -204,13 +213,13 @@ public class GrupoDeUsuariosBusca extends javax.swing.JInternalFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(botaoBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(campoBusca, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
+                    .addComponent(campoBusca)
+                    .addComponent(botaoBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -219,7 +228,7 @@ public class GrupoDeUsuariosBusca extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(toolbar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -273,6 +282,30 @@ public class GrupoDeUsuariosBusca extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "Registro excluído com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_botaoExcluirActionPerformed
+
+    private void botaoBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBuscarActionPerformed
+        String busca = campoBusca.getText();
+
+        try {
+
+            // Se for um valor inteiro, busca em todos os campos
+            int buscaInteiro = Integer.parseInt(busca);
+            Criterion[] criterios = {
+                Restrictions.or(Restrictions.eq("id", buscaInteiro), Restrictions.ilike("nome", "%" + busca + "%"))
+            };
+
+            List<Object> grupos = GrupoDeUsuariosDAO.getInstance().findByCriteria(new GrupoDeUsuarios(), criterios);
+
+        } catch (Exception err) {
+
+            // Caso contrário, buscará somente em campos de tipo texto.
+            Criterion[] criterios = {
+                Restrictions.ilike("nome", "%" + busca + "%")
+            };
+
+            List<Object> grupos = GrupoDeUsuariosDAO.getInstance().findByCriteria(new GrupoDeUsuarios(), criterios);
+        }
+    }//GEN-LAST:event_botaoBuscarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoAtualizar;
