@@ -321,14 +321,16 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
 
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
         if ( this.validarCampos() )
-        {
+        {            
             GrupoDeUsuarios grupoDeUsuarios = new GrupoDeUsuarios();
-            if ( id.getText().length() > 0 )
-            {
-                grupoDeUsuarios.setId(Integer.parseInt(id.getText()));
-            }
             grupoDeUsuarios.setNome(nome.getText());
-            GrupoDeUsuariosDAO.getInstance().merge(grupoDeUsuarios);
+            
+            if ( id.getText().length() > 0 ) {
+                grupoDeUsuarios.setId(Integer.parseInt(id.getText()));
+                GrupoDeUsuariosDAO.getInstance().merge(grupoDeUsuarios);
+            } else {
+                GrupoDeUsuariosDAO.getInstance().persist(grupoDeUsuarios);
+            }
             
             // Obter lista de permissões marcadas.
             DefaultTableModel modelo = (DefaultTableModel) tabelaPermissoes.getModel();
@@ -341,8 +343,13 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
                 permissaoDoGrupoDeUsuarios.setInserir((boolean) modelo.getValueAt(c, 4));
                 permissaoDoGrupoDeUsuarios.setAtualizar((boolean) modelo.getValueAt(c, 5));
                 permissaoDoGrupoDeUsuarios.setExcluir((boolean) modelo.getValueAt(c, 6));
-                permissaoDoGrupoDeUsuarios.setAdmin((boolean) modelo.getValueAt(c, 7));                
-                PermissaoDoGrupoDeUsuariosDAO.getInstance().merge(permissaoDoGrupoDeUsuarios);
+                permissaoDoGrupoDeUsuarios.setAdmin((boolean) modelo.getValueAt(c, 7));  
+                
+                if ( id.getText().length() > 0 ) {
+                    PermissaoDoGrupoDeUsuariosDAO.getInstance().merge(permissaoDoGrupoDeUsuarios);
+                } else {
+                    PermissaoDoGrupoDeUsuariosDAO.getInstance().persist(permissaoDoGrupoDeUsuarios);
+                }
             }
 
             JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
