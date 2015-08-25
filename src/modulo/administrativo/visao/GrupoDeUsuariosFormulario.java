@@ -18,7 +18,10 @@ import modulo.administrativo.dao.GrupoDeUsuariosDAO;
 import modulo.administrativo.dao.PermissaoDoGrupoDeUsuariosDAO;
 import modulo.administrativo.negocio.GrupoDeUsuarios;
 import modulo.administrativo.negocio.PermissaoDoGrupoDeUsuarios;
+import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -73,8 +76,10 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
                 GrupoDeUsuarios grupoDeusuarios = new GrupoDeUsuarios();
                 grupoDeusuarios.setId(Integer.parseInt(id.getText()));
 
-                Criterion[] criterions = {Restrictions.eq("grupoDeUsuarios", grupoDeusuarios)};
-                permissoes = PermissaoDoGrupoDeUsuariosDAO.getInstance().findByCriteria(new PermissaoDoGrupoDeUsuarios(), criterions);
+                Conjunction conjunction = Restrictions.conjunction();  
+                conjunction.add(Restrictions.eq("grupoDeUsuarios", grupoDeusuarios));
+                
+                permissoes = PermissaoDoGrupoDeUsuariosDAO.getInstance().findByCriteria(new PermissaoDoGrupoDeUsuarios(), conjunction, Restrictions.disjunction());
             }            
             
             DefaultTableModel modelo = (DefaultTableModel) tabelaPermissoes.getModel();
@@ -353,7 +358,11 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
             }
 
             JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-            parent.atualizarGrid(grupoDeUsuarios.getId());
+            
+            List<Object> registro = new ArrayList();
+            registro.add(grupoDeUsuarios);
+            
+            parent.atualizarGrid(grupoDeUsuarios.getId(), registro);
             this.setVisible(false);
         }
     }//GEN-LAST:event_botaoSalvarActionPerformed

@@ -4,6 +4,7 @@
  */
 package modulo.administrativo.visao;
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -12,10 +13,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import modulo.administrativo.dao.GrupoDeUsuariosDAO;
-import modulo.administrativo.dao.PermissaoDoGrupoDeUsuariosDAO;
 import modulo.administrativo.negocio.GrupoDeUsuarios;
-import modulo.administrativo.negocio.PermissaoDoGrupoDeUsuarios;
-import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -42,7 +42,7 @@ public class GrupoDeUsuariosBusca extends javax.swing.JInternalFrame {
         botaoAtualizar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/atualizar.png")));
         botaoBuscar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/buscar.png")));
         
-        this.atualizarGrid(-1);
+        this.atualizarGrid(-1, new ArrayList());
         
         tabela.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent event) {
@@ -64,14 +64,18 @@ public class GrupoDeUsuariosBusca extends javax.swing.JInternalFrame {
      * 
      * @param selecionar 
      */
-    public final void atualizarGrid(int selecionar) {
-        try {
+    public final void atualizarGrid(int selecionar, List<Object> grupoDeUsuarios) {
+        try {           
             
-            List<Object> grupoDeUsuarios = GrupoDeUsuariosDAO.getInstance().findAll(new GrupoDeUsuarios());
+            if ( grupoDeUsuarios.isEmpty() )
+            {
+                grupoDeUsuarios = GrupoDeUsuariosDAO.getInstance().findAll(new GrupoDeUsuarios());
+            }
+            
             DefaultTableModel modelo = (DefaultTableModel) tabela.getModel();
             modelo.setNumRows(0);
             
-            for ( int i = 0; i < grupoDeUsuarios.size(); i ++ ) {
+            for ( int i = 0; i < grupoDeUsuarios.size(); i ++ ) {                
                 GrupoDeUsuarios gruposDeUsuarios = (GrupoDeUsuarios) grupoDeUsuarios.get(i);
                 modelo.addRow(new Object[]{gruposDeUsuarios.getId(), gruposDeUsuarios.getNome()});
                 
@@ -196,6 +200,12 @@ public class GrupoDeUsuariosBusca extends javax.swing.JInternalFrame {
             }
         });
 
+        campoBusca.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                campoBuscaKeyPressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -219,7 +229,7 @@ public class GrupoDeUsuariosBusca extends javax.swing.JInternalFrame {
                     .addComponent(campoBusca)
                     .addComponent(botaoBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -249,7 +259,7 @@ public class GrupoDeUsuariosBusca extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_botaoNovoActionPerformed
 
     private void botaoAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAtualizarActionPerformed
-        this.atualizarGrid(-1);
+        this.atualizarGrid(-1, new ArrayList());
     }//GEN-LAST:event_botaoAtualizarActionPerformed
 
     private void botaoEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEditarActionPerformed
@@ -278,34 +288,31 @@ public class GrupoDeUsuariosBusca extends javax.swing.JInternalFrame {
             grupoDeUsuarios.setId(grupodeusuarios_id);
             GrupoDeUsuariosDAO.getInstance().remove(grupoDeUsuarios);
             
-            this.atualizarGrid(-1);
+            this.atualizarGrid(-1, new ArrayList());
             JOptionPane.showMessageDialog(this, "Registro excluído com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_botaoExcluirActionPerformed
 
     private void botaoBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBuscarActionPerformed
         String busca = campoBusca.getText();
-
+        
+        Disjunction or = Restrictions.disjunction();
+        or.add(Restrictions.ilike("nome", busca, MatchMode.ANYWHERE));
+        
         try {
-
-            // Se for um valor inteiro, busca em todos os campos
-            int buscaInteiro = Integer.parseInt(busca);
-            Criterion[] criterios = {
-                Restrictions.or(Restrictions.eq("id", buscaInteiro), Restrictions.ilike("nome", "%" + busca + "%"))
-            };
-
-            List<Object> grupos = GrupoDeUsuariosDAO.getInstance().findByCriteria(new GrupoDeUsuarios(), criterios);
-
+            or.add(Restrictions.eq("id", Integer.parseInt(busca)));
         } catch (Exception err) {
-
-            // Caso contrário, buscará somente em campos de tipo texto.
-            Criterion[] criterios = {
-                Restrictions.ilike("nome", "%" + busca + "%")
-            };
-
-            List<Object> grupos = GrupoDeUsuariosDAO.getInstance().findByCriteria(new GrupoDeUsuarios(), criterios);
         }
+        
+        List<Object> grupos = GrupoDeUsuariosDAO.getInstance().findByCriteria(new GrupoDeUsuarios(), Restrictions.conjunction(), or);
+        this.atualizarGrid(-1, grupos);
     }//GEN-LAST:event_botaoBuscarActionPerformed
+
+    private void campoBuscaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoBuscaKeyPressed
+        if ( evt.getKeyCode() == KeyEvent.VK_ENTER ) {
+            this.botaoBuscarActionPerformed(null);
+        }
+    }//GEN-LAST:event_campoBuscaKeyPressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoAtualizar;

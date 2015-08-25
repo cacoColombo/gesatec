@@ -8,11 +8,10 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import modulo.administrativo.negocio.GrupoDeUsuarios;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Conjunction;
+import org.hibernate.criterion.Disjunction;
 
 public class DAO {
 
@@ -50,13 +49,20 @@ public class DAO {
         return entityManager.createQuery("FROM " + object.getClass().getName()).getResultList();
     }
     
-    public List<Object> findByCriteria(Object object, Criterion[] criterions) {
+    /**
+     * Conjunction, para conjuntos AND, ex.: WHERE id = ? AND nome = ?
+     * Disjunction, para conjuntos OR, ex.: WHERE id = ? OR nome = ?
+     * 
+     * @param object
+     * @param and
+     * @param or
+     * @return 
+     */
+    public List<Object> findByCriteria(Object object, Conjunction and, Disjunction or) {
         Session session = this.getEntityManager().unwrap(Session.class);
         Criteria criteria = session.createCriteria(object.getClass().getName());
-        
-        for (int c = 0; c < criterions.length; c ++) {
-            criteria.add(criterions[c]);
-        }
+        criteria.add(and);
+        criteria.add(or);
         
         return criteria.list();
     }
