@@ -23,56 +23,74 @@ public class Estado implements Serializable {
     @Column(unique = true, nullable = false)
     private int id;
     
-    @ManyToOne
-    @JoinColumn(name = "pais_id", referencedColumnName = "id", nullable = false)
-    private Pais pais;
-    
     @Column(unique = true, nullable = false)
     private String nome;
     
-    @Column
-    private int ibge_id;
+    @Column(unique = true, nullable = false)
+    private String sigla;
     
-    @Column(unique = true, nullable = false, length = 45)
-    private String uf;
+    @ManyToOne
+    @JoinColumn(name = "pais_id", referencedColumnName = "id", nullable = false)
+    private Pais pais;
 
+    /**
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * @param id the id to set
+     */
     public void setId(int id) {
         this.id = id;
     }
 
-    public Pais getPais() {
-        return pais;
-    }
-
-    public void setPais(Pais pais) {
-        this.pais = pais;
-    }
-
+    /**
+     * @return the nome
+     */
     public String getNome() {
         return nome;
     }
 
+    /**
+     * @param nome the nome to set
+     */
     public void setNome(String nome) {
         this.nome = nome;
     }
 
-    public int getIbge_id() {
-        return ibge_id;
+    /**
+     * @return the sigla
+     */
+    public String getSigla() {
+        return sigla;
     }
 
-    public void setIbge_id(int ibge_id) {
-        this.ibge_id = ibge_id;
+    /**
+     * @param sigla the sigla to set
+     */
+    public void setSigla(String sigla) {
+        this.sigla = sigla;
     }
 
-    public String getUf() {
-        return uf;
+    /**
+     * @return the pais
+     */
+    public Pais getPais() {
+        return pais;
     }
 
-    public void setUf(String uf) {
-        this.uf = uf;
+    /**
+     * @param pais the pais to set
+     */
+    public void setPais(Pais pais) {
+        this.pais = pais;
+    }
+    
+    @Override
+    public String toString(){
+        return this.nome;
     }
 }

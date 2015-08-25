@@ -9,9 +9,14 @@ import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
@@ -20,7 +25,9 @@ import javax.swing.text.MaskFormatter;
 import modulo.administrativo.negocio.Usuario;
 import modulo.cadastro.dao.AtendenteDAO;
 import modulo.administrativo.dao.UsuarioDAO;
+import modulo.cadastro.dao.EstadoDAO;
 import modulo.cadastro.negocio.Atendente;
+import modulo.cadastro.negocio.Estado;
 
 /**
  *
@@ -47,6 +54,19 @@ public class AtendenteFormulario extends javax.swing.JDialog {
         } catch (ParseException ex) {
             Logger.getLogger(AtendenteFormulario.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+//        ArrayList<Object> estados = new ArrayList<Object>();
+//        
+//        for(Object o : EstadoDAO.getInstance().findAll(new Estado())){
+//            Estado estado = (Estado) o;
+//            
+//            estados.add(estado.getNome());
+//        }
+        
+        
+        ComboBoxModel model = new DefaultComboBoxModel(EstadoDAO.getInstance().findAll(new Estado()).toArray());
+        estado.setModel(model);
+        
         cpf = new JFormattedTextField(msk);
         botaoSalvar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/salvar.png")));
         botaoCancelar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/cancelar.png")));
@@ -160,8 +180,6 @@ public class AtendenteFormulario extends javax.swing.JDialog {
         });
         toolbar.add(botaoCancelar);
 
-        labelsPainel.setBackground(java.awt.SystemColor.controlLtHighlight);
-
         jLabel1.setText("Nome:");
 
         jLabel2.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
@@ -175,7 +193,6 @@ public class AtendenteFormulario extends javax.swing.JDialog {
 
         jLabel4.setText("RG:");
 
-        sexoM.setBackground(java.awt.SystemColor.controlLtHighlight);
         sexoM.setSelected(true);
         sexoM.setText("Masculino");
         sexoM.addActionListener(new java.awt.event.ActionListener() {
@@ -184,7 +201,6 @@ public class AtendenteFormulario extends javax.swing.JDialog {
             }
         });
 
-        sexoF.setBackground(java.awt.SystemColor.controlLtHighlight);
         sexoF.setText("Feminino");
         sexoF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -350,11 +366,9 @@ public class AtendenteFormulario extends javax.swing.JDialog {
 
         jTabbedPane1.addTab("Dados pessoais", jPanel2);
 
-        jPanel3.setBackground(java.awt.SystemColor.controlLtHighlight);
-
         jLabel12.setText("País:");
 
-        pais.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        pais.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Brasil" }));
 
         jLabel13.setText("Estado:");
 
@@ -466,8 +480,6 @@ public class AtendenteFormulario extends javax.swing.JDialog {
 
         jTabbedPane1.addTab("Endereço", jPanel1);
 
-        jPanel5.setBackground(java.awt.SystemColor.controlLtHighlight);
-
         jLabel20.setText("E-mail:");
 
         jLabel22.setText("Telefone celular:");
@@ -538,7 +550,7 @@ public class AtendenteFormulario extends javax.swing.JDialog {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 592, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
