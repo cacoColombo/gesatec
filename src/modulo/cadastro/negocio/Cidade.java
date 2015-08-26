@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -29,7 +30,7 @@ public class Cidade implements Serializable {
     @Column
     private int ibge_id;
     
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "estado_id", referencedColumnName = "id", nullable = false)
     private Estado estado_id;
     
@@ -72,14 +73,14 @@ public class Cidade implements Serializable {
     /**
      * @return the estado_id
      */
-    public Estado getEstado() {
+    public Estado getEstadoId() {
         return estado_id;
     }
 
     /**
      * @param estado_id the estado_id to set
      */
-    public void setEstado(Estado estado_id) {
+    public void setEstadoId(Estado estado_id) {
         this.estado_id = estado_id;
     }
 

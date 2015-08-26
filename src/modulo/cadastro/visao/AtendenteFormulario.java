@@ -25,9 +25,14 @@ import javax.swing.text.MaskFormatter;
 import modulo.administrativo.negocio.Usuario;
 import modulo.cadastro.dao.AtendenteDAO;
 import modulo.administrativo.dao.UsuarioDAO;
+import modulo.cadastro.dao.CidadeDAO;
 import modulo.cadastro.dao.EstadoDAO;
 import modulo.cadastro.negocio.Atendente;
+import modulo.cadastro.negocio.Cidade;
 import modulo.cadastro.negocio.Estado;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -55,16 +60,14 @@ public class AtendenteFormulario extends javax.swing.JDialog {
             Logger.getLogger(AtendenteFormulario.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-//        ArrayList<Object> estados = new ArrayList<Object>();
-//        
-//        for(Object o : EstadoDAO.getInstance().findAll(new Estado())){
-//            Estado estado = (Estado) o;
-//            
-//            estados.add(estado.getNome());
-//        }
+        ArrayList<Object> estados = new ArrayList<>();
+        Estado empty = new Estado();
+        empty.setId(0);
+        empty.setNome("Selecione um estado...");
+        estados.add(empty);
+        estados.addAll(EstadoDAO.getInstance().findAll(new Estado()));
+        ComboBoxModel model = new DefaultComboBoxModel(estados.toArray());
         
-        
-        ComboBoxModel model = new DefaultComboBoxModel(EstadoDAO.getInstance().findAll(new Estado()).toArray());
         estado.setModel(model);
         
         cpf = new JFormattedTextField(msk);
@@ -75,13 +78,40 @@ public class AtendenteFormulario extends javax.swing.JDialog {
     }
     
     public void popularCampos(Atendente atendente) {
-        id.setText(Integer.toString(atendente.getId()));
+        id.setText("" + atendente.getId());
         nome.setText(atendente.getNome());
-        telefoneCelular.setText(atendente.getTelefoneCelular());
+        rg.setText(atendente.getRg());
+        cpf.setText(atendente.getCpf());
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        if(atendente.getDataNascimento() != null)
+            dataNascimento.setText(format.format(atendente.getDataNascimento()));
+        if(atendente.getSexo() == 'M'){
+            sexoMActionPerformed(null);
+        }
+        else{
+            sexoFActionPerformed(null);
+        }
+        observacao.setText(atendente.getObservacao());
         
-        usuario_id.setText(Integer.toString(atendente.getUsuario().getId()));
+        usuario_id.setText("" + atendente.getUsuario().getId());
         login.setText(atendente.getUsuario().getLogin());
-        senha.setText(atendente.getUsuario().getSenha());
+        senha.setText("");
+        cep.setText(atendente.getCep());
+        if(atendente.getCidade() != null){
+            estado.setSelectedItem(atendente.getCidade().getEstadoId());
+            estadoActionPerformed(null);
+            cidade.setSelectedItem(atendente.getCidade());
+        }
+        bairro.setText(atendente.getBairro());
+        endereco.setText(atendente.getEndereco());
+        numero.setText(atendente.getNumero() + "");
+        complemento.setText(atendente.getComplemento());
+        email.setText(atendente.getEmail());
+        telefoneCelular.setText(atendente.getTelefoneCelular());
+        telefoneResidencial.setText(atendente.getTelefoneResidencial());
+        telefoneTrabalho.setText(atendente.getTelefoneTrabalho());
+        
+        login.setEditable(false);
     }
 
     /**
@@ -372,11 +402,21 @@ public class AtendenteFormulario extends javax.swing.JDialog {
 
         jLabel13.setText("Estado:");
 
-        estado.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        estado.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Selecione estado..." }));
+        estado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                estadoActionPerformed(evt);
+            }
+        });
 
         jLabel14.setText("Cidade:");
 
-        cidade.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cidade.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-" }));
+        cidade.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cidadeActionPerformed(evt);
+            }
+        });
 
         jLabel15.setText("Cep:");
 
@@ -583,7 +623,7 @@ public class AtendenteFormulario extends javax.swing.JDialog {
 
     private boolean verificaCampos(){
         boolean ok = true;
-        message = "Os seguintes erros ocorreram\n\n";
+        message = "Os seguintes erros ocorreram:\n\n";
         if(nome.getText().isEmpty()){
             ok = false;
             message += "* Campo Nome deve ser preenchido\n";
@@ -592,14 +632,16 @@ public class AtendenteFormulario extends javax.swing.JDialog {
             ok = false;
             message += "* Campo Login deve ser preenchido\n";
         }
-        if(senha.getText().isEmpty()){
-            ok = false;
-            message += "* Campo Senha deve ser preenchido\n";
-        }
-        else {
-            if(senha.getText().length() < 8){
+        if(id.getText().isEmpty()){
+            if(senha.getText().isEmpty()){
                 ok = false;
-                message += "* Campo Senha deve ter no mínimo 8 caracteres\n";
+                message += "* Campo Senha deve ser preenchido\n";
+            }
+            else {
+                if(senha.getText().length() < 8){
+                    ok = false;
+                    message += "* Campo Senha deve ter no mínimo 8 caracteres\n";
+                }
             }
         }
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
@@ -634,45 +676,9 @@ public class AtendenteFormulario extends javax.swing.JDialog {
         return ok;
     }
     
-    public void populaCampos(int id) {
-        System.out.println("Hmmmm?");
-        Atendente atendente =  new Atendente();
-        atendente =  (Atendente) AtendenteDAO.getInstance().getById(atendente, id);
-        
-        Usuario usuario =  new Usuario();
-        usuario = (Usuario)UsuarioDAO.getInstance().getById(usuario, (int) id);
-        
-        System.out.println("nOME ->" + atendente.getNome());
-        
-        this.id.setText("" + atendente.getId());
-        nome.setText(atendente.getNome());
-        rg.setText(atendente.getRg());
-        cpf.setText(atendente.getCpf());
-        DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-        if(atendente.getDataNascimento() != null)
-            dataNascimento.setText(format.format(atendente.getDataNascimento()));
-        if(atendente.getSexo() == 'M'){
-            sexoMActionPerformed(null);
-        }
-        else{
-            sexoFActionPerformed(null);
-        }
-        observacao.setText(atendente.getObservacao());
-        login.setText(usuario.getLogin());
-        senha.setText(usuario.getSenha());
-        cep.setText(atendente.getCep());
-        bairro.setText(atendente.getBairro());
-        endereco.setText(atendente.getEndereco());
-        numero.setText(atendente.getNumero() + "");
-        complemento.setText(atendente.getComplemento());
-        email.setText(atendente.getEmail());
-        telefoneCelular.setText(atendente.getTelefoneCelular());
-        telefoneResidencial.setText(atendente.getTelefoneResidencial());
-        telefoneTrabalho.setText(atendente.getTelefoneTrabalho());
-    }
-    
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
-        if ( this.verificaCampos() )
+        System.out.println("Saving data....");
+        if (verificaCampos())
         {
             Atendente atendente = new Atendente();
             
@@ -687,19 +693,18 @@ public class AtendenteFormulario extends javax.swing.JDialog {
             
             try {
                 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");  
-                java.sql.Date data = new java.sql.Date(format.parse(dataNascimento.getText()).getTime()); 
-                
-                System.out.println(data);
-                
-                
+                java.sql.Date data = new java.sql.Date(format.parse(dataNascimento.getText()).getTime());
                 atendente.setDataNascimento(data);
             } catch (ParseException ex) {
-                Logger.getLogger(AtendenteFormulario.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             atendente.setSexo(sexoM.isSelected()?'M':'F');
             atendente.setObservacao(observacao.getText());
-            atendente.setCidade(null);
+            try{
+                atendente.setCidade((Cidade) cidade.getSelectedItem());
+            }
+            catch(ClassCastException e){
+            }
             atendente.setCep(cep.getText());
             atendente.setBairro(bairro.getText());
             atendente.setEndereco(endereco.getText());
@@ -732,7 +737,11 @@ public class AtendenteFormulario extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
             parent.atualizarGrid(atendente.getId());
             this.setVisible(false);
-        }        
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, message, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_botaoSalvarActionPerformed
 
     private void cpfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cpfActionPerformed
@@ -752,6 +761,21 @@ public class AtendenteFormulario extends javax.swing.JDialog {
         sexoM.setSelected(true);
         sexoM.setEnabled(false);
     }//GEN-LAST:event_sexoMActionPerformed
+
+    private void cidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cidadeActionPerformed
+        
+    }//GEN-LAST:event_cidadeActionPerformed
+
+    private void estadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estadoActionPerformed
+        int busca = ((Estado)estado.getSelectedItem()).getId();
+        
+        Disjunction or = Restrictions.disjunction();
+        or.add(Restrictions.eq("estado_id.id", busca));
+        
+        List<Object> grupos = CidadeDAO.getInstance().findByCriteria(new Cidade(), Restrictions.conjunction(), or);
+        ComboBoxModel model = new DefaultComboBoxModel(grupos.toArray());
+        cidade.setModel(model);
+    }//GEN-LAST:event_estadoActionPerformed
 
     /**
      * @param args the command line arguments

@@ -85,7 +85,7 @@ public class AtendenteBusca extends javax.swing.JInternalFrame {
                     atendente.getTelefoneCelular()!=null?atendente.getTelefoneCelular():"",
                     atendente.getTelefoneResidencial()!=null?atendente.getTelefoneResidencial():"",
                     atendente.getTelefoneTrabalho()!=null?atendente.getTelefoneTrabalho():"",
-                    "",
+                    atendente.getCidade()!=null?atendente.getCidade().getNome():"",
                     atendente.getCep()!=null?atendente.getCep():"",
                     atendente.getBairro()!=null?atendente.getBairro():"",
                     atendente.getEndereco()!=null?atendente.getEndereco():"",
