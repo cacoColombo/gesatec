@@ -21,7 +21,7 @@ public class Usuario implements Serializable {
     @Column(unique = true, nullable = false)
     private int id;
     
-    @Column(nullable = false, length = 45)
+    @Column(nullable = false, length = 45, unique = true)
     private String login;
     
     @Column(nullable = false, length = 45)
