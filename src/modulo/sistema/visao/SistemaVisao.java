@@ -13,6 +13,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuBar;
 import modulo.administrativo.visao.GrupoDeUsuariosBusca;
+import modulo.administrativo.visao.UsuarioBusca;
 import modulo.cadastro.visao.AtendenteBusca;
 import modulo.cadastro.visao.CertificacaoBusca;
 import modulo.cadastro.visao.ClienteBusca;
@@ -114,6 +115,10 @@ public class SistemaVisao extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jPanel1.setBackground(java.awt.SystemColor.controlLtHighlight);
+
+        panelConteudo.setBackground(java.awt.SystemColor.controlLtHighlight);
+
         javax.swing.GroupLayout panelConteudoLayout = new javax.swing.GroupLayout(panelConteudo);
         panelConteudo.setLayout(panelConteudoLayout);
         panelConteudoLayout.setHorizontalGroup(
@@ -122,7 +127,7 @@ public class SistemaVisao extends javax.swing.JFrame {
         );
         panelConteudoLayout.setVerticalGroup(
             panelConteudoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 533, Short.MAX_VALUE)
+            .addGap(0, 537, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -240,6 +245,11 @@ public class SistemaVisao extends javax.swing.JFrame {
 
         submenuUsuario.setText("Usuário");
         submenuUsuario.setName("usuario"); // NOI18N
+        submenuUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submenuUsuarioActionPerformed(evt);
+            }
+        });
         menuAdministrativo.add(submenuUsuario);
 
         menu.add(menuAdministrativo);
@@ -312,6 +322,11 @@ public class SistemaVisao extends javax.swing.JFrame {
         ClienteBusca clienteBusca = new ClienteBusca(); 
         this.carregarFrame(clienteBusca);
     }//GEN-LAST:event_submenuClienteActionPerformed
+
+    private void submenuUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submenuUsuarioActionPerformed
+        UsuarioBusca usuarioBusca = new UsuarioBusca(); 
+        this.carregarFrame(usuarioBusca);
+    }//GEN-LAST:event_submenuUsuarioActionPerformed
 
     /**
      * @param args the command line arguments
