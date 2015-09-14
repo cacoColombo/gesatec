@@ -17,6 +17,8 @@ import modulo.administrativo.visao.UsuarioBusca;
 import modulo.cadastro.visao.AtendenteBusca;
 import modulo.cadastro.visao.CertificacaoBusca;
 import modulo.cadastro.visao.ClienteBusca;
+import modulo.cadastro.visao.EspecializacaoBusca;
+import modulo.cadastro.visao.ProfissionalBusca;
 
 /**
  *
@@ -115,10 +117,6 @@ public class SistemaVisao extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(java.awt.SystemColor.controlLtHighlight);
-
-        panelConteudo.setBackground(java.awt.SystemColor.controlLtHighlight);
-
         javax.swing.GroupLayout panelConteudoLayout = new javax.swing.GroupLayout(panelConteudo);
         panelConteudo.setLayout(panelConteudoLayout);
         panelConteudoLayout.setHorizontalGroup(
@@ -175,10 +173,20 @@ public class SistemaVisao extends javax.swing.JFrame {
 
         submenuEspecializacao.setText("Especialização");
         submenuEspecializacao.setName("especializacao"); // NOI18N
+        submenuEspecializacao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submenuEspecializacaoActionPerformed(evt);
+            }
+        });
         submenuCadastros.add(submenuEspecializacao);
 
         submenuProfissional.setText("Profissional");
         submenuProfissional.setName("profissional"); // NOI18N
+        submenuProfissional.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submenuProfissionalActionPerformed(evt);
+            }
+        });
         submenuCadastros.add(submenuProfissional);
 
         menu.add(submenuCadastros);
@@ -327,6 +335,16 @@ public class SistemaVisao extends javax.swing.JFrame {
         UsuarioBusca usuarioBusca = new UsuarioBusca(); 
         this.carregarFrame(usuarioBusca);
     }//GEN-LAST:event_submenuUsuarioActionPerformed
+
+    private void submenuEspecializacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submenuEspecializacaoActionPerformed
+        EspecializacaoBusca especializacaoBusca =  new EspecializacaoBusca();
+        this.carregarFrame(especializacaoBusca);
+    }//GEN-LAST:event_submenuEspecializacaoActionPerformed
+
+    private void submenuProfissionalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submenuProfissionalActionPerformed
+        ProfissionalBusca profissionalBusca = new ProfissionalBusca();
+        this.carregarFrame(profissionalBusca);
+    }//GEN-LAST:event_submenuProfissionalActionPerformed
 
     /**
      * @param args the command line arguments

@@ -4,6 +4,7 @@
  */
 package modulo.cadastro.visao;
 
+import java.util.ArrayList;
 import java.util.List;
 import modulo.sistema.visao.*;
 import javax.swing.ImageIcon;
@@ -191,7 +192,11 @@ public class CertificacaoFormulario extends javax.swing.JDialog {
             CertificacaoDAO.getInstance().merge(certificacao);
 
             JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-            parent.atualizarGrid(certificacao.getId());
+            
+            List<Object> registro = new ArrayList();
+            registro.add(certificacao);
+            
+            parent.atualizarGrid(certificacao.getId(), registro);
             this.setVisible(false);
         }
     }//GEN-LAST:event_botaoSalvarActionPerformed

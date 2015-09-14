@@ -17,6 +17,6 @@ import modulo.sistema.dao.DAO;
  *
  * @author Caco
  */
-public class AtendenteDAO extends DAO {}
+public class ProfissionalDAO extends DAO {}
 
 

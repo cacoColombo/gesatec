@@ -4,6 +4,8 @@
  */
 package modulo.cadastro.visao;
 
+import java.util.ArrayList;
+import java.util.List;
 import modulo.sistema.visao.*;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -187,7 +189,11 @@ public class EspecializacaoFormulario extends javax.swing.JDialog {
             EspecializacaoDAO.getInstance().merge(especializacao);
 
             JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-            parent.atualizarGrid(especializacao.getId());
+            
+            List<Object> registro = new ArrayList();
+            registro.add(especializacao);
+            
+            parent.atualizarGrid(especializacao.getId(), registro);
             this.setVisible(false);
         }
     }//GEN-LAST:event_botaoSalvarActionPerformed
