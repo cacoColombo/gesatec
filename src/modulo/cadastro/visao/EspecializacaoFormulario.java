@@ -186,7 +186,12 @@ public class EspecializacaoFormulario extends javax.swing.JDialog {
                 especializacao.setId(Integer.parseInt(id.getText()));
             }
             especializacao.setNome(nome.getText());
-            EspecializacaoDAO.getInstance().merge(especializacao);
+            
+            if ( id.getText().length() > 0 ) {
+                EspecializacaoDAO.getInstance().merge(especializacao);
+            } else {
+                EspecializacaoDAO.getInstance().persist(especializacao);
+            }
 
             JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
             

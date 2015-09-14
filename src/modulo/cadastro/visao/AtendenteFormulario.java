@@ -733,7 +733,11 @@ public class AtendenteFormulario extends javax.swing.JDialog {
             usuario.setSenha(senha.getText());
             atendente.setUsuario(usuario);
             
-            AtendenteDAO.getInstance().merge(atendente);
+            if ( id.getText().length() > 0 ) {
+                AtendenteDAO.getInstance().merge(atendente);
+            } else {
+                AtendenteDAO.getInstance().persist(atendente);
+            }
             
             JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
             

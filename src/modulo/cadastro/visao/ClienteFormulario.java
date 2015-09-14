@@ -730,7 +730,11 @@ public class ClienteFormulario extends javax.swing.JDialog {
             usuario.setSenha(senha.getText());
             cliente.setUsuario(usuario);
             
-            ClienteDAO.getInstance().merge(cliente);
+            if ( id.getText().length() > 0 ) {
+                ClienteDAO.getInstance().merge(cliente);
+            } else {
+                ClienteDAO.getInstance().persist(cliente);
+            }
             
             JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
             

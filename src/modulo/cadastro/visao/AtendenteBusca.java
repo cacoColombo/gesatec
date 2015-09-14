@@ -123,6 +123,9 @@ public class AtendenteBusca extends Busca {
             
             for ( int i = 0; i < registros.size(); i ++ ) {                
                 Atendente atendente = (Atendente) registros.get(i);
+                
+                System.out.println(atendente.getId());
+                
                 modelo.addRow(new Object[]{
                     atendente.getId(), 
                     atendente.getNome()!=null?atendente.getNome():"",
