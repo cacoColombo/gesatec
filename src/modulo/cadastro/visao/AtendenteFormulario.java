@@ -25,6 +25,7 @@ import javax.swing.text.MaskFormatter;
 import modulo.administrativo.negocio.Usuario;
 import modulo.cadastro.dao.AtendenteDAO;
 import modulo.administrativo.dao.UsuarioDAO;
+import static modulo.administrativo.visao.UsuarioFormulario.parent;
 import modulo.cadastro.dao.CidadeDAO;
 import modulo.cadastro.dao.EstadoDAO;
 import modulo.cadastro.negocio.Atendente;
@@ -735,7 +736,11 @@ public class AtendenteFormulario extends javax.swing.JDialog {
             AtendenteDAO.getInstance().merge(atendente);
             
             JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-            parent.atualizarGrid(atendente.getId());
+            
+            List<Object> registro = new ArrayList();
+            registro.add(atendente);
+            
+            parent.atualizarGrid(atendente.getId(), registro);
             this.setVisible(false);
         }
         else

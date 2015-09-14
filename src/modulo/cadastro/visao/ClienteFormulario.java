@@ -9,18 +9,28 @@ import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
 import modulo.administrativo.negocio.Usuario;
+import modulo.cadastro.dao.CidadeDAO;
 import modulo.cadastro.dao.ClienteDAO;
-import modulo.administrativo.dao.UsuarioDAO;
+import modulo.cadastro.dao.EstadoDAO;
 import modulo.cadastro.negocio.Cliente;
+import modulo.cadastro.negocio.Cidade;
+import modulo.cadastro.negocio.Estado;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -47,6 +57,17 @@ public class ClienteFormulario extends javax.swing.JDialog {
         } catch (ParseException ex) {
             Logger.getLogger(ClienteFormulario.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        ArrayList<Object> estados = new ArrayList<>();
+        Estado empty = new Estado();
+        empty.setId(0);
+        empty.setNome("Selecione um estado...");
+        estados.add(empty);
+        estados.addAll(EstadoDAO.getInstance().findAll(new Estado()));
+        ComboBoxModel model = new DefaultComboBoxModel(estados.toArray());
+        
+        estado.setModel(model);
+        
         cpf = new JFormattedTextField(msk);
         botaoSalvar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/salvar.png")));
         botaoCancelar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/cancelar.png")));
@@ -54,14 +75,41 @@ public class ClienteFormulario extends javax.swing.JDialog {
         sexoM.setEnabled(false);
     }
     
-    public void popularCampos(Cliente atendente) {
-        id.setText(Integer.toString(atendente.getId()));
-        nome.setText(atendente.getNome());
-        telefoneCelular.setText(atendente.getTelefoneCelular());
+    public void popularCampos(Cliente cliente) {
+        id.setText("" + cliente.getId());
+        nome.setText(cliente.getNome());
+        rg.setText(cliente.getRg());
+        cpf.setText(cliente.getCpf());
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        if(cliente.getDataNascimento() != null)
+            dataNascimento.setText(format.format(cliente.getDataNascimento()));
+        if(cliente.getSexo() == 'M'){
+            sexoMActionPerformed(null);
+        }
+        else{
+            sexoFActionPerformed(null);
+        }
+        observacao.setText(cliente.getObservacao());
         
-        usuario_id.setText(Integer.toString(atendente.getUsuario().getId()));
-        login.setText(atendente.getUsuario().getLogin());
-        senha.setText(atendente.getUsuario().getSenha());
+        usuario_id.setText("" + cliente.getUsuario().getId());
+        login.setText(cliente.getUsuario().getLogin());
+        senha.setText("");
+        cep.setText(cliente.getCep());
+        if(cliente.getCidade() != null){
+            estado.setSelectedItem(cliente.getCidade().getEstadoId());
+            estadoActionPerformed(null);
+            cidade.setSelectedItem(cliente.getCidade());
+        }
+        bairro.setText(cliente.getBairro());
+        endereco.setText(cliente.getEndereco());
+        numero.setText(cliente.getNumero() + "");
+        complemento.setText(cliente.getComplemento());
+        email.setText(cliente.getEmail());
+        telefoneCelular.setText(cliente.getTelefoneCelular());
+        telefoneResidencial.setText(cliente.getTelefoneResidencial());
+        telefoneTrabalho.setText(cliente.getTelefoneTrabalho());
+        
+        login.setEditable(false);
     }
 
     /**
@@ -348,15 +396,25 @@ public class ClienteFormulario extends javax.swing.JDialog {
 
         jLabel12.setText("País:");
 
-        pais.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        pais.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Brasil" }));
 
         jLabel13.setText("Estado:");
 
-        estado.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        estado.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Selecione estado..." }));
+        estado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                estadoActionPerformed(evt);
+            }
+        });
 
         jLabel14.setText("Cidade:");
 
-        cidade.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cidade.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-" }));
+        cidade.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cidadeActionPerformed(evt);
+            }
+        });
 
         jLabel15.setText("Cep:");
 
@@ -563,7 +621,7 @@ public class ClienteFormulario extends javax.swing.JDialog {
 
     private boolean verificaCampos(){
         boolean ok = true;
-        message = "Os seguintes erros ocorreram\n\n";
+        message = "Os seguintes erros ocorreram:\n\n";
         if(nome.getText().isEmpty()){
             ok = false;
             message += "* Campo Nome deve ser preenchido\n";
@@ -572,14 +630,16 @@ public class ClienteFormulario extends javax.swing.JDialog {
             ok = false;
             message += "* Campo Login deve ser preenchido\n";
         }
-        if(senha.getText().isEmpty()){
-            ok = false;
-            message += "* Campo Senha deve ser preenchido\n";
-        }
-        else {
-            if(senha.getText().length() < 8){
+        if(id.getText().isEmpty()){
+            if(senha.getText().isEmpty()){
                 ok = false;
-                message += "* Campo Senha deve ter no mínimo 8 caracteres\n";
+                message += "* Campo Senha deve ser preenchido\n";
+            }
+            else {
+                if(senha.getText().length() < 8){
+                    ok = false;
+                    message += "* Campo Senha deve ter no mínimo 8 caracteres\n";
+                }
             }
         }
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
@@ -614,42 +674,9 @@ public class ClienteFormulario extends javax.swing.JDialog {
         return ok;
     }
     
-    public void populaCampos(int id) {
-        Cliente cliente =  new Cliente();
-        cliente =  (Cliente) ClienteDAO.getInstance().getById(cliente, id);
-        
-        Usuario usuario =  new Usuario();
-        usuario = (Usuario)UsuarioDAO.getInstance().getById(usuario, (int) id);
-        
-        this.id.setText("" + cliente.getId());
-        nome.setText(cliente.getNome());
-        rg.setText(cliente.getRg());
-        cpf.setText(cliente.getCpf());
-        DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-        if(cliente.getDataNascimento() != null)
-            dataNascimento.setText(format.format(cliente.getDataNascimento()));
-        if(cliente.getSexo() == 'M'){
-            sexoMActionPerformed(null);
-        }
-        else{
-            sexoFActionPerformed(null);
-        }
-        observacao.setText(cliente.getObservacao());
-        login.setText(usuario.getLogin());
-        senha.setText(usuario.getSenha());
-        cep.setText(cliente.getCep());
-        bairro.setText(cliente.getBairro());
-        endereco.setText(cliente.getEndereco());
-        numero.setText(cliente.getNumero() + "");
-        complemento.setText(cliente.getComplemento());
-        email.setText(cliente.getEmail());
-        telefoneCelular.setText(cliente.getTelefoneCelular());
-        telefoneResidencial.setText(cliente.getTelefoneResidencial());
-        telefoneTrabalho.setText(cliente.getTelefoneTrabalho());
-    }
-    
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
-        if ( this.verificaCampos() )
+        System.out.println("Saving data....");
+        if (verificaCampos())
         {
             Cliente cliente = new Cliente();
             
@@ -664,19 +691,18 @@ public class ClienteFormulario extends javax.swing.JDialog {
             
             try {
                 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");  
-                java.sql.Date data = new java.sql.Date(format.parse(dataNascimento.getText()).getTime()); 
-                
-                System.out.println(data);
-                
-                
+                java.sql.Date data = new java.sql.Date(format.parse(dataNascimento.getText()).getTime());
                 cliente.setDataNascimento(data);
             } catch (ParseException ex) {
-                Logger.getLogger(ClienteFormulario.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             cliente.setSexo(sexoM.isSelected()?'M':'F');
             cliente.setObservacao(observacao.getText());
-            cliente.setCidade(null);
+            try{
+                cliente.setCidade((Cidade) cidade.getSelectedItem());
+            }
+            catch(ClassCastException e){
+            }
             cliente.setCep(cep.getText());
             cliente.setBairro(bairro.getText());
             cliente.setEndereco(endereco.getText());
@@ -707,9 +733,17 @@ public class ClienteFormulario extends javax.swing.JDialog {
             ClienteDAO.getInstance().merge(cliente);
             
             JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-            parent.atualizarGrid(cliente.getId());
+            
+            List<Object> registro = new ArrayList();
+            registro.add(cliente);
+            
+            parent.atualizarGrid(cliente.getId(), registro);
             this.setVisible(false);
-        }        
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, message, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_botaoSalvarActionPerformed
 
     private void cpfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cpfActionPerformed
@@ -729,6 +763,21 @@ public class ClienteFormulario extends javax.swing.JDialog {
         sexoM.setSelected(true);
         sexoM.setEnabled(false);
     }//GEN-LAST:event_sexoMActionPerformed
+
+    private void cidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cidadeActionPerformed
+        
+    }//GEN-LAST:event_cidadeActionPerformed
+
+    private void estadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estadoActionPerformed
+        int busca = ((Estado)estado.getSelectedItem()).getId();
+        
+        Disjunction or = Restrictions.disjunction();
+        or.add(Restrictions.eq("estado_id.id", busca));
+        
+        List<Object> grupos = CidadeDAO.getInstance().findByCriteria(new Cidade(), Restrictions.conjunction(), or);
+        ComboBoxModel model = new DefaultComboBoxModel(grupos.toArray());
+        cidade.setModel(model);
+    }//GEN-LAST:event_estadoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -755,6 +804,7 @@ public class ClienteFormulario extends javax.swing.JDialog {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ClienteFormulario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
