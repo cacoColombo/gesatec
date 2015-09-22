@@ -72,4 +72,9 @@ public class DiaDaSemana implements Serializable {
     public void setAbreviatura(String abreviatura) {
         this.abreviatura = abreviatura;
     }
+    
+     @Override
+    public String toString(){
+        return this.nome;
+    }
 }

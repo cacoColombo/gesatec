@@ -39,6 +39,9 @@ public class PadraoDeAtendimento implements Serializable {
     
     @Column(nullable = false)
     private Time horarioFimExpediente;
+    
+    @Column(nullable = false)
+    private int tempoMedioConsulta;
 
     public int getId() {
         return id;
@@ -78,5 +81,13 @@ public class PadraoDeAtendimento implements Serializable {
 
     public void setHorarioFimExpediente(Time horarioFimExpediente) {
         this.horarioFimExpediente = horarioFimExpediente;
+    }
+
+    public int getTempoMedioConsulta() {
+        return tempoMedioConsulta;
+    }
+    
+    public void setTempoMedioConsulta(int tempoMedioConsulta) {
+        this.tempoMedioConsulta = tempoMedioConsulta;
     }
 }

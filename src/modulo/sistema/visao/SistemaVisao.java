@@ -19,6 +19,7 @@ import modulo.cadastro.visao.CertificacaoBusca;
 import modulo.cadastro.visao.ClienteBusca;
 import modulo.cadastro.visao.EspecializacaoBusca;
 import modulo.cadastro.visao.ProfissionalBusca;
+import modulo.configuracao.visao.PadraoDeAtendimentoBusca;
 
 /**
  *
@@ -218,6 +219,11 @@ public class SistemaVisao extends javax.swing.JFrame {
 
         submenuPadraoDeAtendimento.setText("Padrão de atendimento");
         submenuPadraoDeAtendimento.setName("padraodeatendimento"); // NOI18N
+        submenuPadraoDeAtendimento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submenuPadraoDeAtendimentoActionPerformed(evt);
+            }
+        });
         menuConfiguracoes.add(submenuPadraoDeAtendimento);
 
         submenuTipoDeAtendimento.setText("Tipo de atendimento");
@@ -345,6 +351,11 @@ public class SistemaVisao extends javax.swing.JFrame {
         ProfissionalBusca profissionalBusca = new ProfissionalBusca();
         this.carregarFrame(profissionalBusca);
     }//GEN-LAST:event_submenuProfissionalActionPerformed
+
+    private void submenuPadraoDeAtendimentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submenuPadraoDeAtendimentoActionPerformed
+        PadraoDeAtendimentoBusca padraoDeAtendimentoBusca = new PadraoDeAtendimentoBusca();
+        this.carregarFrame(padraoDeAtendimentoBusca);
+    }//GEN-LAST:event_submenuPadraoDeAtendimentoActionPerformed
 
     /**
      * @param args the command line arguments

@@ -4,7 +4,6 @@
  */
 package modulo.cadastro.visao;
 
-import modulo.sistema.visao.*;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -12,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
@@ -24,15 +22,12 @@ import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
 import modulo.administrativo.negocio.Usuario;
 import modulo.cadastro.dao.ProfissionalDAO;
-import modulo.administrativo.dao.UsuarioDAO;
-import static modulo.administrativo.visao.UsuarioFormulario.parent;
 import modulo.cadastro.dao.CidadeDAO;
 import modulo.cadastro.dao.EstadoDAO;
 import modulo.cadastro.negocio.Profissional;
 import modulo.cadastro.negocio.Cidade;
 import modulo.cadastro.negocio.Estado;
 import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 
 /**

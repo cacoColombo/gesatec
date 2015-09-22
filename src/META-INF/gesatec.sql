@@ -5,6 +5,14 @@ INSERT INTO tipoderepeticao (id, nome) VALUES (1, 'Diária'), (2, 'Semanal'), (3
 INSERT INTO statusagenda (id, nome) VALUES (1, 'AGENDADO'), (2, 'CONFIRMADO'), (3, 'EM ANDAMENTO'), (4, 'FINALIZADO');
 INSERT INTO campo (id, nome, tipo) VALUES (1, 'Texto simples', 'TextField'), (2, 'Texto longo', 'TextArea');
 
+INSERT INTO diadasemana (abreviatura, nome) VALUES ('DOM', 'Domingo');
+INSERT INTO diadasemana (abreviatura, nome) VALUES ('SEG', 'Segunda');
+INSERT INTO diadasemana (abreviatura, nome) VALUES ('TER', 'Terça');
+INSERT INTO diadasemana (abreviatura, nome) VALUES ('QUA', 'Quarta');
+INSERT INTO diadasemana (abreviatura, nome) VALUES ('QUI', 'Quinta');
+INSERT INTO diadasemana (abreviatura, nome) VALUES ('SEX', 'Sexta');
+INSERT INTO diadasemana (abreviatura, nome) VALUES ('SAB', 'Sábado');
+
 INSERT INTO pais (nome, sigla, nacionalidade) VALUES ('Brasil', 'BR', 'brasileiro');	
 	
 INSERT INTO estado (nome, sigla, pais_id) VALUES ('Acre', 'AC', 1);
