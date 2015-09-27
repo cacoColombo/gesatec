@@ -4,6 +4,7 @@
  */
 package modulo.sistema.visao;
 
+import java.awt.event.KeyEvent;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.util.List;
@@ -109,6 +110,11 @@ public class LoginVisao extends javax.swing.JFrame {
                 loginActionPerformed(evt);
             }
         });
+        login.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                loginKeyPressed(evt);
+            }
+        });
 
         loginLabel1.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         loginLabel1.setForeground(new java.awt.Color(128, 128, 128));
@@ -120,6 +126,11 @@ public class LoginVisao extends javax.swing.JFrame {
         jLabel5.setText("*");
 
         senha.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        senha.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                senhaKeyPressed(evt);
+            }
+        });
 
         botaoLogar.setBackground(new java.awt.Color(0, 139, 139));
         botaoLogar.setText("Logar");
@@ -239,6 +250,18 @@ public class LoginVisao extends javax.swing.JFrame {
     private void botaoSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSairActionPerformed
         System.exit(0);
     }//GEN-LAST:event_botaoSairActionPerformed
+
+    private void senhaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_senhaKeyPressed
+        if ( evt.getKeyCode() == KeyEvent.VK_ENTER ) {
+            this.botaoLogarActionPerformed(null);
+        }
+    }//GEN-LAST:event_senhaKeyPressed
+
+    private void loginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_loginKeyPressed
+        if ( evt.getKeyCode() == KeyEvent.VK_ENTER ) {
+            this.botaoLogarActionPerformed(null);
+        }
+    }//GEN-LAST:event_loginKeyPressed
 
     /**
      * @param args the command line arguments
