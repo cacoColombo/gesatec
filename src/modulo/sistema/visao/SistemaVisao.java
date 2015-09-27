@@ -12,6 +12,7 @@ import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import modulo.administrativo.visao.GrupoDeUsuariosBusca;
 import modulo.administrativo.visao.UsuarioBusca;
 import modulo.cadastro.visao.AtendenteBusca;
@@ -311,17 +312,15 @@ public class SistemaVisao extends javax.swing.JFrame {
     }//GEN-LAST:event_submenuAtendenteActionPerformed
 
     private void submenuLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submenuLogoutActionPerformed
-        /**
         int reply = JOptionPane.showConfirmDialog(null, "Você têm certeza que deseja sair do sistema?", "Atenção!", JOptionPane.YES_NO_OPTION);
             
         if ( reply == JOptionPane.YES_OPTION ) 
         {
-            Login login = new Login();
+            LoginVisao login = new LoginVisao();
             login.setLocationRelativeTo(null);
             login.setVisible(true);
             this.setVisible(false);
         }
-        */
     }//GEN-LAST:event_submenuLogoutActionPerformed
 
     private void submenuCertificacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submenuCertificacaoActionPerformed

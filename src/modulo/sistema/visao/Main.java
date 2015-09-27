@@ -30,10 +30,6 @@ public class Main {
             // Cria as tabelas na base de dados, com base nas entidades de negócio.
             EntityManagerFactory factory = Persistence.createEntityManagerFactory("crudHibernatePU");
             factory.close();            
-            
-            //Inicia o sistema.
-            SistemaVisao sistema = new SistemaVisao();
-            sistema.setExtendedState(sistema.MAXIMIZED_BOTH);
 
             /**
             // Seta ícone principal da aplicação.
@@ -42,7 +38,10 @@ public class Main {
             application.setDockIconImage(image);
             */
             
-            sistema.setVisible(true);
+            //Inicia o sistema.
+            LoginVisao login = new LoginVisao();
+            login.setLocationRelativeTo(null);
+            login.setVisible(true);
             
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
