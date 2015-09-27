@@ -26,9 +26,8 @@ public class LoginVisao extends javax.swing.JFrame {
      */
     public LoginVisao() {
         initComponents();
-
+        this.setIconImage(new ImageIcon(this.getClass().getResource("/publico/imagens/logo.png")).getImage());
         logoImage.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/logo_gesatec.png")));
-
         botaoLogar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/logar.png")));
         botaoSair.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/remover.png")));
     }

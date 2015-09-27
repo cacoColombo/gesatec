@@ -29,14 +29,7 @@ public class Main {
             
             // Cria as tabelas na base de dados, com base nas entidades de negócio.
             EntityManagerFactory factory = Persistence.createEntityManagerFactory("crudHibernatePU");
-            factory.close();            
-
-            /**
-            // Seta ícone principal da aplicação.
-            Application application = Application.getApplication();
-            Image image = new ImageIcon(sistema.getClass().getResource("/publico/imagens/favicon.ico")).getImage();
-            application.setDockIconImage(image);
-            */
+            factory.close();
             
             //Inicia o sistema.
             LoginVisao login = new LoginVisao();
