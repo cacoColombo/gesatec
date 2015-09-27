@@ -22,7 +22,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
-import modulo.administrativo.negocio.Usuario;
+import modulo.administrativo.negocio.UserAccount;
 import modulo.cadastro.dao.AtendenteDAO;
 import modulo.administrativo.dao.UsuarioDAO;
 import static modulo.administrativo.visao.UsuarioFormulario.parent;
@@ -721,16 +721,17 @@ public class AtendenteFormulario extends javax.swing.JDialog {
             atendente.setTelefoneTrabalho(telefoneTrabalho.getText());
             atendente.setEmail(email.getText());
             
-            Usuario usuario = new Usuario();
+            UserAccount usuario = new UserAccount();
             
             if ( usuario_id.getText().length() > 0 )
             {
                 usuario.setId(Integer.parseInt(usuario_id.getText()));
             }
             
-            usuario.setAtivo(true);
+            usuario.setActive(true);
             usuario.setLogin(login.getText());
-            usuario.setSenha(senha.getText());
+            usuario.setPassword(senha.getText());
+            usuario.setName(nome.getText());
             atendente.setUsuario(usuario);
             
             if ( id.getText().length() > 0 ) {

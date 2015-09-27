@@ -11,7 +11,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modulo.administrativo.dao.UsuarioDAO;
-import modulo.administrativo.negocio.Usuario;
+import modulo.administrativo.negocio.UserAccount;
 import modulo.sistema.visao.Busca;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
@@ -72,19 +72,19 @@ public class UsuarioBusca extends Busca {
             
             if ( registros.isEmpty() )
             {
-                registros = UsuarioDAO.getInstance().findAll(new Usuario());
+                registros = UsuarioDAO.getInstance().findAll(new UserAccount());
             }
             
             DefaultTableModel modelo = (DefaultTableModel) getTabela().getModel();
             modelo.setNumRows(0);
             
             for ( int i = 0; i < registros.size(); i ++ ) {                
-                Usuario usuario = (Usuario) registros.get(i);
+                UserAccount usuario = (UserAccount) registros.get(i);
                 modelo.addRow(new Object[]{
                     usuario.getId(), 
                     "",//usuario.getNome(),
                     usuario.getLogin(),
-                    usuario.isAtivo() ? "SIM" : "NÃO"
+                    usuario.isActive() ? "SIM" : "NÃO"
                 });
                 
                 // Verifica item a selecionar
@@ -118,10 +118,10 @@ public class UsuarioBusca extends Busca {
         Object registro = getTabela().getValueAt(selected, 0);
         int usuario_id = Integer.parseInt(registro.toString());
         
-        Object usuario = UsuarioDAO.getInstance().getById(new Usuario(), usuario_id);
+        Object usuario = UsuarioDAO.getInstance().getById(new UserAccount(), usuario_id);
         
         form = new UsuarioFormulario(this, true);
-        form.popularCampos((Usuario) usuario);
+        form.popularCampos((UserAccount) usuario);
         form.setLocationRelativeTo(null);
         form.setVisible(true);
     }
@@ -136,7 +136,7 @@ public class UsuarioBusca extends Busca {
             
         if ( escolha == JOptionPane.YES_OPTION ) 
         {
-            Usuario usuario = new Usuario();
+            UserAccount usuario = new UserAccount();
             usuario.setId(grupodeusuarios_id);
             UsuarioDAO.getInstance().remove(usuario);
             
@@ -158,7 +158,7 @@ public class UsuarioBusca extends Busca {
         } catch (Exception err) {
         }
         
-        List<Object> grupos = UsuarioDAO.getInstance().findByCriteria(new Usuario(), Restrictions.conjunction(), or);
+        List<Object> grupos = UsuarioDAO.getInstance().findByCriteria(new UserAccount(), Restrictions.conjunction(), or);
         this.atualizarGrid(-1, grupos);
     }
 }

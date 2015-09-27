@@ -11,7 +11,7 @@ import modulo.sistema.visao.*;
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
-import modulo.administrativo.negocio.Usuario;
+import modulo.administrativo.negocio.UserAccount;
 import modulo.cadastro.dao.CertificacaoDAO;
 import modulo.cadastro.negocio.Certificacao;
 
@@ -40,7 +40,7 @@ public class UsuarioFormulario extends javax.swing.JDialog {
         botaoRemoverGrupo.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/remover.png")));
     }
     
-    public void popularCampos(Usuario usuario) {
+    public void popularCampos(UserAccount usuario) {
         id.setText(Integer.toString(usuario.getId()));
         login.setText(usuario.getLogin());
     }

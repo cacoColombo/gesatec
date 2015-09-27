@@ -18,7 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import modulo.administrativo.negocio.Usuario;
+import modulo.administrativo.negocio.UserAccount;
 
 @Entity
 @Table(name = "pessoa")
@@ -80,7 +80,7 @@ public class Pessoa implements Serializable {
     protected String complemento;
     
     @OneToOne(cascade = {CascadeType.ALL})
-    protected Usuario usuario;
+    protected UserAccount usuario;
     
     @Column(length = 45, columnDefinition = "VARCHAR(45) DEFAULT 'pessoa'")
     protected String tipo = "pessoa";
@@ -221,11 +221,11 @@ public class Pessoa implements Serializable {
         this.complemento = complemento;
     }
 
-    public Usuario getUsuario() {
+    public UserAccount getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(Usuario usuario) {
+    public void setUsuario(UserAccount usuario) {
         this.usuario = usuario;
     }
 

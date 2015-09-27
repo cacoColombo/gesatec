@@ -25,7 +25,7 @@ public class GrupoDoUsuario implements Serializable {
     
     @ManyToOne
     @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = false)
-    private Usuario usuario;
+    private UserAccount usuario;
     
     @ManyToOne
     @JoinColumn(name = "grupodeusuarios_id", referencedColumnName = "id", nullable = false)
@@ -39,11 +39,11 @@ public class GrupoDoUsuario implements Serializable {
         this.id = id;
     }
 
-    public Usuario getUsuario() {
+    public UserAccount getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(Usuario usuario) {
+    public void setUsuario(UserAccount usuario) {
         this.usuario = usuario;
     }
 

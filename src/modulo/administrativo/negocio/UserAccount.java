@@ -13,8 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "usuario")
-public class Usuario implements Serializable {
+@Table(name = "useraccount")
+public class UserAccount implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +25,13 @@ public class Usuario implements Serializable {
     private String login;
     
     @Column(nullable = false, length = 45)
-    private String senha;
+    private String password;
+    
+    @Column(nullable=false)
+    private String name;
     
     @Column(columnDefinition = "BOOLEAN DEFAULT TRUE", nullable = false)
-    private boolean ativo;
+    private boolean active;
 
     public int getId() {
         return id;
@@ -46,19 +49,27 @@ public class Usuario implements Serializable {
         this.login = login;
     }
 
-    public String getSenha() {
-        return senha;
+    public String getPassword() {
+        return password;
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public boolean isAtivo() {
-        return ativo;
+    public String getName() {
+        return name;
     }
 
-    public void setAtivo(boolean ativo) {
-        this.ativo = ativo;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
