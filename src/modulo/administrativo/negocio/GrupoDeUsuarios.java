@@ -54,4 +54,9 @@ public class GrupoDeUsuarios implements Serializable {
     public void setPermissaoDoGrupoDeUsuarios(List<PermissaoDoGrupoDeUsuarios> permissaoDoGrupoDeUsuarios) {
         this.permissaoDoGrupoDeUsuarios = permissaoDoGrupoDeUsuarios;
     }
+    
+    @Override
+    public String toString() {
+        return this.nome;
+    }
 }

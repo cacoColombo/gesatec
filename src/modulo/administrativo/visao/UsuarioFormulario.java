@@ -11,6 +11,10 @@ import modulo.sistema.visao.*;
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import modulo.administrativo.dao.GrupoDeUsuariosDAO;
+import modulo.administrativo.dao.UsuarioDAO;
+import modulo.administrativo.negocio.GrupoDeUsuarios;
 import modulo.administrativo.negocio.UserAccount;
 import modulo.cadastro.dao.CertificacaoDAO;
 import modulo.cadastro.negocio.Certificacao;
@@ -42,13 +46,28 @@ public class UsuarioFormulario extends javax.swing.JDialog {
     
     public void popularCampos(UserAccount usuario) {
         id.setText(Integer.toString(usuario.getId()));
+        name.setText(usuario.getName());
         login.setText(usuario.getLogin());
+        
+        if ( !Integer.toString(usuario.getId()).isEmpty() )
+        {
+            name.setEnabled(false);
+            login.setEnabled(false);
+        }
+        
+        grupoDeUsuarios.addItem("");
+        List<Object> grupos = GrupoDeUsuariosDAO.getInstance().findAll(new GrupoDeUsuarios());
+        
+        for ( int i = 0; i < grupos.size(); i ++ ) {                
+            GrupoDeUsuarios grupo = (GrupoDeUsuarios) grupos.get(i);
+            grupoDeUsuarios.addItem(grupo);
+        }        
     }
     
     public boolean validarCampos() {
         try {
-            if ( !(login.getText().length() > 0) ) {
-                throw new Exception("O campo 'Nome' é requerido!");
+            if( !senha.getText().isEmpty() && senha.getText().length() < 8 ){
+                throw new Exception("O campo 'Senha' deve ter no mínimo 8 caracteres");
             }
             
             return true;
@@ -74,15 +93,14 @@ public class UsuarioFormulario extends javax.swing.JDialog {
         jPanel2 = new javax.swing.JPanel();
         labelsPainel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        login = new javax.swing.JTextField();
+        name = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         id = new javax.swing.JLabel();
         senha = new javax.swing.JPasswordField();
-        jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         pessoa = new javax.swing.JLabel();
+        login = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
@@ -124,19 +142,11 @@ public class UsuarioFormulario extends javax.swing.JDialog {
 
         jLabel3.setText("Login:");
 
-        jLabel4.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
-        jLabel4.setForeground(java.awt.Color.red);
-        jLabel4.setText("*");
-
         id.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
-
-        jLabel5.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
-        jLabel5.setForeground(java.awt.Color.red);
-        jLabel5.setText("*");
 
         jLabel6.setText("Senha:");
 
-        jLabel8.setText("Pessoa:");
+        jLabel8.setText("Nome:");
 
         pessoa.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
 
@@ -148,27 +158,27 @@ public class UsuarioFormulario extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(labelsPainelLayout.createSequentialGroup()
-                        .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(labelsPainelLayout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(id, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, labelsPainelLayout.createSequentialGroup()
-                                .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(senha)
-                                    .addComponent(login, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5)))
-                    .addGroup(labelsPainelLayout.createSequentialGroup()
                         .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(pessoa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addComponent(pessoa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(labelsPainelLayout.createSequentialGroup()
+                        .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(labelsPainelLayout.createSequentialGroup()
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(id, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, labelsPainelLayout.createSequentialGroup()
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(login, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)))
+                            .addGroup(labelsPainelLayout.createSequentialGroup()
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(senha, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         labelsPainelLayout.setVerticalGroup(
@@ -178,28 +188,28 @@ public class UsuarioFormulario extends javax.swing.JDialog {
                 .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(id, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8)
-                    .addComponent(pessoa, javax.swing.GroupLayout.DEFAULT_SIZE, 19, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel8)
+                        .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pessoa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel4)
                     .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(senha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5)
                     .addComponent(jLabel6))
-                .addContainerGap(399, Short.MAX_VALUE))
+                .addGap(391, 391, 391))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(labelsPainel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(labelsPainel, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,17 +222,26 @@ public class UsuarioFormulario extends javax.swing.JDialog {
 
         jLabel7.setText("Grupo de usuários:");
 
+        grupoDeUsuarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                grupoDeUsuariosActionPerformed(evt);
+            }
+        });
+
         botaoAdicionarGrupo.setText("Adicionar grupo");
+        botaoAdicionarGrupo.setEnabled(false);
+        botaoAdicionarGrupo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoAdicionarGrupoActionPerformed(evt);
+            }
+        });
 
         botaoRemoverGrupo.setText("Remover grupo");
         botaoRemoverGrupo.setEnabled(false);
 
         tabelaDeGrupos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+
             },
             new String [] {
                 "ID", "Nome"
@@ -323,23 +342,46 @@ public class UsuarioFormulario extends javax.swing.JDialog {
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
         if ( this.validarCampos() )
         {
-            Certificacao certificacao = new Certificacao();
-            if ( id.getText().length() > 0 )
+            UserAccount userAccount = new UserAccount();
+            userAccount.setId(Integer.parseInt(id.getText()));
+            userAccount.setName(name.getText());
+            userAccount.setLogin(login.getText());
+            
+            if ( !senha.getText().isEmpty() )
             {
-                certificacao.setId(Integer.parseInt(id.getText()));
+                userAccount.setPassword(senha.getText());
             }
-            certificacao.setNome(login.getText());
-            CertificacaoDAO.getInstance().merge(certificacao);
+            
+            UsuarioDAO.getInstance().merge(userAccount);
 
             JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
             
             List<Object> registro = new ArrayList();
-            registro.add(certificacao);
+            registro.add(userAccount);
             
-            parent.atualizarGrid(certificacao.getId(), registro);
+            parent.atualizarGrid(userAccount.getId(), registro);
             this.setVisible(false);
         }
     }//GEN-LAST:event_botaoSalvarActionPerformed
+
+    private void grupoDeUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_grupoDeUsuariosActionPerformed
+        if ( grupoDeUsuarios.getSelectedItem().toString().isEmpty() ) {
+            botaoAdicionarGrupo.setEnabled(false);
+        } else {
+            botaoAdicionarGrupo.setEnabled(true);
+        }
+    }//GEN-LAST:event_grupoDeUsuariosActionPerformed
+
+    private void botaoAdicionarGrupoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAdicionarGrupoActionPerformed
+        GrupoDeUsuarios grupo = (GrupoDeUsuarios) grupoDeUsuarios.getSelectedItem();
+        DefaultTableModel modelo = (DefaultTableModel) tabelaDeGrupos.getModel();
+        modelo.addRow(new Object[]{grupo.getId(), grupo.getNome()});
+        
+        // Remover do combo, o item adicionado.
+        
+        
+        
+    }//GEN-LAST:event_botaoAdicionarGrupoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -391,8 +433,6 @@ public class UsuarioFormulario extends javax.swing.JDialog {
     private javax.swing.JLabel id;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -403,6 +443,7 @@ public class UsuarioFormulario extends javax.swing.JDialog {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel labelsPainel;
     private javax.swing.JTextField login;
+    private javax.swing.JTextField name;
     private javax.swing.JLabel pessoa;
     private javax.swing.JPasswordField senha;
     private javax.swing.JTable tabelaDeGrupos;

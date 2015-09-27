@@ -30,6 +30,7 @@ public class UsuarioBusca extends Busca {
      */
     public UsuarioBusca() {
         super.initComponents();
+        this.getBotaoNovo().setEnabled(false);
     }
     
     @Override
@@ -41,7 +42,7 @@ public class UsuarioBusca extends Busca {
             // Colunas
             new String [] {
                 "ID", 
-                "Pessoa", 
+                "Nome", 
                 "Login", 
                 "Ativo"
             }
@@ -82,7 +83,7 @@ public class UsuarioBusca extends Busca {
                 UserAccount usuario = (UserAccount) registros.get(i);
                 modelo.addRow(new Object[]{
                     usuario.getId(), 
-                    "",//usuario.getNome(),
+                    usuario.getName(),
                     usuario.getLogin(),
                     usuario.isActive() ? "SIM" : "NÃO"
                 });

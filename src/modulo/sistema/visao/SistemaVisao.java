@@ -57,6 +57,8 @@ public class SistemaVisao extends javax.swing.JFrame {
         submenuLogout.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/logout.png")));
         submenuGrupoDeUsuarios.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/grupoDeUsuarios.png")));
         submenuUsuario.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/usuario.png")));
+        
+        this.setIconImage(new ImageIcon(this.getClass().getResource("/publico/imagens/favicon.ico")).getImage());
     }
     
     public JMenuBar getMenu() {
