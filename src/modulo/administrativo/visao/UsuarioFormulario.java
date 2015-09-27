@@ -7,17 +7,19 @@ package modulo.administrativo.visao;
 import java.util.ArrayList;
 import modulo.cadastro.visao.*;
 import java.util.List;
-import modulo.sistema.visao.*;
 import javax.swing.ImageIcon;
-import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import modulo.administrativo.dao.GrupoDeUsuariosDAO;
+import modulo.administrativo.dao.GrupoDoUsuarioDAO;
 import modulo.administrativo.dao.UsuarioDAO;
 import modulo.administrativo.negocio.GrupoDeUsuarios;
+import modulo.administrativo.negocio.GrupoDoUsuario;
 import modulo.administrativo.negocio.UserAccount;
-import modulo.cadastro.dao.CertificacaoDAO;
-import modulo.cadastro.negocio.Certificacao;
+import org.hibernate.criterion.Conjunction;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -26,6 +28,8 @@ import modulo.cadastro.negocio.Certificacao;
 public class UsuarioFormulario extends javax.swing.JDialog {
 
     public static UsuarioBusca parent;
+    public UserAccount useraccount;
+    List<Object> gruposDoUsuario;
     
     /**
      * Creates new form AtendenteFormulario
@@ -42,12 +46,25 @@ public class UsuarioFormulario extends javax.swing.JDialog {
         botaoCancelar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/cancelar.png")));
         botaoAdicionarGrupo.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/add.png")));
         botaoRemoverGrupo.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/remover.png")));
+        
+        tabelaDeGrupos.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+            public void valueChanged(ListSelectionEvent event) {
+                if(tabelaDeGrupos.getSelectedRow() > tabelaDeGrupos.getRowCount()){
+                    botaoRemoverGrupo.setEnabled(false);
+                }
+                else{
+                    botaoRemoverGrupo.setEnabled(true);
+                }
+            }
+        });
     }
     
     public void popularCampos(UserAccount usuario) {
+        this.useraccount = usuario;
         id.setText(Integer.toString(usuario.getId()));
         name.setText(usuario.getName());
         login.setText(usuario.getLogin());
+        ativo.setSelected(usuario.isActive());
         
         if ( !Integer.toString(usuario.getId()).isEmpty() )
         {
@@ -55,13 +72,41 @@ public class UsuarioFormulario extends javax.swing.JDialog {
             login.setEnabled(false);
         }
         
+        // Obter grupos de usuários, do usuário.
+        Conjunction and = Restrictions.conjunction();
+        and.add(Restrictions.eq("usuario", usuario));
+        gruposDoUsuario = GrupoDoUsuarioDAO.getInstance().findByCriteria(new GrupoDoUsuario(), and, Restrictions.disjunction());
+        
+        // Popula combobox de grupos de usuários, somente com os grupos não pertencentes ao usuário editado.
         grupoDeUsuarios.addItem("");
         List<Object> grupos = GrupoDeUsuariosDAO.getInstance().findAll(new GrupoDeUsuarios());
         
         for ( int i = 0; i < grupos.size(); i ++ ) {                
             GrupoDeUsuarios grupo = (GrupoDeUsuarios) grupos.get(i);
-            grupoDeUsuarios.addItem(grupo);
-        }        
+            boolean possuiGrupo = false;
+            
+            for ( int g = 0; g < gruposDoUsuario.size(); g++ ) {
+                // Somente adicionar, se não existir no list de gruposDoUsuario
+                GrupoDoUsuario grupoDoUsuario = (GrupoDoUsuario) gruposDoUsuario.get(g);
+                
+                if ( grupoDoUsuario.getGrupoDeUsuarios().getId() == grupo.getId() )
+                {
+                    possuiGrupo = true;
+                    break;
+                }
+            }
+            
+            if ( !possuiGrupo ) {
+                grupoDeUsuarios.addItem(grupo);
+            }
+        } 
+        
+        // Popula tabela de grupos de usuários, com os grupos pertencentes ao usuário editado.
+        DefaultTableModel modelo = (DefaultTableModel) tabelaDeGrupos.getModel();
+        for ( int g = 0; g < gruposDoUsuario.size(); g++ ) {
+            GrupoDoUsuario grupoDoUsuario = (GrupoDoUsuario) gruposDoUsuario.get(g);
+            modelo.addRow(new Object[]{grupoDoUsuario.getGrupoDeUsuarios().getId(), grupoDoUsuario.getGrupoDeUsuarios().getNome()});
+        }
     }
     
     public boolean validarCampos() {
@@ -101,6 +146,8 @@ public class UsuarioFormulario extends javax.swing.JDialog {
         jLabel8 = new javax.swing.JLabel();
         pessoa = new javax.swing.JLabel();
         login = new javax.swing.JTextField();
+        ativo = new javax.swing.JCheckBox();
+        jLabel9 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
@@ -150,6 +197,8 @@ public class UsuarioFormulario extends javax.swing.JDialog {
 
         pessoa.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
 
+        jLabel9.setText("Ativo:");
+
         javax.swing.GroupLayout labelsPainelLayout = new javax.swing.GroupLayout(labelsPainel);
         labelsPainel.setLayout(labelsPainelLayout);
         labelsPainelLayout.setHorizontalGroup(
@@ -175,9 +224,13 @@ public class UsuarioFormulario extends javax.swing.JDialog {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(login, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)))
                             .addGroup(labelsPainelLayout.createSequentialGroup()
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(senha, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(ativo)
+                                    .addComponent(senha, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -202,7 +255,11 @@ public class UsuarioFormulario extends javax.swing.JDialog {
                 .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(senha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
-                .addGap(391, 391, 391))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ativo)
+                    .addComponent(jLabel9))
+                .addGap(355, 355, 355))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -238,6 +295,11 @@ public class UsuarioFormulario extends javax.swing.JDialog {
 
         botaoRemoverGrupo.setText("Remover grupo");
         botaoRemoverGrupo.setEnabled(false);
+        botaoRemoverGrupo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoRemoverGrupoActionPerformed(evt);
+            }
+        });
 
         tabelaDeGrupos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -342,24 +404,41 @@ public class UsuarioFormulario extends javax.swing.JDialog {
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
         if ( this.validarCampos() )
         {
-            UserAccount userAccount = new UserAccount();
-            userAccount.setId(Integer.parseInt(id.getText()));
-            userAccount.setName(name.getText());
-            userAccount.setLogin(login.getText());
-            
+            useraccount.setName(name.getText());
+            useraccount.setLogin(login.getText());
+            useraccount.setActive(ativo.isSelected());
             if ( !senha.getText().isEmpty() )
             {
-                userAccount.setPassword(senha.getText());
+                useraccount.setPassword(senha.getText());
+            }
+            UsuarioDAO.getInstance().merge(useraccount);
+            
+            // Deletar todos os grupos do usuário, e registrá-los novamente.
+            for ( int g = 0; g < gruposDoUsuario.size(); g++ ) {
+                // Somente adicionar, se não existir no list de gruposDoUsuario
+                GrupoDoUsuario grupoDoUsuario = (GrupoDoUsuario) gruposDoUsuario.get(g);
+                GrupoDoUsuarioDAO.getInstance().remove(grupoDoUsuario);
             }
             
-            UsuarioDAO.getInstance().merge(userAccount);
-
+            DefaultTableModel modelo = (DefaultTableModel) tabelaDeGrupos.getModel();
+            for ( int i = 0; i < modelo.getRowCount(); i++ )
+            {
+                GrupoDeUsuarios grupo = new GrupoDeUsuarios();
+                grupo.setId((int)modelo.getValueAt(i, 0));
+                
+                GrupoDoUsuario grupoDoUsuario = new GrupoDoUsuario();
+                grupoDoUsuario.setUsuario(useraccount);
+                grupoDoUsuario.setGrupoDeUsuarios(grupo);
+                
+                GrupoDoUsuarioDAO.getInstance().merge(grupoDoUsuario);
+            }
+            
             JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
             
             List<Object> registro = new ArrayList();
-            registro.add(userAccount);
+            registro.add(useraccount);
             
-            parent.atualizarGrid(userAccount.getId(), registro);
+            parent.atualizarGrid(useraccount.getId(), registro);
             this.setVisible(false);
         }
     }//GEN-LAST:event_botaoSalvarActionPerformed
@@ -376,12 +455,21 @@ public class UsuarioFormulario extends javax.swing.JDialog {
         GrupoDeUsuarios grupo = (GrupoDeUsuarios) grupoDeUsuarios.getSelectedItem();
         DefaultTableModel modelo = (DefaultTableModel) tabelaDeGrupos.getModel();
         modelo.addRow(new Object[]{grupo.getId(), grupo.getNome()});
-        
-        // Remover do combo, o item adicionado.
-        
-        
-        
+        grupoDeUsuarios.removeItem(grupo);
+        grupoDeUsuarios.setSelectedItem("");
     }//GEN-LAST:event_botaoAdicionarGrupoActionPerformed
+
+    private void botaoRemoverGrupoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoRemoverGrupoActionPerformed
+        int selected = tabelaDeGrupos.getSelectedRow();
+        Object registro = tabelaDeGrupos.getValueAt(selected, 0);
+        int grupo_id = Integer.parseInt(registro.toString());
+        
+        Object grupo = GrupoDeUsuariosDAO.getInstance().getById(new GrupoDeUsuarios(), grupo_id);
+        DefaultTableModel modelo = (DefaultTableModel) tabelaDeGrupos.getModel();
+        modelo.removeRow(selected);
+        grupoDeUsuarios.addItem(grupo);
+        botaoRemoverGrupo.setEnabled(false);
+    }//GEN-LAST:event_botaoRemoverGrupoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -425,6 +513,7 @@ public class UsuarioFormulario extends javax.swing.JDialog {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox ativo;
     private javax.swing.JButton botaoAdicionarGrupo;
     private javax.swing.JButton botaoCancelar;
     private javax.swing.JButton botaoRemoverGrupo;
@@ -436,6 +525,7 @@ public class UsuarioFormulario extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

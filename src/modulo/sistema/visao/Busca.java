@@ -24,11 +24,30 @@ import javax.swing.table.DefaultTableModel;
  */
 public abstract class Busca extends javax.swing.JInternalFrame {
     
+    private boolean forcarDesabilitarBotaoExcluir = false;
+    private boolean forcarDesabilitarBotaoEditar = false;
+    
     /**
      * Creates new form ModeloBusca
      */
     public Busca() {
         initComponents();
+    }
+
+    public boolean isForcarDesabilitarBotaoExcluir() {
+        return forcarDesabilitarBotaoExcluir;
+    }
+
+    public void setForcarDesabilitarBotaoExcluir(boolean forcarDesabilitarBotaoExcluir) {
+        this.forcarDesabilitarBotaoExcluir = forcarDesabilitarBotaoExcluir;
+    }
+
+    public boolean isForcarDesabilitarBotaoEditar() {
+        return forcarDesabilitarBotaoEditar;
+    }
+
+    public void setForcarDesabilitarBotaoEditar(boolean forcarDesabilitarBotaoEditar) {
+        this.forcarDesabilitarBotaoEditar = forcarDesabilitarBotaoEditar;
     }
 
     public JButton getBotaoAtualizar() {
@@ -150,8 +169,8 @@ public abstract class Busca extends javax.swing.JInternalFrame {
                     botaoExcluir.setEnabled(false);
                 }
                 else{
-                    botaoExcluir.setEnabled(true);
-                    botaoEditar.setEnabled(true);
+                    botaoExcluir.setEnabled(!forcarDesabilitarBotaoExcluir);
+                    botaoEditar.setEnabled(!forcarDesabilitarBotaoEditar);
                 }
             }
         });

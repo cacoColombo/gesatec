@@ -30,7 +30,10 @@ public class UsuarioBusca extends Busca {
      */
     public UsuarioBusca() {
         super.initComponents();
+        
         this.getBotaoNovo().setEnabled(false);
+        this.getBotaoExcluir().setEnabled(false);
+        this.setForcarDesabilitarBotaoExcluir(true);
     }
     
     @Override
@@ -152,14 +155,14 @@ public class UsuarioBusca extends Busca {
         
         Disjunction or = Restrictions.disjunction();
         or.add(Restrictions.ilike("login", busca, MatchMode.ANYWHERE));
-        //or.add(Restrictions.ilike("ativo", busca, MatchMode.ANYWHERE));
+        or.add(Restrictions.ilike("name", busca, MatchMode.ANYWHERE));
         
         try {
             or.add(Restrictions.eq("id", Integer.parseInt(busca)));
         } catch (Exception err) {
         }
         
-        List<Object> grupos = UsuarioDAO.getInstance().findByCriteria(new UserAccount(), Restrictions.conjunction(), or);
-        this.atualizarGrid(-1, grupos);
+        List<Object> usuarios = UsuarioDAO.getInstance().findByCriteria(new UserAccount(), Restrictions.conjunction(), or);
+        this.atualizarGrid(-1, usuarios);
     }
 }
