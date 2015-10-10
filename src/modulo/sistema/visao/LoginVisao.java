@@ -5,12 +5,12 @@
 package modulo.sistema.visao;
 
 import java.awt.event.KeyEvent;
-import java.nio.charset.Charset;
-import java.security.MessageDigest;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import modulo.administrativo.dao.GrupoDoUsuarioDAO;
 import modulo.administrativo.dao.UsuarioDAO;
+import modulo.administrativo.negocio.GrupoDoUsuario;
 import modulo.administrativo.negocio.UserAccount;
 import modulo.sistema.negocio.UsuarioLogado;
 import org.hibernate.criterion.Conjunction;
@@ -232,8 +232,15 @@ public class LoginVisao extends javax.swing.JFrame {
 
             if ( findUsuario.size() > 0 )
             {
+                // Seta o usuário autenticado para o objeto usuariologado.
                 UserAccount userAccount = (UserAccount) findUsuario.get(0);
                 UsuarioLogado.getInstance().setaUsuarioLogado(userAccount);
+                
+                // Obter todos os grupos do usuário, e seta para o objeto usuariologado.
+                Conjunction find = Restrictions.conjunction();
+                find.add(Restrictions.eq("usuario", userAccount));
+                List<Object> gruposDoUsuario = GrupoDoUsuarioDAO.getInstance().findByCriteria(new GrupoDoUsuario(), find, Restrictions.disjunction());
+                UsuarioLogado.getInstance().setGruposDoUsuarioLogado(gruposDoUsuario);                
                 
                 SistemaVisao sistema = new SistemaVisao();
                 sistema.setExtendedState(sistema.MAXIMIZED_BOTH);

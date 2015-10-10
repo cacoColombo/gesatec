@@ -4,15 +4,25 @@
  */
 package modulo.sistema.visao;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.beans.PropertyVetoException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import modulo.administrativo.dao.GrupoDeUsuariosDAO;
+import modulo.administrativo.dao.PermissaoDoGrupoDeUsuariosDAO;
+import modulo.administrativo.negocio.GrupoDeUsuarios;
+import modulo.administrativo.negocio.GrupoDoUsuario;
+import modulo.administrativo.negocio.PermissaoDoGrupoDeUsuarios;
+import modulo.administrativo.negocio.UserAccount;
 import modulo.administrativo.visao.GrupoDeUsuariosBusca;
 import modulo.administrativo.visao.UsuarioBusca;
 import modulo.cadastro.visao.AtendenteBusca;
@@ -21,6 +31,9 @@ import modulo.cadastro.visao.ClienteBusca;
 import modulo.cadastro.visao.EspecializacaoBusca;
 import modulo.cadastro.visao.ProfissionalBusca;
 import modulo.configuracao.visao.PadraoDeAtendimentoBusca;
+import modulo.sistema.negocio.UsuarioLogado;
+import org.hibernate.criterion.Conjunction;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -39,26 +52,113 @@ public class SistemaVisao extends javax.swing.JFrame {
         this.setIconImage(new ImageIcon(this.getClass().getResource("/publico/imagens/logo.png")).getImage());
         
         submenuCadastros.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/cadastros.png")));
+        submenuCadastros.setEnabled(false);
         submenuAtendente.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/atendente.png")));
+        submenuAtendente.setEnabled(false);
         submenuCertificacao.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/certificacao.png")));
+        submenuCertificacao.setEnabled(false);
         submenuCliente.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/cliente.png")));
+        submenuCliente.setEnabled(false);
         submenuEspecializacao.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/especializacao.png")));
+        submenuEspecializacao.setEnabled(false);
         submenuProfissional.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/profissional.png")));
+        submenuProfissional.setEnabled(false);
         
         menuProcessos.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/processo.png")));
+        menuProcessos.setEnabled(false);
         submenuAgenda.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/agenda.png")));
+        submenuAgenda.setEnabled(false);
         submenuAtendimento.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/atendimento.png")));
+        submenuAtendimento.setEnabled(false);
         submenuProntuario.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/prontuario.png")));
+        submenuProntuario.setEnabled(false);
         
         menuConfiguracoes.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/configuracoes.png")));
+        menuConfiguracoes.setEnabled(false);
         submenuPadraoDeAtendimento.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/padraoDeAtendimento.png")));
+        submenuPadraoDeAtendimento.setEnabled(false);
         submenuTipoDeAtendimento.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/tipoDeAtendimento.png")));
+        submenuTipoDeAtendimento.setEnabled(false);
         submenuTipoDeProntuario.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/tipoDeProntuario.png")));
+        submenuTipoDeProntuario.setEnabled(false);
         
         menuAdministrativo.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/administrativo.png")));
+        menuAdministrativo.setEnabled(false);
         submenuLogout.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/logout.png")));
+        submenuLogout.setEnabled(false);
         submenuGrupoDeUsuarios.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/grupoDeUsuarios.png")));
+        submenuGrupoDeUsuarios.setEnabled(false);
         submenuUsuario.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/usuario.png")));
+        submenuUsuario.setEnabled(false);
+        
+        this.verificaPermissoesDoUsuario();
+    }
+    
+    /**
+     * Verifica as permissões do usuário, 
+     * conforme permissões concebidas aos seus grupos.
+     */
+    private void verificaPermissoesDoUsuario() {
+        UserAccount usuario = UsuarioLogado.getInstance().getUsuarioLogado();
+        List<Object> gruposDoUsuario = UsuarioLogado.getInstance().getGruposDoUsuarioLogado();
+        
+        // Percorre os grupos de usuários, do usuário.
+        for ( int i = 0; i < gruposDoUsuario.size(); i ++ ) {                
+            GrupoDoUsuario grupoDoUsuario = (GrupoDoUsuario) gruposDoUsuario.get(i);
+            
+            // Obtém as permissões do grupo de usuários, do usuário.
+            Conjunction find = Restrictions.conjunction();
+            find.add(Restrictions.eq("grupoDeUsuarios", grupoDoUsuario.getGrupoDeUsuarios()));
+            List<Object> permissoesDoGrupo = PermissaoDoGrupoDeUsuariosDAO.getInstance().findByCriteria(new PermissaoDoGrupoDeUsuarios(), find, Restrictions.disjunction());
+            
+            // Percorre as permissões do grupo de usuários, do usuário.
+            for ( int x = 0; x < permissoesDoGrupo.size(); x ++ ) {
+                PermissaoDoGrupoDeUsuarios permissao = (PermissaoDoGrupoDeUsuarios) permissoesDoGrupo.get(x);
+                this.setaPermissaoDoUsuario(permissao);
+            }
+        }       
+    }
+    
+    /**
+     * Habilita item do menu correspondente 
+     * a permissão de visualização do usuário.
+     * 
+     * @param permissao 
+     */
+    private void setaPermissaoDoUsuario(PermissaoDoGrupoDeUsuarios permissao)
+    {
+        JMenuBar menuSistema = this.getMenu();
+        Component[] modulos = menuSistema.getComponents();
+
+        // Percorre os módulos.
+        loop: for ( int m = 0; m < modulos.length; m ++ ) {
+
+            if ( modulos[m] instanceof JMenu )
+            {
+                JMenu modulo = (JMenu) modulos[m];
+                Component[] telas = modulo.getMenuComponents();
+
+                // Percorre as telas do módulo.
+                for ( int t = 0; t < telas.length; t ++ ) {
+                    if ( telas[t] instanceof JMenuItem )
+                    {
+                        JMenuItem tela = (JMenuItem) telas[t];
+                        
+                        if ( permissao.getId().equals(tela.getName()) )
+                        {
+                            // Se usuário possuir permissão de visualização na tela, habilita.
+                            if ( permissao.isVisualizar() )
+                            {
+                                modulo.setEnabled(true);
+                                tela.setEnabled(true);
+                            }
+                            
+                            break loop;
+                        }
+                    }
+                }
+            }
+        }
     }
     
     public JMenuBar getMenu() {
