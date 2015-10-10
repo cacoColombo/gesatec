@@ -32,6 +32,7 @@ public class AtendenteBusca extends Busca {
      * Creates new form AtendenteBusca
      */
     public AtendenteBusca() {
+        this.setName("atendente");
         super.initComponents();
     }
     

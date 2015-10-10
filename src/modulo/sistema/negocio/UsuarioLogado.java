@@ -4,8 +4,9 @@
  */
 package modulo.sistema.negocio;
 
+import java.util.LinkedList;
 import java.util.List;
-import modulo.administrativo.negocio.GrupoDoUsuario;
+import modulo.administrativo.negocio.PermissaoDoGrupoDeUsuarios;
 import modulo.administrativo.negocio.UserAccount;
 
 /**
@@ -19,6 +20,8 @@ public class UsuarioLogado {
     private UserAccount usuarioLogado;
     
     private List<Object> gruposDoUsuarioLogado;
+    
+    private LinkedList<Object> permissoesDosGruposDoUsuarioLogado = new LinkedList<>();
     
     private UsuarioLogado() {}
     
@@ -40,5 +43,13 @@ public class UsuarioLogado {
 
     public void setGruposDoUsuarioLogado(List<Object> gruposDoUsuarioLogado) {
         this.gruposDoUsuarioLogado = gruposDoUsuarioLogado;
+    }
+
+    public LinkedList<Object> getPermissoesDosGruposDoUsuarioLogado() {
+        return permissoesDosGruposDoUsuarioLogado;
+    }
+
+    public void setPermissoesDosGruposDoUsuarioLogado(LinkedList<Object> permissoesDosGruposDoUsuarioLogado) {
+        this.permissoesDosGruposDoUsuarioLogado = permissoesDosGruposDoUsuarioLogado;
     }
 }

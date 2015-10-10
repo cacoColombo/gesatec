@@ -29,6 +29,7 @@ public class CertificacaoBusca extends Busca {
      * Creates new form CertificacaoBusca
      */
     public CertificacaoBusca() {
+        this.setName("certificacao");
         super.initComponents();
     }
     

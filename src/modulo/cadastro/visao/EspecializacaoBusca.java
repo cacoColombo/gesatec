@@ -29,6 +29,7 @@ public class EspecializacaoBusca extends Busca {
      * Creates new form EspecializacaoBusca
      */
     public EspecializacaoBusca() {
+        this.setName("especializacao");
         super.initComponents();
     }
     

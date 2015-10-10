@@ -33,6 +33,7 @@ public class ClienteBusca extends Busca {
      * Creates new form ClienteBusca
      */
     public ClienteBusca() {
+        this.setName("cliente");
         super.initComponents();
     }
     

@@ -54,20 +54,6 @@ public class LoginVisao extends javax.swing.JFrame {
         return ok;
     }
 
-    public String MD5(String md5) {
-        try {
-            java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
-            byte[] array = md.digest(md5.getBytes());
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < array.length; ++i) {
-                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1, 3));
-            }
-            return sb.toString();
-        } catch (java.security.NoSuchAlgorithmException e) {
-        }
-        return null;
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -226,7 +212,7 @@ public class LoginVisao extends javax.swing.JFrame {
 
             Conjunction and = Restrictions.conjunction();
             and.add(Restrictions.eq("login", login.getText()));
-            and.add(Restrictions.eq("password", MD5(senha.getText())));
+            and.add(Restrictions.eq("password", UserAccount.MD5(senha.getText())));
             and.add(Restrictions.eq("active", true));
             List<Object> findUsuario = UsuarioDAO.getInstance().findByCriteria(new UserAccount(), and, Restrictions.disjunction());
 

@@ -29,6 +29,7 @@ public class UsuarioBusca extends Busca {
      * Creates new form UsuarioBusca
      */
     public UsuarioBusca() {
+        this.setName("usuario");
         super.initComponents();
         
         this.getBotaoNovo().setEnabled(false);

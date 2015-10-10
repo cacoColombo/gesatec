@@ -29,6 +29,7 @@ public class PadraoDeAtendimentoBusca extends Busca {
      * Creates new form PadraoDeAtendimentoBusca
      */
     public PadraoDeAtendimentoBusca() {
+        this.setName("padraodeatendimento");
         super.initComponents();
     }
     

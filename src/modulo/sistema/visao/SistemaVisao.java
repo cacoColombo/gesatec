@@ -114,6 +114,7 @@ public class SistemaVisao extends javax.swing.JFrame {
             // Percorre as permissões do grupo de usuários, do usuário.
             for ( int x = 0; x < permissoesDoGrupo.size(); x ++ ) {
                 PermissaoDoGrupoDeUsuarios permissao = (PermissaoDoGrupoDeUsuarios) permissoesDoGrupo.get(x);
+                UsuarioLogado.getInstance().getPermissoesDosGruposDoUsuarioLogado().add(permissao);
                 this.setaPermissaoDoUsuario(permissao);
             }
         }       
@@ -147,7 +148,7 @@ public class SistemaVisao extends javax.swing.JFrame {
                         if ( permissao.getId().equals(tela.getName()) )
                         {
                             // Se usuário possuir permissão de visualização na tela, habilita.
-                            if ( permissao.isVisualizar() )
+                            if ( permissao.isVisualizar() || permissao.isAdmin() )
                             {
                                 modulo.setEnabled(true);
                                 tela.setEnabled(true);

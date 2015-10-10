@@ -6,6 +6,7 @@ package modulo.sistema.visao;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -17,6 +18,8 @@ import javax.swing.JToolBar;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import modulo.administrativo.negocio.PermissaoDoGrupoDeUsuarios;
+import modulo.sistema.negocio.UsuarioLogado;
 
 /**
  *
@@ -157,8 +160,11 @@ public abstract class Busca extends javax.swing.JInternalFrame {
         botaoAtualizar.setIcon(new ImageIcon(getClass().getResource("/publico/imagens/atualizar.png")));
         botaoBuscar.setIcon(new ImageIcon(getClass().getResource("/publico/imagens/buscar.png")));
         
+        botaoNovo.setEnabled(false);
         botaoEditar.setEnabled(false);
         botaoExcluir.setEnabled(false);
+        setForcarDesabilitarBotaoEditar(true);
+        setForcarDesabilitarBotaoExcluir(true);
         
         atualizarGrid(-1, new ArrayList());
         
@@ -174,6 +180,40 @@ public abstract class Busca extends javax.swing.JInternalFrame {
                 }
             }
         });
+        
+        this.setaPermissoesDoUsuarioNaTela();
+    }
+    
+    /**
+     * Verifica e seta as permissões concebidas ao usuário na tela acessada.
+     */
+    private void setaPermissoesDoUsuarioNaTela() {
+        LinkedList<Object> permissoes = UsuarioLogado.getInstance().getPermissoesDosGruposDoUsuarioLogado();
+        
+        for ( int i = 0; i < permissoes.size(); i ++ ) {
+            PermissaoDoGrupoDeUsuarios permissao = (PermissaoDoGrupoDeUsuarios) permissoes.get(i);
+            
+            if ( permissao.getId().equals(this.getName()) ) {
+                
+                // Usuário possui permissão de inserção.
+                if ( permissao.isInserir() || permissao.isAdmin() )
+                {
+                    botaoNovo.setEnabled(true);
+                }
+                
+                // Usuário possui permissão de edição.
+                if ( permissao.isAtualizar() || permissao.isAdmin() )
+                {
+                    setForcarDesabilitarBotaoEditar(false);
+                }
+                
+                // Usuário possui permissão de exclusão.
+                if ( permissao.isExcluir() || permissao.isAdmin() )
+                {
+                    setForcarDesabilitarBotaoExcluir(false);
+                }
+            }
+        }
     }
 
     /**

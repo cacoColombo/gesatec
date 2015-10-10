@@ -32,6 +32,7 @@ public class ProfissionalBusca extends Busca {
      * Creates new form ProfissionalBusca
      */
     public ProfissionalBusca() {
+        this.setName("profissional");
         super.initComponents();
     }
     
