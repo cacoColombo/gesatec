@@ -30,7 +30,7 @@ public class LoginVisao extends javax.swing.JFrame {
         this.setIconImage(new ImageIcon(this.getClass().getResource("/publico/imagens/logo.png")).getImage());
         logoImage.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/logo_gesatec.png")));
         botaoLogar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/logar.png")));
-        botaoSair.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/remover.png")));
+        botaoSair.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/sair.png")));
     }
 
     public boolean validarCampos() {
@@ -126,7 +126,7 @@ public class LoginVisao extends javax.swing.JFrame {
             }
         });
 
-        botaoSair.setText("Sair");
+        botaoSair.setText("Sair   ");
         botaoSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botaoSairActionPerformed(evt);
