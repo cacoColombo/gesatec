@@ -12,6 +12,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import modulo.cadastro.dao.CertificacaoDAO;
 import modulo.cadastro.negocio.Certificacao;
+import modulo.sistema.negocio.SOptionPane;
 
 /**
  *
@@ -35,8 +36,12 @@ public class CertificacaoFormulario extends javax.swing.JDialog {
     }
     
     public void popularCampos(Certificacao certificacao) {
-        id.setText(Integer.toString(certificacao.getId()));
-        nome.setText(certificacao.getNome());
+        try {
+            id.setText(Integer.toString(certificacao.getId()));
+            nome.setText(certificacao.getNome());
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     public boolean validarCampos() {
@@ -47,7 +52,7 @@ public class CertificacaoFormulario extends javax.swing.JDialog {
             
             return true;
         } catch (Exception err) {
-            JOptionPane.showMessageDialog(this, err.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }
@@ -181,28 +186,32 @@ public class CertificacaoFormulario extends javax.swing.JDialog {
     }//GEN-LAST:event_botaoCancelarActionPerformed
 
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
-        if ( this.validarCampos() )
-        {
-            Certificacao certificacao = new Certificacao();
-            if ( id.getText().length() > 0 )
+        try {
+            if ( this.validarCampos() )
             {
-                certificacao.setId(Integer.parseInt(id.getText()));
-            }
-            certificacao.setNome(nome.getText());
-            
-            if ( id.getText().length() > 0 ) {
-                CertificacaoDAO.getInstance().merge(certificacao);
-            } else {
-                CertificacaoDAO.getInstance().persist(certificacao);
-            }
+                Certificacao certificacao = new Certificacao();
+                if ( id.getText().length() > 0 )
+                {
+                    certificacao.setId(Integer.parseInt(id.getText()));
+                }
+                certificacao.setNome(nome.getText());
 
-            JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-            
-            List<Object> registro = new ArrayList();
-            registro.add(certificacao);
-            
-            parent.atualizarGrid(certificacao.getId(), registro);
-            this.setVisible(false);
+                if ( id.getText().length() > 0 ) {
+                    CertificacaoDAO.getInstance().merge(certificacao);
+                } else {
+                    CertificacaoDAO.getInstance().persist(certificacao);
+                }
+
+                JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+
+                List<Object> registro = new ArrayList();
+                registro.add(certificacao);
+
+                parent.atualizarGrid(certificacao.getId(), registro);
+                this.setVisible(false);
+            }
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botaoSalvarActionPerformed
 

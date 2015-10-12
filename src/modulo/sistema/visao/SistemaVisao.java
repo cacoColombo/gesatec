@@ -31,6 +31,7 @@ import modulo.cadastro.visao.ClienteBusca;
 import modulo.cadastro.visao.EspecializacaoBusca;
 import modulo.cadastro.visao.ProfissionalBusca;
 import modulo.configuracao.visao.PadraoDeAtendimentoBusca;
+import modulo.sistema.negocio.SOptionPane;
 import modulo.sistema.negocio.UsuarioLogado;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Restrictions;
@@ -99,25 +100,29 @@ public class SistemaVisao extends javax.swing.JFrame {
      * conforme permissões concebidas aos seus grupos.
      */
     private void verificaPermissoesDoUsuario() {
-        UserAccount usuario = UsuarioLogado.getInstance().getUsuarioLogado();
-        List<Object> gruposDoUsuario = UsuarioLogado.getInstance().getGruposDoUsuarioLogado();
-        
-        // Percorre os grupos de usuários, do usuário.
-        for ( int i = 0; i < gruposDoUsuario.size(); i ++ ) {                
-            GrupoDoUsuario grupoDoUsuario = (GrupoDoUsuario) gruposDoUsuario.get(i);
-            
-            // Obtém as permissões do grupo de usuários, do usuário.
-            Conjunction find = Restrictions.conjunction();
-            find.add(Restrictions.eq("grupoDeUsuarios", grupoDoUsuario.getGrupoDeUsuarios()));
-            List<Object> permissoesDoGrupo = PermissaoDoGrupoDeUsuariosDAO.getInstance().findByCriteria(new PermissaoDoGrupoDeUsuarios(), find, Restrictions.disjunction());
-            
-            // Percorre as permissões do grupo de usuários, do usuário.
-            for ( int x = 0; x < permissoesDoGrupo.size(); x ++ ) {
-                PermissaoDoGrupoDeUsuarios permissao = (PermissaoDoGrupoDeUsuarios) permissoesDoGrupo.get(x);
-                UsuarioLogado.getInstance().getPermissoesDosGruposDoUsuarioLogado().add(permissao);
-                this.setaPermissaoDoUsuario(permissao);
+        try {
+            UserAccount usuario = UsuarioLogado.getInstance().getUsuarioLogado();
+            List<Object> gruposDoUsuario = UsuarioLogado.getInstance().getGruposDoUsuarioLogado();
+
+            // Percorre os grupos de usuários, do usuário.
+            for ( int i = 0; i < gruposDoUsuario.size(); i ++ ) {                
+                GrupoDoUsuario grupoDoUsuario = (GrupoDoUsuario) gruposDoUsuario.get(i);
+
+                // Obtém as permissões do grupo de usuários, do usuário.
+                Conjunction find = Restrictions.conjunction();
+                find.add(Restrictions.eq("grupoDeUsuarios", grupoDoUsuario.getGrupoDeUsuarios()));
+                List<Object> permissoesDoGrupo = PermissaoDoGrupoDeUsuariosDAO.getInstance().findByCriteria(new PermissaoDoGrupoDeUsuarios(), find, Restrictions.disjunction());
+
+                // Percorre as permissões do grupo de usuários, do usuário.
+                for ( int x = 0; x < permissoesDoGrupo.size(); x ++ ) {
+                    PermissaoDoGrupoDeUsuarios permissao = (PermissaoDoGrupoDeUsuarios) permissoesDoGrupo.get(x);
+                    UsuarioLogado.getInstance().getPermissoesDosGruposDoUsuarioLogado().add(permissao);
+                    this.setaPermissaoDoUsuario(permissao);
+                }
             }
-        }       
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     /**

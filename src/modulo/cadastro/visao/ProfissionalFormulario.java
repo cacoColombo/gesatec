@@ -27,6 +27,7 @@ import modulo.cadastro.dao.EstadoDAO;
 import modulo.cadastro.negocio.Profissional;
 import modulo.cadastro.negocio.Cidade;
 import modulo.cadastro.negocio.Estado;
+import modulo.sistema.negocio.SOptionPane;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Restrictions;
 
@@ -56,15 +57,19 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             Logger.getLogger(ProfissionalFormulario.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        ArrayList<Object> estados = new ArrayList<>();
-        Estado empty = new Estado();
-        empty.setId(0);
-        empty.setNome("Selecione um estado...");
-        estados.add(empty);
-        estados.addAll(EstadoDAO.getInstance().findAll(new Estado()));
-        ComboBoxModel model = new DefaultComboBoxModel(estados.toArray());
-        
-        estado.setModel(model);
+        try {
+            ArrayList<Object> estados = new ArrayList<>();
+            Estado empty = new Estado();
+            empty.setId(0);
+            empty.setNome("Selecione um estado...");
+            estados.add(empty);
+            estados.addAll(EstadoDAO.getInstance().findAll(new Estado()));
+            ComboBoxModel model = new DefaultComboBoxModel(estados.toArray());
+
+            estado.setModel(model);
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
         
         cpf = new JFormattedTextField(msk);
         botaoSalvar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/salvar.png")));
@@ -74,40 +79,44 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     }
     
     public void popularCampos(Profissional profissional) {
-        id.setText("" + profissional.getId());
-        nome.setText(profissional.getNome());
-        rg.setText(profissional.getRg());
-        cpf.setText(profissional.getCpf());
-        DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-        if(profissional.getDataNascimento() != null)
-            dataNascimento.setText(format.format(profissional.getDataNascimento()));
-        if(profissional.getSexo() == 'M'){
-            sexoMActionPerformed(null);
+        try {
+            id.setText("" + profissional.getId());
+            nome.setText(profissional.getNome());
+            rg.setText(profissional.getRg());
+            cpf.setText(profissional.getCpf());
+            DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+            if(profissional.getDataNascimento() != null)
+                dataNascimento.setText(format.format(profissional.getDataNascimento()));
+            if(profissional.getSexo() == 'M'){
+                sexoMActionPerformed(null);
+            }
+            else{
+                sexoFActionPerformed(null);
+            }
+            observacao.setText(profissional.getObservacao());
+
+            usuario_id.setText("" + profissional.getUsuario().getId());
+            login.setText(profissional.getUsuario().getLogin());
+            senha.setText("");
+            cep.setText(profissional.getCep());
+            if(profissional.getCidade() != null){
+                estado.setSelectedItem(profissional.getCidade().getEstadoId());
+                estadoActionPerformed(null);
+                cidade.setSelectedItem(profissional.getCidade());
+            }
+            bairro.setText(profissional.getBairro());
+            endereco.setText(profissional.getEndereco());
+            numero.setText(profissional.getNumero() + "");
+            complemento.setText(profissional.getComplemento());
+            email.setText(profissional.getEmail());
+            telefoneCelular.setText(profissional.getTelefoneCelular());
+            telefoneResidencial.setText(profissional.getTelefoneResidencial());
+            telefoneTrabalho.setText(profissional.getTelefoneTrabalho());
+
+            login.setEditable(false);
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
-        else{
-            sexoFActionPerformed(null);
-        }
-        observacao.setText(profissional.getObservacao());
-        
-        usuario_id.setText("" + profissional.getUsuario().getId());
-        login.setText(profissional.getUsuario().getLogin());
-        senha.setText("");
-        cep.setText(profissional.getCep());
-        if(profissional.getCidade() != null){
-            estado.setSelectedItem(profissional.getCidade().getEstadoId());
-            estadoActionPerformed(null);
-            cidade.setSelectedItem(profissional.getCidade());
-        }
-        bairro.setText(profissional.getBairro());
-        endereco.setText(profissional.getEndereco());
-        numero.setText(profissional.getNumero() + "");
-        complemento.setText(profissional.getComplemento());
-        email.setText(profissional.getEmail());
-        telefoneCelular.setText(profissional.getTelefoneCelular());
-        telefoneResidencial.setText(profissional.getTelefoneResidencial());
-        telefoneTrabalho.setText(profissional.getTelefoneTrabalho());
-        
-        login.setEditable(false);
     }
 
     /**
@@ -701,75 +710,79 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     }
     
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
-        System.out.println("Saving data....");
-        if (verificaCampos())
-        {
-            Profissional profissional = new Profissional();
-            
-            if ( id.getText().length() > 0 )
+        try {
+            System.out.println("Saving data....");
+            if (verificaCampos())
             {
-                profissional.setId(Integer.parseInt(id.getText()));
+                Profissional profissional = new Profissional();
+
+                if ( id.getText().length() > 0 )
+                {
+                    profissional.setId(Integer.parseInt(id.getText()));
+                }
+
+                profissional.setNome(nome.getText());
+                profissional.setRg(rg.getText());
+                profissional.setCpf(cpf.getText());
+
+                try {
+                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");  
+                    java.sql.Date data = new java.sql.Date(format.parse(dataNascimento.getText()).getTime());
+                    profissional.setDataNascimento(data);
+                } catch (ParseException ex) {
+                }
+
+                profissional.setSexo(sexoM.isSelected()?'M':'F');
+                profissional.setObservacao(observacao.getText());
+                try{
+                    profissional.setCidade((Cidade) cidade.getSelectedItem());
+                }
+                catch(ClassCastException e){
+                }
+                profissional.setCep(cep.getText());
+                profissional.setBairro(bairro.getText());
+                profissional.setEndereco(endereco.getText());
+                profissional.setComplemento(complemento.getText());
+                try{
+                    profissional.setNumero(Integer.parseInt(numero.getText()));
+                }
+                catch(NumberFormatException e){
+                    profissional.setNumero(0);
+                }
+                profissional.setTelefoneCelular(telefoneCelular.getText());
+                profissional.setTelefoneResidencial(telefoneResidencial.getText());
+                profissional.setTelefoneTrabalho(telefoneTrabalho.getText());
+                profissional.setEmail(email.getText());
+
+                UserAccount usuario = new UserAccount();
+
+                if ( usuario_id.getText().length() > 0 )
+                {
+                    usuario.setId(Integer.parseInt(usuario_id.getText()));
+                }
+
+                usuario.setActive(true);
+                usuario.setLogin(login.getText());
+                usuario.setPassword(senha.getText());
+                usuario.setName(nome.getText());
+                profissional.setUsuario(usuario);
+
+                ProfissionalDAO.getInstance().merge(profissional);
+
+                JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+
+                List<Object> registro = new ArrayList();
+                registro.add(profissional);
+
+                parent.atualizarGrid(profissional.getId(), registro);
+                this.setVisible(false);
             }
-            
-            profissional.setNome(nome.getText());
-            profissional.setRg(rg.getText());
-            profissional.setCpf(cpf.getText());
-            
-            try {
-                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");  
-                java.sql.Date data = new java.sql.Date(format.parse(dataNascimento.getText()).getTime());
-                profissional.setDataNascimento(data);
-            } catch (ParseException ex) {
-            }
-            
-            profissional.setSexo(sexoM.isSelected()?'M':'F');
-            profissional.setObservacao(observacao.getText());
-            try{
-                profissional.setCidade((Cidade) cidade.getSelectedItem());
-            }
-            catch(ClassCastException e){
-            }
-            profissional.setCep(cep.getText());
-            profissional.setBairro(bairro.getText());
-            profissional.setEndereco(endereco.getText());
-            profissional.setComplemento(complemento.getText());
-            try{
-                profissional.setNumero(Integer.parseInt(numero.getText()));
-            }
-            catch(NumberFormatException e){
-                profissional.setNumero(0);
-            }
-            profissional.setTelefoneCelular(telefoneCelular.getText());
-            profissional.setTelefoneResidencial(telefoneResidencial.getText());
-            profissional.setTelefoneTrabalho(telefoneTrabalho.getText());
-            profissional.setEmail(email.getText());
-            
-            UserAccount usuario = new UserAccount();
-            
-            if ( usuario_id.getText().length() > 0 )
+            else
             {
-                usuario.setId(Integer.parseInt(usuario_id.getText()));
+                throw new Exception(message);
             }
-            
-            usuario.setActive(true);
-            usuario.setLogin(login.getText());
-            usuario.setPassword(senha.getText());
-            usuario.setName(nome.getText());
-            profissional.setUsuario(usuario);
-            
-            ProfissionalDAO.getInstance().merge(profissional);
-            
-            JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-            
-            List<Object> registro = new ArrayList();
-            registro.add(profissional);
-            
-            parent.atualizarGrid(profissional.getId(), registro);
-            this.setVisible(false);
-        }
-        else
-        {
-            JOptionPane.showMessageDialog(this, message, "Erro!", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botaoSalvarActionPerformed
 
@@ -796,14 +809,18 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     }//GEN-LAST:event_cidadeActionPerformed
 
     private void estadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estadoActionPerformed
-        int busca = ((Estado)estado.getSelectedItem()).getId();
-        
-        Disjunction or = Restrictions.disjunction();
-        or.add(Restrictions.eq("estado_id.id", busca));
-        
-        List<Object> grupos = CidadeDAO.getInstance().findByCriteria(new Cidade(), Restrictions.conjunction(), or);
-        ComboBoxModel model = new DefaultComboBoxModel(grupos.toArray());
-        cidade.setModel(model);
+        try {
+            int busca = ((Estado)estado.getSelectedItem()).getId();
+
+            Disjunction or = Restrictions.disjunction();
+            or.add(Restrictions.eq("estado_id.id", busca));
+
+            List<Object> grupos = CidadeDAO.getInstance().findByCriteria(new Cidade(), Restrictions.conjunction(), or);
+            ComboBoxModel model = new DefaultComboBoxModel(grupos.toArray());
+            cidade.setModel(model);
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_estadoActionPerformed
 
     /**

@@ -11,6 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import modulo.cadastro.dao.EspecializacaoDAO;
 import modulo.cadastro.negocio.Especializacao;
+import modulo.sistema.negocio.SOptionPane;
 
 /**
  *
@@ -34,8 +35,12 @@ public class EspecializacaoFormulario extends javax.swing.JDialog {
     }
     
     public void popularCampos(Especializacao especializacao) {
-        id.setText(Integer.toString(especializacao.getId()));
-        nome.setText(especializacao.getNome());
+        try {
+            id.setText(Integer.toString(especializacao.getId()));
+            nome.setText(especializacao.getNome());
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     public boolean validarCampos() {
@@ -46,7 +51,7 @@ public class EspecializacaoFormulario extends javax.swing.JDialog {
             
             return true;
         } catch (Exception err) {
-            JOptionPane.showMessageDialog(this, err.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }
@@ -178,28 +183,32 @@ public class EspecializacaoFormulario extends javax.swing.JDialog {
     }//GEN-LAST:event_botaoCancelarActionPerformed
 
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
-        if ( this.validarCampos() )
-        {
-            Especializacao especializacao = new Especializacao();
-            if ( id.getText().length() > 0 )
+        try {
+            if ( this.validarCampos() )
             {
-                especializacao.setId(Integer.parseInt(id.getText()));
-            }
-            especializacao.setNome(nome.getText());
-            
-            if ( id.getText().length() > 0 ) {
-                EspecializacaoDAO.getInstance().merge(especializacao);
-            } else {
-                EspecializacaoDAO.getInstance().persist(especializacao);
-            }
+                Especializacao especializacao = new Especializacao();
+                if ( id.getText().length() > 0 )
+                {
+                    especializacao.setId(Integer.parseInt(id.getText()));
+                }
+                especializacao.setNome(nome.getText());
 
-            JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-            
-            List<Object> registro = new ArrayList();
-            registro.add(especializacao);
-            
-            parent.atualizarGrid(especializacao.getId(), registro);
-            this.setVisible(false);
+                if ( id.getText().length() > 0 ) {
+                    EspecializacaoDAO.getInstance().merge(especializacao);
+                } else {
+                    EspecializacaoDAO.getInstance().persist(especializacao);
+                }
+
+                JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+
+                List<Object> registro = new ArrayList();
+                registro.add(especializacao);
+
+                parent.atualizarGrid(especializacao.getId(), registro);
+                this.setVisible(false);
+            }
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botaoSalvarActionPerformed
 

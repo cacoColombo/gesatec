@@ -18,6 +18,7 @@ import modulo.administrativo.dao.GrupoDeUsuariosDAO;
 import modulo.administrativo.dao.PermissaoDoGrupoDeUsuariosDAO;
 import modulo.administrativo.negocio.GrupoDeUsuarios;
 import modulo.administrativo.negocio.PermissaoDoGrupoDeUsuarios;
+import modulo.sistema.negocio.SOptionPane;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
@@ -48,9 +49,13 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
     }
     
     public void popularCampos(GrupoDeUsuarios grupoDeUsuarios) {
-        id.setText(Integer.toString(grupoDeUsuarios.getId()));
-        nome.setText(grupoDeUsuarios.getNome());
-        this.atualizarGridPermissoes();
+        try {
+            id.setText(Integer.toString(grupoDeUsuarios.getId()));
+            nome.setText(grupoDeUsuarios.getNome());
+            this.atualizarGridPermissoes();
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     public boolean validarCampos() {
@@ -61,7 +66,7 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
             
             return true;
         } catch (Exception err) {
-            JOptionPane.showMessageDialog(this, err.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }
@@ -141,7 +146,7 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
             }
             
         } catch (Exception err) {
-            JOptionPane.showMessageDialog(this, "Erro ao atualizar grid: " + err.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -325,45 +330,49 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
     }//GEN-LAST:event_botaoCancelarActionPerformed
 
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
-        if ( this.validarCampos() )
-        {            
-            GrupoDeUsuarios grupoDeUsuarios = new GrupoDeUsuarios();
-            grupoDeUsuarios.setNome(nome.getText());
-            
-            if ( id.getText().length() > 0 ) {
-                grupoDeUsuarios.setId(Integer.parseInt(id.getText()));
-                GrupoDeUsuariosDAO.getInstance().merge(grupoDeUsuarios);
-            } else {
-                GrupoDeUsuariosDAO.getInstance().persist(grupoDeUsuarios);
-            }
-            
-            // Obter lista de permissões marcadas.
-            DefaultTableModel modelo = (DefaultTableModel) tabelaPermissoes.getModel();
-            
-            for ( int c = 0; c < modelo.getRowCount(); c ++ ) {                
-                PermissaoDoGrupoDeUsuarios permissaoDoGrupoDeUsuarios = new PermissaoDoGrupoDeUsuarios();
-                permissaoDoGrupoDeUsuarios.setId((String) modelo.getValueAt(c, 0));
-                permissaoDoGrupoDeUsuarios.setGrupoDeUsuarios(grupoDeUsuarios);
-                permissaoDoGrupoDeUsuarios.setVisualizar((boolean) modelo.getValueAt(c, 3));
-                permissaoDoGrupoDeUsuarios.setInserir((boolean) modelo.getValueAt(c, 4));
-                permissaoDoGrupoDeUsuarios.setAtualizar((boolean) modelo.getValueAt(c, 5));
-                permissaoDoGrupoDeUsuarios.setExcluir((boolean) modelo.getValueAt(c, 6));
-                permissaoDoGrupoDeUsuarios.setAdmin((boolean) modelo.getValueAt(c, 7));  
-                
-                if ( id.getText().length() > 0 ) {
-                    PermissaoDoGrupoDeUsuariosDAO.getInstance().merge(permissaoDoGrupoDeUsuarios);
-                } else {
-                    PermissaoDoGrupoDeUsuariosDAO.getInstance().persist(permissaoDoGrupoDeUsuarios);
-                }
-            }
+        try {
+            if ( this.validarCampos() )
+            {            
+                GrupoDeUsuarios grupoDeUsuarios = new GrupoDeUsuarios();
+                grupoDeUsuarios.setNome(nome.getText());
 
-            JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-            
-            List<Object> registro = new ArrayList();
-            registro.add(grupoDeUsuarios);
-            
-            parent.atualizarGrid(grupoDeUsuarios.getId(), registro);
-            this.setVisible(false);
+                if ( id.getText().length() > 0 ) {
+                    grupoDeUsuarios.setId(Integer.parseInt(id.getText()));
+                    GrupoDeUsuariosDAO.getInstance().merge(grupoDeUsuarios);
+                } else {
+                    GrupoDeUsuariosDAO.getInstance().persist(grupoDeUsuarios);
+                }
+
+                // Obter lista de permissões marcadas.
+                DefaultTableModel modelo = (DefaultTableModel) tabelaPermissoes.getModel();
+
+                for ( int c = 0; c < modelo.getRowCount(); c ++ ) {                
+                    PermissaoDoGrupoDeUsuarios permissaoDoGrupoDeUsuarios = new PermissaoDoGrupoDeUsuarios();
+                    permissaoDoGrupoDeUsuarios.setId((String) modelo.getValueAt(c, 0));
+                    permissaoDoGrupoDeUsuarios.setGrupoDeUsuarios(grupoDeUsuarios);
+                    permissaoDoGrupoDeUsuarios.setVisualizar((boolean) modelo.getValueAt(c, 3));
+                    permissaoDoGrupoDeUsuarios.setInserir((boolean) modelo.getValueAt(c, 4));
+                    permissaoDoGrupoDeUsuarios.setAtualizar((boolean) modelo.getValueAt(c, 5));
+                    permissaoDoGrupoDeUsuarios.setExcluir((boolean) modelo.getValueAt(c, 6));
+                    permissaoDoGrupoDeUsuarios.setAdmin((boolean) modelo.getValueAt(c, 7));  
+
+                    if ( id.getText().length() > 0 ) {
+                        PermissaoDoGrupoDeUsuariosDAO.getInstance().merge(permissaoDoGrupoDeUsuarios);
+                    } else {
+                        PermissaoDoGrupoDeUsuariosDAO.getInstance().persist(permissaoDoGrupoDeUsuarios);
+                    }
+                }
+
+                JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+
+                List<Object> registro = new ArrayList();
+                registro.add(grupoDeUsuarios);
+
+                parent.atualizarGrid(grupoDeUsuarios.getId(), registro);
+                this.setVisible(false);
+            }
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botaoSalvarActionPerformed
 

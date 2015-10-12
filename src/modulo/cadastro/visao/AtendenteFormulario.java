@@ -31,6 +31,7 @@ import modulo.cadastro.dao.EstadoDAO;
 import modulo.cadastro.negocio.Atendente;
 import modulo.cadastro.negocio.Cidade;
 import modulo.cadastro.negocio.Estado;
+import modulo.sistema.negocio.SOptionPane;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -61,15 +62,19 @@ public class AtendenteFormulario extends javax.swing.JDialog {
             Logger.getLogger(AtendenteFormulario.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        ArrayList<Object> estados = new ArrayList<>();
-        Estado empty = new Estado();
-        empty.setId(0);
-        empty.setNome("Selecione um estado...");
-        estados.add(empty);
-        estados.addAll(EstadoDAO.getInstance().findAll(new Estado()));
-        ComboBoxModel model = new DefaultComboBoxModel(estados.toArray());
-        
-        estado.setModel(model);
+        try {
+            ArrayList<Object> estados = new ArrayList<>();
+            Estado empty = new Estado();
+            empty.setId(0);
+            empty.setNome("Selecione um estado...");
+            estados.add(empty);
+            estados.addAll(EstadoDAO.getInstance().findAll(new Estado()));
+            ComboBoxModel model = new DefaultComboBoxModel(estados.toArray());
+
+            estado.setModel(model);
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
         
         cpf = new JFormattedTextField(msk);
         botaoSalvar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/salvar.png")));
@@ -79,40 +84,44 @@ public class AtendenteFormulario extends javax.swing.JDialog {
     }
     
     public void popularCampos(Atendente atendente) {
-        id.setText("" + atendente.getId());
-        nome.setText(atendente.getNome());
-        rg.setText(atendente.getRg());
-        cpf.setText(atendente.getCpf());
-        DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-        if(atendente.getDataNascimento() != null)
-            dataNascimento.setText(format.format(atendente.getDataNascimento()));
-        if(atendente.getSexo() == 'M'){
-            sexoMActionPerformed(null);
+        try {
+            id.setText("" + atendente.getId());
+            nome.setText(atendente.getNome());
+            rg.setText(atendente.getRg());
+            cpf.setText(atendente.getCpf());
+            DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+            if(atendente.getDataNascimento() != null)
+                dataNascimento.setText(format.format(atendente.getDataNascimento()));
+            if(atendente.getSexo() == 'M'){
+                sexoMActionPerformed(null);
+            }
+            else{
+                sexoFActionPerformed(null);
+            }
+            observacao.setText(atendente.getObservacao());
+
+            usuario_id.setText("" + atendente.getUsuario().getId());
+            login.setText(atendente.getUsuario().getLogin());
+            senha.setText("");
+            cep.setText(atendente.getCep());
+            if(atendente.getCidade() != null){
+                estado.setSelectedItem(atendente.getCidade().getEstadoId());
+                estadoActionPerformed(null);
+                cidade.setSelectedItem(atendente.getCidade());
+            }
+            bairro.setText(atendente.getBairro());
+            endereco.setText(atendente.getEndereco());
+            numero.setText(atendente.getNumero() + "");
+            complemento.setText(atendente.getComplemento());
+            email.setText(atendente.getEmail());
+            telefoneCelular.setText(atendente.getTelefoneCelular());
+            telefoneResidencial.setText(atendente.getTelefoneResidencial());
+            telefoneTrabalho.setText(atendente.getTelefoneTrabalho());
+
+            login.setEditable(false);
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
-        else{
-            sexoFActionPerformed(null);
-        }
-        observacao.setText(atendente.getObservacao());
-        
-        usuario_id.setText("" + atendente.getUsuario().getId());
-        login.setText(atendente.getUsuario().getLogin());
-        senha.setText("");
-        cep.setText(atendente.getCep());
-        if(atendente.getCidade() != null){
-            estado.setSelectedItem(atendente.getCidade().getEstadoId());
-            estadoActionPerformed(null);
-            cidade.setSelectedItem(atendente.getCidade());
-        }
-        bairro.setText(atendente.getBairro());
-        endereco.setText(atendente.getEndereco());
-        numero.setText(atendente.getNumero() + "");
-        complemento.setText(atendente.getComplemento());
-        email.setText(atendente.getEmail());
-        telefoneCelular.setText(atendente.getTelefoneCelular());
-        telefoneResidencial.setText(atendente.getTelefoneResidencial());
-        telefoneTrabalho.setText(atendente.getTelefoneTrabalho());
-        
-        login.setEditable(false);
     }
 
     /**
@@ -678,79 +687,83 @@ public class AtendenteFormulario extends javax.swing.JDialog {
     }
     
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
-        System.out.println("Saving data....");
-        if (verificaCampos())
-        {
-            Atendente atendente = new Atendente();
-            
-            if ( id.getText().length() > 0 )
+        try {
+            System.out.println("Saving data....");
+            if (verificaCampos())
             {
-                atendente.setId(Integer.parseInt(id.getText()));
+                Atendente atendente = new Atendente();
+
+                if ( id.getText().length() > 0 )
+                {
+                    atendente.setId(Integer.parseInt(id.getText()));
+                }
+
+                atendente.setNome(nome.getText());
+                atendente.setRg(rg.getText());
+                atendente.setCpf(cpf.getText());
+
+                try {
+                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");  
+                    java.sql.Date data = new java.sql.Date(format.parse(dataNascimento.getText()).getTime());
+                    atendente.setDataNascimento(data);
+                } catch (ParseException ex) {
+                }
+
+                atendente.setSexo(sexoM.isSelected()?'M':'F');
+                atendente.setObservacao(observacao.getText());
+                try{
+                    atendente.setCidade((Cidade) cidade.getSelectedItem());
+                }
+                catch(ClassCastException e){
+                }
+                atendente.setCep(cep.getText());
+                atendente.setBairro(bairro.getText());
+                atendente.setEndereco(endereco.getText());
+                atendente.setComplemento(complemento.getText());
+                try{
+                    atendente.setNumero(Integer.parseInt(numero.getText()));
+                }
+                catch(NumberFormatException e){
+                    atendente.setNumero(0);
+                }
+                atendente.setTelefoneCelular(telefoneCelular.getText());
+                atendente.setTelefoneResidencial(telefoneResidencial.getText());
+                atendente.setTelefoneTrabalho(telefoneTrabalho.getText());
+                atendente.setEmail(email.getText());
+
+                UserAccount usuario = new UserAccount();
+
+                if ( usuario_id.getText().length() > 0 )
+                {
+                    usuario.setId(Integer.parseInt(usuario_id.getText()));
+                }
+
+                usuario.setActive(true);
+                usuario.setLogin(login.getText());
+                usuario.setPassword(senha.getText());
+                usuario.setName(nome.getText());
+                atendente.setUsuario(usuario);
+
+                if ( id.getText().length() > 0 ) {
+                    AtendenteDAO.getInstance().merge(atendente);
+                } else {
+                    AtendenteDAO.getInstance().persist(atendente);
+                }
+
+                JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+
+                List<Object> registro = new ArrayList();
+                registro.add(atendente);
+
+                parent.atualizarGrid(atendente.getId(), registro);
+                this.setVisible(false);
             }
-            
-            atendente.setNome(nome.getText());
-            atendente.setRg(rg.getText());
-            atendente.setCpf(cpf.getText());
-            
-            try {
-                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");  
-                java.sql.Date data = new java.sql.Date(format.parse(dataNascimento.getText()).getTime());
-                atendente.setDataNascimento(data);
-            } catch (ParseException ex) {
-            }
-            
-            atendente.setSexo(sexoM.isSelected()?'M':'F');
-            atendente.setObservacao(observacao.getText());
-            try{
-                atendente.setCidade((Cidade) cidade.getSelectedItem());
-            }
-            catch(ClassCastException e){
-            }
-            atendente.setCep(cep.getText());
-            atendente.setBairro(bairro.getText());
-            atendente.setEndereco(endereco.getText());
-            atendente.setComplemento(complemento.getText());
-            try{
-                atendente.setNumero(Integer.parseInt(numero.getText()));
-            }
-            catch(NumberFormatException e){
-                atendente.setNumero(0);
-            }
-            atendente.setTelefoneCelular(telefoneCelular.getText());
-            atendente.setTelefoneResidencial(telefoneResidencial.getText());
-            atendente.setTelefoneTrabalho(telefoneTrabalho.getText());
-            atendente.setEmail(email.getText());
-            
-            UserAccount usuario = new UserAccount();
-            
-            if ( usuario_id.getText().length() > 0 )
+            else
             {
-                usuario.setId(Integer.parseInt(usuario_id.getText()));
+                throw new Exception(message);
             }
-            
-            usuario.setActive(true);
-            usuario.setLogin(login.getText());
-            usuario.setPassword(senha.getText());
-            usuario.setName(nome.getText());
-            atendente.setUsuario(usuario);
-            
-            if ( id.getText().length() > 0 ) {
-                AtendenteDAO.getInstance().merge(atendente);
-            } else {
-                AtendenteDAO.getInstance().persist(atendente);
-            }
-            
-            JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-            
-            List<Object> registro = new ArrayList();
-            registro.add(atendente);
-            
-            parent.atualizarGrid(atendente.getId(), registro);
-            this.setVisible(false);
-        }
-        else
-        {
-            JOptionPane.showMessageDialog(this, message, "Erro!", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botaoSalvarActionPerformed
 
@@ -777,14 +790,18 @@ public class AtendenteFormulario extends javax.swing.JDialog {
     }//GEN-LAST:event_cidadeActionPerformed
 
     private void estadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estadoActionPerformed
-        int busca = ((Estado)estado.getSelectedItem()).getId();
-        
-        Disjunction or = Restrictions.disjunction();
-        or.add(Restrictions.eq("estado_id.id", busca));
-        
-        List<Object> grupos = CidadeDAO.getInstance().findByCriteria(new Cidade(), Restrictions.conjunction(), or);
-        ComboBoxModel model = new DefaultComboBoxModel(grupos.toArray());
-        cidade.setModel(model);
+        try {
+            int busca = ((Estado)estado.getSelectedItem()).getId();
+
+            Disjunction or = Restrictions.disjunction();
+            or.add(Restrictions.eq("estado_id.id", busca));
+
+            List<Object> grupos = CidadeDAO.getInstance().findByCriteria(new Cidade(), Restrictions.conjunction(), or);
+            ComboBoxModel model = new DefaultComboBoxModel(grupos.toArray());
+            cidade.setModel(model);
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_estadoActionPerformed
 
     /**

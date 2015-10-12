@@ -21,6 +21,7 @@ import modulo.configuracao.dao.DiaDaSemanaDAO;
 import modulo.configuracao.dao.PadraoDeAtendimentoDAO;
 import modulo.configuracao.negocio.DiaDaSemana;
 import modulo.configuracao.negocio.PadraoDeAtendimento;
+import modulo.sistema.negocio.SOptionPane;
 
 /**
  *
@@ -48,27 +49,35 @@ public class PadraoDeAtendimentoFormulario extends javax.swing.JDialog {
             Logger.getLogger(PadraoDeAtendimentoFormulario.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        ArrayList<Object> diasDaSemana = new ArrayList<>();
-        DiaDaSemana empty = new DiaDaSemana();
-        empty.setId(0);
-        empty.setNome("Selecione um dia da semana...");
-        diasDaSemana.add(empty);
-        diasDaSemana.addAll(DiaDaSemanaDAO.getInstance().findAll(new DiaDaSemana()));
-        ComboBoxModel model = new DefaultComboBoxModel(diasDaSemana.toArray());
-        
-        diaDaSemana.setModel(model);
+        try {
+            ArrayList<Object> diasDaSemana = new ArrayList<>();
+            DiaDaSemana empty = new DiaDaSemana();
+            empty.setId(0);
+            empty.setNome("Selecione um dia da semana...");
+            diasDaSemana.add(empty);
+            diasDaSemana.addAll(DiaDaSemanaDAO.getInstance().findAll(new DiaDaSemana()));
+            ComboBoxModel model = new DefaultComboBoxModel(diasDaSemana.toArray());
+
+            diaDaSemana.setModel(model);
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
         
         botaoSalvar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/salvar.png")));
         botaoCancelar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/cancelar.png")));
     }
     
     public void popularCampos(PadraoDeAtendimento padraoDeAtendimento) {
-        id.setText(Integer.toString(padraoDeAtendimento.getId()));
-        nome.setText(padraoDeAtendimento.getNome());
-        diaDaSemana.setSelectedItem(padraoDeAtendimento.getDiaDaSemana());
-        horarioInicioExpediente.setText(padraoDeAtendimento.getHorarioInicioExpediente().toString());
-        horarioFimExpediente.setText(padraoDeAtendimento.getHorarioFimExpediente().toString());
-        tempoConsulta.setText(padraoDeAtendimento.getTempoMedioConsulta() + "");
+        try {
+            id.setText(Integer.toString(padraoDeAtendimento.getId()));
+            nome.setText(padraoDeAtendimento.getNome());
+            diaDaSemana.setSelectedItem(padraoDeAtendimento.getDiaDaSemana());
+            horarioInicioExpediente.setText(padraoDeAtendimento.getHorarioInicioExpediente().toString());
+            horarioFimExpediente.setText(padraoDeAtendimento.getHorarioFimExpediente().toString());
+            tempoConsulta.setText(padraoDeAtendimento.getTempoMedioConsulta() + "");
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     public boolean validarCampos() {
@@ -110,7 +119,7 @@ public class PadraoDeAtendimentoFormulario extends javax.swing.JDialog {
             
             return true;
         } catch (Exception err) {
-            JOptionPane.showMessageDialog(this, err.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }
@@ -342,42 +351,46 @@ public class PadraoDeAtendimentoFormulario extends javax.swing.JDialog {
     }//GEN-LAST:event_botaoCancelarActionPerformed
 
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
-        if ( this.validarCampos() )
-        {
-            PadraoDeAtendimento padraoDeAtendimento = new PadraoDeAtendimento();
-            if ( id.getText().length() > 0 )
+        try {
+            if ( this.validarCampos() )
             {
-                padraoDeAtendimento.setId(Integer.parseInt(id.getText()));
-            }
-            padraoDeAtendimento.setNome(nome.getText());
-            padraoDeAtendimento.setDiaDaSemana((DiaDaSemana)diaDaSemana.getSelectedItem());
-            
-            DateFormat fmt = new SimpleDateFormat("hh:mm");
-            try{
-                long ms = fmt.parse(horarioInicioExpediente.getText()).getTime();
-                padraoDeAtendimento.setHorarioInicioExpediente(new java.sql.Time(ms));
-                ms = fmt.parse(horarioFimExpediente.getText()).getTime();
-                padraoDeAtendimento.setHorarioFimExpediente(new java.sql.Time(ms));
-            }
-            catch(ParseException err){
-                JOptionPane.showMessageDialog(this, err.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
-            }
-            
-            padraoDeAtendimento.setTempoMedioConsulta(Integer.parseInt(tempoConsulta.getText()));
-            
-            if ( id.getText().length() > 0 ) {
-                PadraoDeAtendimentoDAO.getInstance().merge(padraoDeAtendimento);
-            } else {
-                PadraoDeAtendimentoDAO.getInstance().persist(padraoDeAtendimento);
-            }
+                PadraoDeAtendimento padraoDeAtendimento = new PadraoDeAtendimento();
+                if ( id.getText().length() > 0 )
+                {
+                    padraoDeAtendimento.setId(Integer.parseInt(id.getText()));
+                }
+                padraoDeAtendimento.setNome(nome.getText());
+                padraoDeAtendimento.setDiaDaSemana((DiaDaSemana)diaDaSemana.getSelectedItem());
 
-            JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-            
-            List<Object> registro = new ArrayList();
-            registro.add(padraoDeAtendimento);
-            
-            parent.atualizarGrid(padraoDeAtendimento.getId(), registro);
-            this.setVisible(false);
+                DateFormat fmt = new SimpleDateFormat("hh:mm");
+                try{
+                    long ms = fmt.parse(horarioInicioExpediente.getText()).getTime();
+                    padraoDeAtendimento.setHorarioInicioExpediente(new java.sql.Time(ms));
+                    ms = fmt.parse(horarioFimExpediente.getText()).getTime();
+                    padraoDeAtendimento.setHorarioFimExpediente(new java.sql.Time(ms));
+                }
+                catch(ParseException err){
+                    JOptionPane.showMessageDialog(this, err.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+                }
+
+                padraoDeAtendimento.setTempoMedioConsulta(Integer.parseInt(tempoConsulta.getText()));
+
+                if ( id.getText().length() > 0 ) {
+                    PadraoDeAtendimentoDAO.getInstance().merge(padraoDeAtendimento);
+                } else {
+                    PadraoDeAtendimentoDAO.getInstance().persist(padraoDeAtendimento);
+                }
+
+                JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+
+                List<Object> registro = new ArrayList();
+                registro.add(padraoDeAtendimento);
+
+                parent.atualizarGrid(padraoDeAtendimento.getId(), registro);
+                this.setVisible(false);
+            }
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botaoSalvarActionPerformed
 

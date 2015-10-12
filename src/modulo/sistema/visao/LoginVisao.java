@@ -12,6 +12,7 @@ import modulo.administrativo.dao.GrupoDoUsuarioDAO;
 import modulo.administrativo.dao.UsuarioDAO;
 import modulo.administrativo.negocio.GrupoDoUsuario;
 import modulo.administrativo.negocio.UserAccount;
+import modulo.sistema.negocio.SOptionPane;
 import modulo.sistema.negocio.UsuarioLogado;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Restrictions;
@@ -34,24 +35,27 @@ public class LoginVisao extends javax.swing.JFrame {
     }
 
     public boolean validarCampos() {
-        boolean ok = true;
-        String message = "";
+        try {
+            String message = "";
 
-        if (login.getText().isEmpty()) {
-            ok = false;
-            message += "O campo 'Login' deve ser preenchido!\n";
+            if (login.getText().isEmpty()) {
+                message += "O campo 'Login' deve ser preenchido!\n";
+            }
+
+            if (senha.getText().isEmpty()) {
+                message += "O campo 'Senha' deve ser preenchido!\n";
+            }
+
+            if (!message.isEmpty()) {
+                throw new Exception(message);
+            }
+            
+            return true;
+            
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
-
-        if (senha.getText().isEmpty()) {
-            ok = false;
-            message += "O campo 'Senha' deve ser preenchido!\n";
-        }
-
-        if (!ok) {
-            JOptionPane.showMessageDialog(this, message, "Erro!", JOptionPane.ERROR_MESSAGE);
-        }
-
-        return ok;
     }
 
     /**
@@ -82,7 +86,7 @@ public class LoginVisao extends javax.swing.JFrame {
         logoImage.setBorder(null);
 
         loginLabel.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
-        loginLabel.setForeground(new java.awt.Color(128, 128, 128));
+        loginLabel.setForeground(new java.awt.Color(51, 51, 51));
         loginLabel.setText("Login");
         loginLabel.setAlignmentY(0.0F);
 
@@ -103,7 +107,7 @@ public class LoginVisao extends javax.swing.JFrame {
         });
 
         loginLabel1.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
-        loginLabel1.setForeground(new java.awt.Color(128, 128, 128));
+        loginLabel1.setForeground(new java.awt.Color(51, 51, 51));
         loginLabel1.setText("Senha");
         loginLabel1.setAlignmentY(0.0F);
 
@@ -208,35 +212,39 @@ public class LoginVisao extends javax.swing.JFrame {
     }//GEN-LAST:event_loginActionPerformed
 
     private void botaoLogarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLogarActionPerformed
-        if (this.validarCampos()) {
+        try {
+            if (this.validarCampos()) {
 
-            Conjunction and = Restrictions.conjunction();
-            and.add(Restrictions.eq("login", login.getText()));
-            and.add(Restrictions.eq("password", UserAccount.MD5(senha.getText())));
-            and.add(Restrictions.eq("active", true));
-            List<Object> findUsuario = UsuarioDAO.getInstance().findByCriteria(new UserAccount(), and, Restrictions.disjunction());
+                Conjunction and = Restrictions.conjunction();
+                and.add(Restrictions.eq("login", login.getText()));
+                and.add(Restrictions.eq("password", UserAccount.MD5(senha.getText())));
+                and.add(Restrictions.eq("active", true));
+                List<Object> findUsuario = UsuarioDAO.getInstance().findByCriteria(new UserAccount(), and, Restrictions.disjunction());
 
-            if ( findUsuario.size() > 0 )
-            {
-                // Seta o usuário autenticado para o objeto usuariologado.
-                UserAccount userAccount = (UserAccount) findUsuario.get(0);
-                UsuarioLogado.getInstance().setaUsuarioLogado(userAccount);
-                
-                // Obter todos os grupos do usuário, e seta para o objeto usuariologado.
-                Conjunction find = Restrictions.conjunction();
-                find.add(Restrictions.eq("usuario", userAccount));
-                List<Object> gruposDoUsuario = GrupoDoUsuarioDAO.getInstance().findByCriteria(new GrupoDoUsuario(), find, Restrictions.disjunction());
-                UsuarioLogado.getInstance().setGruposDoUsuarioLogado(gruposDoUsuario);                
-                
-                SistemaVisao sistema = new SistemaVisao();
-                sistema.setExtendedState(sistema.MAXIMIZED_BOTH);
-                sistema.setVisible(true);
-                this.setVisible(false);
+                if ( findUsuario.size() > 0 )
+                {
+                    // Seta o usuário autenticado para o objeto usuariologado.
+                    UserAccount userAccount = (UserAccount) findUsuario.get(0);
+                    UsuarioLogado.getInstance().setaUsuarioLogado(userAccount);
+
+                    // Obter todos os grupos do usuário, e seta para o objeto usuariologado.
+                    Conjunction find = Restrictions.conjunction();
+                    find.add(Restrictions.eq("usuario", userAccount));
+                    List<Object> gruposDoUsuario = GrupoDoUsuarioDAO.getInstance().findByCriteria(new GrupoDoUsuario(), find, Restrictions.disjunction());
+                    UsuarioLogado.getInstance().setGruposDoUsuarioLogado(gruposDoUsuario);                
+
+                    SistemaVisao sistema = new SistemaVisao();
+                    sistema.setExtendedState(sistema.MAXIMIZED_BOTH);
+                    sistema.setVisible(true);
+                    this.setVisible(false);
+                }
+                else
+                {
+                    throw new Exception("Usuário e(ou) senha inválidos.");
+                }
             }
-            else
-            {
-                JOptionPane.showMessageDialog(this, "Usuário e(ou) senha inválidos.", "Erro!", JOptionPane.ERROR_MESSAGE);
-            }
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botaoLogarActionPerformed
 

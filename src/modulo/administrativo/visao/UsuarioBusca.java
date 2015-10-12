@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modulo.administrativo.dao.UsuarioDAO;
 import modulo.administrativo.negocio.UserAccount;
+import modulo.sistema.negocio.SOptionPane;
 import modulo.sistema.visao.Busca;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
@@ -106,7 +107,7 @@ public class UsuarioBusca extends Busca {
             }
             
         } catch (Exception err) {
-            JOptionPane.showMessageDialog(this, "Erro ao atualizar grid: " + err.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -119,51 +120,63 @@ public class UsuarioBusca extends Busca {
 
     @Override
     public void botaoEditarActionPerformed(ActionEvent evt) {
-        int selected = getTabela().getSelectedRow();
-        Object registro = getTabela().getValueAt(selected, 0);
-        int usuario_id = Integer.parseInt(registro.toString());
-        
-        Object usuario = UsuarioDAO.getInstance().getById(new UserAccount(), usuario_id);
-        
-        form = new UsuarioFormulario(this, true);
-        form.popularCampos((UserAccount) usuario);
-        form.setLocationRelativeTo(null);
-        form.setVisible(true);
+        try {
+            int selected = getTabela().getSelectedRow();
+            Object registro = getTabela().getValueAt(selected, 0);
+            int usuario_id = Integer.parseInt(registro.toString());
+
+            Object usuario = UsuarioDAO.getInstance().getById(new UserAccount(), usuario_id);
+
+            form = new UsuarioFormulario(this, true);
+            form.popularCampos((UserAccount) usuario);
+            form.setLocationRelativeTo(null);
+            form.setVisible(true);
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     @Override
     public void botaoExcluirActionPerformed(ActionEvent evt) {
-        int selected = getTabela().getSelectedRow();
-        Object registro = getTabela().getValueAt(selected, 0);
-        int grupodeusuarios_id = Integer.parseInt(registro.toString());
-        
-        int escolha = JOptionPane.showConfirmDialog(null, "Você têm certeza que deseja excluir este registro?", "Atenção!", JOptionPane.YES_NO_OPTION);
-            
-        if ( escolha == JOptionPane.YES_OPTION ) 
-        {
-            UserAccount usuario = new UserAccount();
-            usuario.setId(grupodeusuarios_id);
-            UsuarioDAO.getInstance().remove(usuario);
-            
-            this.atualizarGrid(-1, new ArrayList());
-            JOptionPane.showMessageDialog(this, "Registro excluído com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+        try {
+            int selected = getTabela().getSelectedRow();
+            Object registro = getTabela().getValueAt(selected, 0);
+            int grupodeusuarios_id = Integer.parseInt(registro.toString());
+
+            int escolha = JOptionPane.showConfirmDialog(null, "Você têm certeza que deseja excluir este registro?", "Atenção!", JOptionPane.YES_NO_OPTION);
+
+            if ( escolha == JOptionPane.YES_OPTION ) 
+            {
+                UserAccount usuario = new UserAccount();
+                usuario.setId(grupodeusuarios_id);
+                UsuarioDAO.getInstance().remove(usuario);
+
+                this.atualizarGrid(-1, new ArrayList());
+                JOptionPane.showMessageDialog(this, "Registro excluído com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     @Override
     public void botaoBuscarActionPerformed(ActionEvent evt) {
-        String busca = getCampoBusca().getText();
-        
-        Disjunction or = Restrictions.disjunction();
-        or.add(Restrictions.ilike("login", busca, MatchMode.ANYWHERE));
-        or.add(Restrictions.ilike("name", busca, MatchMode.ANYWHERE));
-        
         try {
-            or.add(Restrictions.eq("id", Integer.parseInt(busca)));
+            String busca = getCampoBusca().getText();
+
+            Disjunction or = Restrictions.disjunction();
+            or.add(Restrictions.ilike("login", busca, MatchMode.ANYWHERE));
+            or.add(Restrictions.ilike("name", busca, MatchMode.ANYWHERE));
+
+            try {
+                or.add(Restrictions.eq("id", Integer.parseInt(busca)));
+            } catch (Exception err) {
+            }
+
+            List<Object> usuarios = UsuarioDAO.getInstance().findByCriteria(new UserAccount(), Restrictions.conjunction(), or);
+            this.atualizarGrid(-1, usuarios);
         } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
-        
-        List<Object> usuarios = UsuarioDAO.getInstance().findByCriteria(new UserAccount(), Restrictions.conjunction(), or);
-        this.atualizarGrid(-1, usuarios);
     }
 }

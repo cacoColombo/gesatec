@@ -18,6 +18,7 @@ import modulo.administrativo.dao.UsuarioDAO;
 import modulo.administrativo.negocio.GrupoDeUsuarios;
 import modulo.administrativo.negocio.GrupoDoUsuario;
 import modulo.administrativo.negocio.UserAccount;
+import modulo.sistema.negocio.SOptionPane;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Restrictions;
 
@@ -60,52 +61,56 @@ public class UsuarioFormulario extends javax.swing.JDialog {
     }
     
     public void popularCampos(UserAccount usuario) {
-        this.useraccount = usuario;
-        id.setText(Integer.toString(usuario.getId()));
-        name.setText(usuario.getName());
-        login.setText(usuario.getLogin());
-        ativo.setSelected(usuario.isActive());
-        
-        if ( !Integer.toString(usuario.getId()).isEmpty() )
-        {
-            name.setEnabled(false);
-            login.setEnabled(false);
-        }
-        
-        // Obter grupos de usuários, do usuário.
-        Conjunction and = Restrictions.conjunction();
-        and.add(Restrictions.eq("usuario", usuario));
-        gruposDoUsuario = GrupoDoUsuarioDAO.getInstance().findByCriteria(new GrupoDoUsuario(), and, Restrictions.disjunction());
-        
-        // Popula combobox de grupos de usuários, somente com os grupos não pertencentes ao usuário editado.
-        grupoDeUsuarios.addItem("");
-        List<Object> grupos = GrupoDeUsuariosDAO.getInstance().findAll(new GrupoDeUsuarios());
-        
-        for ( int i = 0; i < grupos.size(); i ++ ) {                
-            GrupoDeUsuarios grupo = (GrupoDeUsuarios) grupos.get(i);
-            boolean possuiGrupo = false;
-            
-            for ( int g = 0; g < gruposDoUsuario.size(); g++ ) {
-                // Somente adicionar, se não existir no list de gruposDoUsuario
-                GrupoDoUsuario grupoDoUsuario = (GrupoDoUsuario) gruposDoUsuario.get(g);
-                
-                if ( grupoDoUsuario.getGrupoDeUsuarios().getId() == grupo.getId() )
-                {
-                    possuiGrupo = true;
-                    break;
+        try {
+            this.useraccount = usuario;
+            id.setText(Integer.toString(usuario.getId()));
+            name.setText(usuario.getName());
+            login.setText(usuario.getLogin());
+            ativo.setSelected(usuario.isActive());
+
+            if ( !Integer.toString(usuario.getId()).isEmpty() )
+            {
+                name.setEnabled(false);
+                login.setEnabled(false);
+            }
+
+            // Obter grupos de usuários, do usuário.
+            Conjunction and = Restrictions.conjunction();
+            and.add(Restrictions.eq("usuario", usuario));
+            gruposDoUsuario = GrupoDoUsuarioDAO.getInstance().findByCriteria(new GrupoDoUsuario(), and, Restrictions.disjunction());
+
+            // Popula combobox de grupos de usuários, somente com os grupos não pertencentes ao usuário editado.
+            grupoDeUsuarios.addItem("");
+            List<Object> grupos = GrupoDeUsuariosDAO.getInstance().findAll(new GrupoDeUsuarios());
+
+            for ( int i = 0; i < grupos.size(); i ++ ) {                
+                GrupoDeUsuarios grupo = (GrupoDeUsuarios) grupos.get(i);
+                boolean possuiGrupo = false;
+
+                for ( int g = 0; g < gruposDoUsuario.size(); g++ ) {
+                    // Somente adicionar, se não existir no list de gruposDoUsuario
+                    GrupoDoUsuario grupoDoUsuario = (GrupoDoUsuario) gruposDoUsuario.get(g);
+
+                    if ( grupoDoUsuario.getGrupoDeUsuarios().getId() == grupo.getId() )
+                    {
+                        possuiGrupo = true;
+                        break;
+                    }
                 }
+
+                if ( !possuiGrupo ) {
+                    grupoDeUsuarios.addItem(grupo);
+                }
+            } 
+
+            // Popula tabela de grupos de usuários, com os grupos pertencentes ao usuário editado.
+            DefaultTableModel modelo = (DefaultTableModel) tabelaDeGrupos.getModel();
+            for ( int g = 0; g < gruposDoUsuario.size(); g++ ) {
+                GrupoDoUsuario grupoDoUsuario = (GrupoDoUsuario) gruposDoUsuario.get(g);
+                modelo.addRow(new Object[]{grupoDoUsuario.getGrupoDeUsuarios().getId(), grupoDoUsuario.getGrupoDeUsuarios().getNome()});
             }
-            
-            if ( !possuiGrupo ) {
-                grupoDeUsuarios.addItem(grupo);
-            }
-        } 
-        
-        // Popula tabela de grupos de usuários, com os grupos pertencentes ao usuário editado.
-        DefaultTableModel modelo = (DefaultTableModel) tabelaDeGrupos.getModel();
-        for ( int g = 0; g < gruposDoUsuario.size(); g++ ) {
-            GrupoDoUsuario grupoDoUsuario = (GrupoDoUsuario) gruposDoUsuario.get(g);
-            modelo.addRow(new Object[]{grupoDoUsuario.getGrupoDeUsuarios().getId(), grupoDoUsuario.getGrupoDeUsuarios().getNome()});
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -117,7 +122,7 @@ public class UsuarioFormulario extends javax.swing.JDialog {
             
             return true;
         } catch (Exception err) {
-            JOptionPane.showMessageDialog(this, err.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }
@@ -402,44 +407,48 @@ public class UsuarioFormulario extends javax.swing.JDialog {
     }//GEN-LAST:event_botaoCancelarActionPerformed
 
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
-        if ( this.validarCampos() )
-        {
-            useraccount.setName(name.getText());
-            useraccount.setLogin(login.getText());
-            useraccount.setActive(ativo.isSelected());
-            if ( !senha.getText().isEmpty() )
+        try {
+            if ( this.validarCampos() )
             {
-                useraccount.setPassword(senha.getText());
+                useraccount.setName(name.getText());
+                useraccount.setLogin(login.getText());
+                useraccount.setActive(ativo.isSelected());
+                if ( !senha.getText().isEmpty() )
+                {
+                    useraccount.setPassword(senha.getText());
+                }
+                UsuarioDAO.getInstance().merge(useraccount);
+
+                // Deletar todos os grupos do usuário, e registrá-los novamente.
+                for ( int g = 0; g < gruposDoUsuario.size(); g++ ) {
+                    // Somente adicionar, se não existir no list de gruposDoUsuario
+                    GrupoDoUsuario grupoDoUsuario = (GrupoDoUsuario) gruposDoUsuario.get(g);
+                    GrupoDoUsuarioDAO.getInstance().remove(grupoDoUsuario);
+                }
+
+                DefaultTableModel modelo = (DefaultTableModel) tabelaDeGrupos.getModel();
+                for ( int i = 0; i < modelo.getRowCount(); i++ )
+                {
+                    GrupoDeUsuarios grupo = new GrupoDeUsuarios();
+                    grupo.setId((int)modelo.getValueAt(i, 0));
+
+                    GrupoDoUsuario grupoDoUsuario = new GrupoDoUsuario();
+                    grupoDoUsuario.setUsuario(useraccount);
+                    grupoDoUsuario.setGrupoDeUsuarios(grupo);
+
+                    GrupoDoUsuarioDAO.getInstance().merge(grupoDoUsuario);
+                }
+
+                JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+
+                List<Object> registro = new ArrayList();
+                registro.add(useraccount);
+
+                parent.atualizarGrid(useraccount.getId(), registro);
+                this.setVisible(false);
             }
-            UsuarioDAO.getInstance().merge(useraccount);
-            
-            // Deletar todos os grupos do usuário, e registrá-los novamente.
-            for ( int g = 0; g < gruposDoUsuario.size(); g++ ) {
-                // Somente adicionar, se não existir no list de gruposDoUsuario
-                GrupoDoUsuario grupoDoUsuario = (GrupoDoUsuario) gruposDoUsuario.get(g);
-                GrupoDoUsuarioDAO.getInstance().remove(grupoDoUsuario);
-            }
-            
-            DefaultTableModel modelo = (DefaultTableModel) tabelaDeGrupos.getModel();
-            for ( int i = 0; i < modelo.getRowCount(); i++ )
-            {
-                GrupoDeUsuarios grupo = new GrupoDeUsuarios();
-                grupo.setId((int)modelo.getValueAt(i, 0));
-                
-                GrupoDoUsuario grupoDoUsuario = new GrupoDoUsuario();
-                grupoDoUsuario.setUsuario(useraccount);
-                grupoDoUsuario.setGrupoDeUsuarios(grupo);
-                
-                GrupoDoUsuarioDAO.getInstance().merge(grupoDoUsuario);
-            }
-            
-            JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-            
-            List<Object> registro = new ArrayList();
-            registro.add(useraccount);
-            
-            parent.atualizarGrid(useraccount.getId(), registro);
-            this.setVisible(false);
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botaoSalvarActionPerformed
 
@@ -452,23 +461,31 @@ public class UsuarioFormulario extends javax.swing.JDialog {
     }//GEN-LAST:event_grupoDeUsuariosActionPerformed
 
     private void botaoAdicionarGrupoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAdicionarGrupoActionPerformed
-        GrupoDeUsuarios grupo = (GrupoDeUsuarios) grupoDeUsuarios.getSelectedItem();
-        DefaultTableModel modelo = (DefaultTableModel) tabelaDeGrupos.getModel();
-        modelo.addRow(new Object[]{grupo.getId(), grupo.getNome()});
-        grupoDeUsuarios.removeItem(grupo);
-        grupoDeUsuarios.setSelectedItem("");
+        try {
+            GrupoDeUsuarios grupo = (GrupoDeUsuarios) grupoDeUsuarios.getSelectedItem();
+            DefaultTableModel modelo = (DefaultTableModel) tabelaDeGrupos.getModel();
+            modelo.addRow(new Object[]{grupo.getId(), grupo.getNome()});
+            grupoDeUsuarios.removeItem(grupo);
+            grupoDeUsuarios.setSelectedItem("");
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_botaoAdicionarGrupoActionPerformed
 
     private void botaoRemoverGrupoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoRemoverGrupoActionPerformed
-        int selected = tabelaDeGrupos.getSelectedRow();
-        Object registro = tabelaDeGrupos.getValueAt(selected, 0);
-        int grupo_id = Integer.parseInt(registro.toString());
-        
-        Object grupo = GrupoDeUsuariosDAO.getInstance().getById(new GrupoDeUsuarios(), grupo_id);
-        DefaultTableModel modelo = (DefaultTableModel) tabelaDeGrupos.getModel();
-        modelo.removeRow(selected);
-        grupoDeUsuarios.addItem(grupo);
-        botaoRemoverGrupo.setEnabled(false);
+        try {
+            int selected = tabelaDeGrupos.getSelectedRow();
+            Object registro = tabelaDeGrupos.getValueAt(selected, 0);
+            int grupo_id = Integer.parseInt(registro.toString());
+
+            Object grupo = GrupoDeUsuariosDAO.getInstance().getById(new GrupoDeUsuarios(), grupo_id);
+            DefaultTableModel modelo = (DefaultTableModel) tabelaDeGrupos.getModel();
+            modelo.removeRow(selected);
+            grupoDeUsuarios.addItem(grupo);
+            botaoRemoverGrupo.setEnabled(false);
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_botaoRemoverGrupoActionPerformed
 
     /**

@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modulo.cadastro.dao.AtendenteDAO;
 import modulo.cadastro.negocio.Atendente;
+import modulo.sistema.negocio.SOptionPane;
 import modulo.sistema.visao.Busca;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
@@ -161,7 +162,7 @@ public class AtendenteBusca extends Busca {
             }
             
         } catch (Exception err) {
-            JOptionPane.showMessageDialog(this, "Erro ao atualizar grid: " + err.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -174,51 +175,63 @@ public class AtendenteBusca extends Busca {
 
     @Override
     public void botaoEditarActionPerformed(ActionEvent evt) {
-        int selected = getTabela().getSelectedRow();
-        Object registro = getTabela().getValueAt(selected, 0);
-        int atendente_id = Integer.parseInt(registro.toString());
-        
-        Object atendente = AtendenteDAO.getInstance().getById(new Atendente(), atendente_id);
-        
-        form = new AtendenteFormulario(this, true);
-        form.popularCampos((Atendente) atendente);
-        form.setLocationRelativeTo(null);
-        form.setVisible(true);
+        try {
+            int selected = getTabela().getSelectedRow();
+            Object registro = getTabela().getValueAt(selected, 0);
+            int atendente_id = Integer.parseInt(registro.toString());
+
+            Object atendente = AtendenteDAO.getInstance().getById(new Atendente(), atendente_id);
+
+            form = new AtendenteFormulario(this, true);
+            form.popularCampos((Atendente) atendente);
+            form.setLocationRelativeTo(null);
+            form.setVisible(true);
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     @Override
     public void botaoExcluirActionPerformed(ActionEvent evt) {
-        int selected = getTabela().getSelectedRow();
-        Object registro = getTabela().getValueAt(selected, 0);
-        int grupodeatendentes_id = Integer.parseInt(registro.toString());
-        
-        int escolha = JOptionPane.showConfirmDialog(null, "Você têm certeza que deseja excluir este registro?", "Atenção!", JOptionPane.YES_NO_OPTION);
-            
-        if ( escolha == JOptionPane.YES_OPTION ) 
-        {
-            Atendente atendente = new Atendente();
-            atendente.setId(grupodeatendentes_id);
-            AtendenteDAO.getInstance().remove(atendente);
-            
-            this.atualizarGrid(-1, new ArrayList());
-            JOptionPane.showMessageDialog(this, "Registro excluído com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+        try {
+            int selected = getTabela().getSelectedRow();
+            Object registro = getTabela().getValueAt(selected, 0);
+            int grupodeatendentes_id = Integer.parseInt(registro.toString());
+
+            int escolha = JOptionPane.showConfirmDialog(null, "Você têm certeza que deseja excluir este registro?", "Atenção!", JOptionPane.YES_NO_OPTION);
+
+            if ( escolha == JOptionPane.YES_OPTION ) 
+            {
+                Atendente atendente = new Atendente();
+                atendente.setId(grupodeatendentes_id);
+                AtendenteDAO.getInstance().remove(atendente);
+
+                this.atualizarGrid(-1, new ArrayList());
+                JOptionPane.showMessageDialog(this, "Registro excluído com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     @Override
     public void botaoBuscarActionPerformed(ActionEvent evt) {
-        String busca = getCampoBusca().getText();
-        
-        Disjunction or = Restrictions.disjunction();
-        or.add(Restrictions.ilike("nome", busca, MatchMode.ANYWHERE));
-        //or.add(Restrictions.ilike("ativo", busca, MatchMode.ANYWHERE));
-        
         try {
-            or.add(Restrictions.eq("id", Integer.parseInt(busca)));
+            String busca = getCampoBusca().getText();
+
+            Disjunction or = Restrictions.disjunction();
+            or.add(Restrictions.ilike("nome", busca, MatchMode.ANYWHERE));
+            //or.add(Restrictions.ilike("ativo", busca, MatchMode.ANYWHERE));
+
+            try {
+                or.add(Restrictions.eq("id", Integer.parseInt(busca)));
+            } catch (Exception err) {
+            }
+
+            List<Object> grupos = AtendenteDAO.getInstance().findByCriteria(new Atendente(), Restrictions.conjunction(), or);
+            this.atualizarGrid(-1, grupos);
         } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
-        
-        List<Object> grupos = AtendenteDAO.getInstance().findByCriteria(new Atendente(), Restrictions.conjunction(), or);
-        this.atualizarGrid(-1, grupos);
     }
 }
