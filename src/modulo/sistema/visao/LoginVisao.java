@@ -70,10 +70,8 @@ public class LoginVisao extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         logoImage = new javax.swing.JLabel();
         loginLabel = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         login = new javax.swing.JTextField();
         loginLabel1 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         senha = new javax.swing.JPasswordField();
         botaoLogar = new javax.swing.JButton();
         botaoSair = new javax.swing.JButton();
@@ -87,12 +85,9 @@ public class LoginVisao extends javax.swing.JFrame {
 
         loginLabel.setFont(new java.awt.Font("Ubuntu", 0, 15)); // NOI18N
         loginLabel.setForeground(new java.awt.Color(51, 51, 51));
+        loginLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         loginLabel.setText("Login");
         loginLabel.setAlignmentY(0.0F);
-
-        jLabel4.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
-        jLabel4.setForeground(java.awt.Color.red);
-        jLabel4.setText("*");
 
         login.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         login.addActionListener(new java.awt.event.ActionListener() {
@@ -108,12 +103,9 @@ public class LoginVisao extends javax.swing.JFrame {
 
         loginLabel1.setFont(new java.awt.Font("Ubuntu", 0, 15)); // NOI18N
         loginLabel1.setForeground(new java.awt.Color(51, 51, 51));
+        loginLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         loginLabel1.setText("Senha");
         loginLabel1.setAlignmentY(0.0F);
-
-        jLabel5.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
-        jLabel5.setForeground(java.awt.Color.red);
-        jLabel5.setText("*");
 
         senha.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         senha.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -142,55 +134,39 @@ public class LoginVisao extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(145, 145, 145)
-                        .addComponent(loginLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5)
-                        .addGap(131, 131, 131))
+                    .addComponent(loginLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(login, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(senha)
+                    .addComponent(loginLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(147, 147, 147)
-                                .addComponent(loginLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel4))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(44, 44, 44)
-                                .addComponent(logoImage, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(32, 32, 32)
+                        .addComponent(logoImage, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(login)
-                            .addComponent(senha)
-                            .addComponent(botaoLogar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(botaoSair, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(botaoLogar, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(botaoSair, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(36, 36, 36)
                 .addComponent(logoImage, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(loginLabel)
-                    .addComponent(jLabel4))
+                .addComponent(loginLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(loginLabel1)
-                    .addComponent(jLabel5))
+                .addComponent(loginLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(senha, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(botaoLogar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(botaoSair, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(botaoLogar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botaoSair, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -301,8 +277,6 @@ public class LoginVisao extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoLogar;
     private javax.swing.JButton botaoSair;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField login;
     private javax.swing.JLabel loginLabel;
