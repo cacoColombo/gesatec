@@ -85,7 +85,7 @@ public class LoginVisao extends javax.swing.JFrame {
         logoImage.setBackground(java.awt.SystemColor.controlLtHighlight);
         logoImage.setBorder(null);
 
-        loginLabel.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        loginLabel.setFont(new java.awt.Font("Ubuntu", 0, 15)); // NOI18N
         loginLabel.setForeground(new java.awt.Color(51, 51, 51));
         loginLabel.setText("Login");
         loginLabel.setAlignmentY(0.0F);
@@ -106,7 +106,7 @@ public class LoginVisao extends javax.swing.JFrame {
             }
         });
 
-        loginLabel1.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        loginLabel1.setFont(new java.awt.Font("Ubuntu", 0, 15)); // NOI18N
         loginLabel1.setForeground(new java.awt.Color(51, 51, 51));
         loginLabel1.setText("Senha");
         loginLabel1.setAlignmentY(0.0F);
