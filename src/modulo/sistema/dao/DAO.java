@@ -8,6 +8,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
+import modulo.sistema.negocio.SOptionPane;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Conjunction;
@@ -76,6 +78,7 @@ public class DAO {
         } catch (Exception ex) {
             ex.printStackTrace();
             entityManager.getTransaction().rollback();
+            SOptionPane.showMessageDialog(null, ex, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -88,6 +91,7 @@ public class DAO {
         } catch (Exception ex) {
             ex.printStackTrace();
             entityManager.getTransaction().rollback();
+            SOptionPane.showMessageDialog(null, ex, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -100,6 +104,7 @@ public class DAO {
         } catch (Exception ex) {
             ex.printStackTrace();
             entityManager.getTransaction().rollback();
+            SOptionPane.showMessageDialog(null, ex, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -109,6 +114,7 @@ public class DAO {
             remove(objectRm);
         } catch (Exception ex) {
             ex.printStackTrace();
+            SOptionPane.showMessageDialog(null, ex, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
