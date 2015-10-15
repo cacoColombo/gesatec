@@ -115,8 +115,8 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
                             boolean admin = false;
                             
                             // Verifica se o grupo já possui registro na permissão, e popula conforme registros.
-                            for (int p = 0; p < permissoes.size(); p ++) {
-                                PermissaoDoGrupoDeUsuarios permissaoDoGrupoDeUsuarios = (PermissaoDoGrupoDeUsuarios) permissoes.get(p);
+                            for ( Object object : permissoes ) {
+                                PermissaoDoGrupoDeUsuarios permissaoDoGrupoDeUsuarios = (PermissaoDoGrupoDeUsuarios) object;
                                 
                                 if ( permissaoDoGrupoDeUsuarios.getId().equals(tela.getName()) ) {
                                     visualizar = permissaoDoGrupoDeUsuarios.isVisualizar();
@@ -342,6 +342,11 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
                 } else {
                     GrupoDeUsuariosDAO.getInstance().persist(grupoDeUsuarios);
                 }
+                
+                // Obter lista de permissões já registrada para o grupo
+                Conjunction and = Restrictions.conjunction();
+                and.add(Restrictions.eq("grupoDeUsuarios", grupoDeUsuarios));
+                List findPermissoes = PermissaoDoGrupoDeUsuariosDAO.getInstance().findByCriteria(new PermissaoDoGrupoDeUsuarios(), and, Restrictions.disjunction());
 
                 // Obter lista de permissões marcadas.
                 DefaultTableModel modelo = (DefaultTableModel) tabelaPermissoes.getModel();
@@ -355,15 +360,19 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
                     permissaoDoGrupoDeUsuarios.setAtualizar((boolean) modelo.getValueAt(c, 5));
                     permissaoDoGrupoDeUsuarios.setExcluir((boolean) modelo.getValueAt(c, 6));
                     permissaoDoGrupoDeUsuarios.setAdmin((boolean) modelo.getValueAt(c, 7));  
-
-                    // Verifica se a permissão já está registrada na base
-                    Conjunction and = Restrictions.conjunction();
-                    and.add(Restrictions.eq("grupoDeUsuarios", permissaoDoGrupoDeUsuarios.getGrupoDeUsuarios()));
-                    and.add(Restrictions.eq("id", permissaoDoGrupoDeUsuarios.getId()));
-                    List findPermissao = PermissaoDoGrupoDeUsuariosDAO.getInstance().findByCriteria(new PermissaoDoGrupoDeUsuarios(), and, Restrictions.disjunction());
-                   
-                    if ( findPermissao.size() > 0 ) {
-                        PermissaoDoGrupoDeUsuariosDAO.getInstance().merge(permissaoDoGrupoDeUsuarios);     
+                    
+                    // Verifica se a permissão já está registrada para o grupo, se sim, atualiza, caso contrário, insere.
+                    boolean merge = false;
+                    for ( Object object :  findPermissoes ) {
+                        PermissaoDoGrupoDeUsuarios permissao = (PermissaoDoGrupoDeUsuarios) object;
+                        if ( permissao.getId().equals(permissaoDoGrupoDeUsuarios.getId()) ) {
+                            merge = true;
+                            break;
+                        }
+                    }                    
+                    
+                    if ( merge ) {
+                        PermissaoDoGrupoDeUsuariosDAO.getInstance().merge(permissaoDoGrupoDeUsuarios);
                     } else {
                         PermissaoDoGrupoDeUsuariosDAO.getInstance().persist(permissaoDoGrupoDeUsuarios);
                     }
