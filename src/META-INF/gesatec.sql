@@ -9,23 +9,14 @@ ALTER SEQUENCE pessoa_id_seq RESTART WITH 2;
 --Permissões do usuário
 INSERT INTO grupodeusuarios (nome) VALUES ('Administradores');
 INSERT INTO grupodousuario (usuario_id, grupodeusuarios_id) VALUES (1, 1);
-INSERT INTO permissaodogrupodeusuarios 
-            (id, admin, atualizar, excluir, inserir, vizualizar, grupodeusuarios_id) 
-     VALUES ('grupodeusuarios', TRUE, TRUE, TRUE, TRUE, TRUE, 1);
+INSERT INTO permissaodogrupodeusuarios (id, admin, atualizar, excluir, inserir, visualizar, grupodeusuarios_id) VALUES ('grupodeusuarios', TRUE, TRUE, TRUE, TRUE, TRUE, 1);
+INSERT INTO permissaodogrupodeusuarios (id, admin, atualizar, excluir, inserir, visualizar, grupodeusuarios_id) VALUES ('efetuarlogout', TRUE, TRUE, TRUE, TRUE, TRUE, 1);
 
 
 INSERT INTO diadasemana (id, nome, abreviatura) VALUES (1, 'Domingo', 'Dom'), (2, 'Segunda-feira', 'Seg'), (3, 'Terça-feira', 'Ter'), (4, 'Quarta-feira', 'Qua'), (5, 'Quinta-feira', 'Qui'), (6, 'Sexta-feira', 'Sex'), (7, 'Sábado', 'Sáb');
 INSERT INTO tipoderepeticao (id, nome) VALUES (1, 'Diária'), (2, 'Semanal'), (3, 'Mensal'), (4, 'Anual');
 INSERT INTO statusagenda (id, nome) VALUES (1, 'AGENDADO'), (2, 'CONFIRMADO'), (3, 'EM ANDAMENTO'), (4, 'FINALIZADO');
 INSERT INTO campo (id, nome, tipo) VALUES (1, 'Texto simples', 'TextField'), (2, 'Texto longo', 'TextArea');
-
-INSERT INTO diadasemana (abreviatura, nome) VALUES ('DOM', 'Domingo');
-INSERT INTO diadasemana (abreviatura, nome) VALUES ('SEG', 'Segunda');
-INSERT INTO diadasemana (abreviatura, nome) VALUES ('TER', 'Terça');
-INSERT INTO diadasemana (abreviatura, nome) VALUES ('QUA', 'Quarta');
-INSERT INTO diadasemana (abreviatura, nome) VALUES ('QUI', 'Quinta');
-INSERT INTO diadasemana (abreviatura, nome) VALUES ('SEX', 'Sexta');
-INSERT INTO diadasemana (abreviatura, nome) VALUES ('SAB', 'Sábado');
 
 INSERT INTO pais (nome, sigla, nacionalidade) VALUES ('Brasil', 'BR', 'brasileiro');	
 	

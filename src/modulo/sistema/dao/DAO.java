@@ -78,7 +78,7 @@ public class DAO {
         } catch (Exception ex) {
             ex.printStackTrace();
             entityManager.getTransaction().rollback();
-            SOptionPane.showMessageDialog(null, ex, "Erro!", JOptionPane.ERROR_MESSAGE);
+            //SOptionPane.showMessageDialog(null, ex, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -91,7 +91,7 @@ public class DAO {
         } catch (Exception ex) {
             ex.printStackTrace();
             entityManager.getTransaction().rollback();
-            SOptionPane.showMessageDialog(null, ex, "Erro!", JOptionPane.ERROR_MESSAGE);
+            //SOptionPane.showMessageDialog(null, ex, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -104,7 +104,7 @@ public class DAO {
         } catch (Exception ex) {
             ex.printStackTrace();
             entityManager.getTransaction().rollback();
-            SOptionPane.showMessageDialog(null, ex, "Erro!", JOptionPane.ERROR_MESSAGE);
+            //SOptionPane.showMessageDialog(null, ex, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -114,7 +114,7 @@ public class DAO {
             remove(objectRm);
         } catch (Exception ex) {
             ex.printStackTrace();
-            SOptionPane.showMessageDialog(null, ex, "Erro!", JOptionPane.ERROR_MESSAGE);
+            //SOptionPane.showMessageDialog(null, ex, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

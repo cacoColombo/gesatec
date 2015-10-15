@@ -356,8 +356,14 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
                     permissaoDoGrupoDeUsuarios.setExcluir((boolean) modelo.getValueAt(c, 6));
                     permissaoDoGrupoDeUsuarios.setAdmin((boolean) modelo.getValueAt(c, 7));  
 
-                    if ( id.getText().length() > 0 ) {
-                        PermissaoDoGrupoDeUsuariosDAO.getInstance().merge(permissaoDoGrupoDeUsuarios);
+                    // Verifica se a permissão já está registrada na base
+                    Conjunction and = Restrictions.conjunction();
+                    and.add(Restrictions.eq("grupoDeUsuarios", permissaoDoGrupoDeUsuarios.getGrupoDeUsuarios()));
+                    and.add(Restrictions.eq("id", permissaoDoGrupoDeUsuarios.getId()));
+                    List findPermissao = PermissaoDoGrupoDeUsuariosDAO.getInstance().findByCriteria(new PermissaoDoGrupoDeUsuarios(), and, Restrictions.disjunction());
+                   
+                    if ( findPermissao.size() > 0 ) {
+                        PermissaoDoGrupoDeUsuariosDAO.getInstance().merge(permissaoDoGrupoDeUsuarios);     
                     } else {
                         PermissaoDoGrupoDeUsuariosDAO.getInstance().persist(permissaoDoGrupoDeUsuarios);
                     }
