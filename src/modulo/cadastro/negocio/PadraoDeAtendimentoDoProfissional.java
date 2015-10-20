@@ -18,7 +18,7 @@ import modulo.configuracao.negocio.PadraoDeAtendimento;
 
 @Entity
 @Table(name="padraodeatendimentodoprofissional", uniqueConstraints = {
-    @UniqueConstraint(columnNames={"profissional_id", "padraodeatendimento_id"})
+    @UniqueConstraint(name="padraodeatendimentodoprofissional_uk", columnNames={"profissional_id", "padraodeatendimento_id"})
 })
 public class PadraoDeAtendimentoDoProfissional implements Serializable {
     

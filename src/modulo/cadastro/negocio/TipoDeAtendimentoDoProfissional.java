@@ -18,7 +18,7 @@ import modulo.configuracao.negocio.TipoDeAtendimento;
 
 @Entity
 @Table(name="tipodeatendimentodoprofissional", uniqueConstraints = {
-    @UniqueConstraint(columnNames={"profissional_id", "tipodeatendimento_id"})
+    @UniqueConstraint(name="tipodeatendimentodoprofissional_uk", columnNames={"profissional_id", "tipodeatendimento_id"})
 })
 public class TipoDeAtendimentoDoProfissional implements Serializable {
     

@@ -18,7 +18,7 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name="padraodeatendimento", uniqueConstraints = {
-    @UniqueConstraint(columnNames={"diadasemana_id", "horarioinicioexpediente", "horariofimexpediente"})
+    @UniqueConstraint(name="padraodeatendimento_uk", columnNames={"diadasemana_id", "horarioinicioexpediente", "horariofimexpediente"})
 })
 public class PadraoDeAtendimento implements Serializable {
     

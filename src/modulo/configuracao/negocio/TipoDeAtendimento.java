@@ -23,6 +23,9 @@ public class TipoDeAtendimento implements Serializable {
     
     @Column(unique = true, nullable = false)
     private String nome;
+    
+    @Column(columnDefinition = "BOOLEAN DEFAULT TRUE", nullable = false)
+    private boolean ativo = true;
 
     public int getId() {
         return id;
@@ -38,5 +41,13 @@ public class TipoDeAtendimento implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 }
