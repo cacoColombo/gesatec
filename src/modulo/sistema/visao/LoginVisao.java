@@ -12,6 +12,7 @@ import modulo.administrativo.dao.GrupoDoUsuarioDAO;
 import modulo.administrativo.dao.UsuarioDAO;
 import modulo.administrativo.negocio.GrupoDoUsuario;
 import modulo.administrativo.negocio.UserAccount;
+import modulo.sistema.negocio.Auditoria;
 import modulo.sistema.negocio.SOptionPane;
 import modulo.sistema.negocio.UsuarioLogado;
 import org.hibernate.criterion.Conjunction;
@@ -190,7 +191,6 @@ public class LoginVisao extends javax.swing.JFrame {
     private void botaoLogarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLogarActionPerformed
         try {
             if (this.validarCampos()) {
-
                 Conjunction and = Restrictions.conjunction();
                 and.add(Restrictions.eq("login", login.getText()));
                 and.add(Restrictions.eq("password", UserAccount.MD5(senha.getText())));
@@ -202,7 +202,7 @@ public class LoginVisao extends javax.swing.JFrame {
                     // Seta o usuário autenticado para o objeto usuariologado.
                     UserAccount userAccount = (UserAccount) findUsuario.get(0);
                     UsuarioLogado.getInstance().setaUsuarioLogado(userAccount);
-
+                    Auditoria.registra("LOGIN AUTORIZADO");
                     // Obter todos os grupos do usuário, e seta para o objeto usuariologado.
                     Conjunction find = Restrictions.conjunction();
                     find.add(Restrictions.eq("usuario", userAccount));
@@ -216,6 +216,7 @@ public class LoginVisao extends javax.swing.JFrame {
                 }
                 else
                 {
+                    Auditoria.registra("LOGIN NÃO AUTORIZADO ("+ login.getText() +")");
                     throw new Exception("Usuário e(ou) senha inválidos.");
                 }
             }

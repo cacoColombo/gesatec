@@ -9,25 +9,24 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.JOptionPane;
-import modulo.sistema.negocio.Auditoria;
 import modulo.sistema.negocio.SOptionPane;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Disjunction;
 
-public class DAO {
+public class DAOAuditoria {
 
-    private static DAO instance;
+    private static DAOAuditoria instance;
     protected EntityManager entityManager;
 
-    public DAO() {
+    public DAOAuditoria() {
         entityManager = getEntityManager();
     }
 
-    public static DAO getInstance() {
+    public static DAOAuditoria getInstance() {
         if (instance == null) {
-            instance = new DAO();
+            instance = new DAOAuditoria();
         }
 
         return instance;
@@ -72,15 +71,10 @@ public class DAO {
 
     public void persist(Object object) {
         try {
-            int id = (int) object.getClass().getMethod("getId").invoke(object);
             entityManager.getTransaction().begin();
             entityManager.persist(object);
             entityManager.flush();
             entityManager.getTransaction().commit();
-            int id2 = (int) object.getClass().getMethod("getId").invoke(object);
-            String className = object.getClass().toString();
-            className = className.substring(className.lastIndexOf(".") + 1);
-            Auditoria.registra( (id==0?"INSERT":"UPDATE") + " on " + className +  " (id = " + id2+")");
         } catch (Exception ex) {
             ex.printStackTrace();
             entityManager.getTransaction().rollback();
@@ -90,15 +84,10 @@ public class DAO {
 
     public void merge(Object object) {
         try {
-            int id = (int) object.getClass().getMethod("getId").invoke(object);
             entityManager.getTransaction().begin();
             entityManager.merge(object);
             entityManager.flush();
             entityManager.getTransaction().commit();
-            int id2 = (int) object.getClass().getMethod("getId").invoke(object);
-            String className = object.getClass().toString();
-            className = className.substring(className.lastIndexOf(".") + 1);
-            Auditoria.registra( (id==0?"INSERT":"UPDATE") + " on " + className +  " (id = " + id2+")");
         } catch (Exception ex) {
             ex.printStackTrace();
             entityManager.getTransaction().rollback();
@@ -112,10 +101,6 @@ public class DAO {
             object = entityManager.find(object.getClass(), object.getClass().getMethod("getId").invoke(object));
             entityManager.remove(object);
             entityManager.getTransaction().commit();
-            int id = (int) object.getClass().getMethod("getId").invoke(object);
-            String className = object.getClass().toString();
-            className = className.substring(className.lastIndexOf(".") + 1);
-            Auditoria.registra("REMOVE" + " on " + className +  " (id = " + id+")");
         } catch (Exception ex) {
             ex.printStackTrace();
             entityManager.getTransaction().rollback();
@@ -127,7 +112,6 @@ public class DAO {
         try {
             Object objectRm = getById(object, id);
             remove(objectRm);
-            Auditoria.registra("INSERT/UPDATE on " + object.getClass().toString());
         } catch (Exception ex) {
             ex.printStackTrace();
             SOptionPane.showMessageDialog(null, ex, "Erro!", JOptionPane.ERROR_MESSAGE);

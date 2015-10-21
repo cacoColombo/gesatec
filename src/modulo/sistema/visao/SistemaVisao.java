@@ -31,6 +31,7 @@ import modulo.cadastro.visao.ClienteBusca;
 import modulo.cadastro.visao.EspecializacaoBusca;
 import modulo.cadastro.visao.ProfissionalBusca;
 import modulo.configuracao.visao.PadraoDeAtendimentoBusca;
+import modulo.sistema.negocio.Auditoria;
 import modulo.sistema.negocio.SOptionPane;
 import modulo.sistema.negocio.UsuarioLogado;
 import org.hibernate.criterion.Conjunction;
@@ -421,6 +422,7 @@ public class SistemaVisao extends javax.swing.JFrame {
             
         if ( reply == JOptionPane.YES_OPTION ) 
         {
+            Auditoria.registra("LOGOUT");
             LoginVisao login = new LoginVisao();
             login.setLocationRelativeTo(null);
             login.setVisible(true);
