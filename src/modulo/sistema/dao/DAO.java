@@ -72,15 +72,24 @@ public class DAO {
 
     public void persist(Object object) {
         try {
-            int id = (int) object.getClass().getMethod("getId").invoke(object);
+            Object oId = object.getClass().getMethod("getId").invoke(object);
             entityManager.getTransaction().begin();
             entityManager.persist(object);
             entityManager.flush();
             entityManager.getTransaction().commit();
-            int id2 = (int) object.getClass().getMethod("getId").invoke(object);
+            Object oId2 = (int) object.getClass().getMethod("getId").invoke(object);
             String className = object.getClass().toString();
             className = className.substring(className.lastIndexOf(".") + 1);
-            Auditoria.registra( (id==0?"INSERT":"UPDATE") + " on " + className +  " (id = " + id2+")");
+            if(oId instanceof String){
+                String id  = (String) oId;
+                String id2 = (String) oId2;
+                Auditoria.registra( (id.isEmpty()?"INSERT":"UPDATE") + " on " + className +  " (id = " + id2+")");
+            }
+            else {
+                int id  = (int) oId;
+                int id2 = (int) oId2;
+                Auditoria.registra( (id==0?"INSERT":"UPDATE") + " on " + className +  " (id = " + id2+")");
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             entityManager.getTransaction().rollback();
@@ -90,15 +99,24 @@ public class DAO {
 
     public void merge(Object object) {
         try {
-            int id = (int) object.getClass().getMethod("getId").invoke(object);
+            Object oId = object.getClass().getMethod("getId").invoke(object);
             entityManager.getTransaction().begin();
             entityManager.merge(object);
             entityManager.flush();
             entityManager.getTransaction().commit();
-            int id2 = (int) object.getClass().getMethod("getId").invoke(object);
+            Object oId2 = object.getClass().getMethod("getId").invoke(object);
             String className = object.getClass().toString();
             className = className.substring(className.lastIndexOf(".") + 1);
-            Auditoria.registra( (id==0?"INSERT":"UPDATE") + " on " + className +  " (id = " + id2+")");
+            if(oId instanceof String){
+                String id  = (String) oId;
+                String id2 = (String) oId2;
+                Auditoria.registra( (id.isEmpty()?"INSERT":"UPDATE") + " on " + className +  " (id = " + id2+")");
+            }
+            else {
+                int id  = (int) oId;
+                int id2 = (int) oId2;
+                Auditoria.registra( (id==0?"INSERT":"UPDATE") + " on " + className +  " (id = " + id2+")");
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             entityManager.getTransaction().rollback();
@@ -115,7 +133,7 @@ public class DAO {
             int id = (int) object.getClass().getMethod("getId").invoke(object);
             String className = object.getClass().toString();
             className = className.substring(className.lastIndexOf(".") + 1);
-            Auditoria.registra("REMOVE" + " on " + className +  " (id = " + id+")");
+            Auditoria.registra("REMOVE" + " on " + className +  " (id = " + object.getClass().getMethod("getId").invoke(object).toString() +")");
         } catch (Exception ex) {
             ex.printStackTrace();
             entityManager.getTransaction().rollback();
