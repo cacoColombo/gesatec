@@ -14,8 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Entity
-@Table(name = "statusagenda")
-public class StatusAgenda implements Serializable {
+@Table(name = "statusagendamento")
+public class StatusAgendamento implements Serializable {
     
     @Transient
     final int STATUS_AGENDA_AGENDADO = 1;

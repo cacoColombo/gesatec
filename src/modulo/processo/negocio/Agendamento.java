@@ -18,13 +18,15 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import modulo.cadastro.negocio.Atendente;
 import modulo.cadastro.negocio.Cliente;
+import modulo.cadastro.negocio.Profissional;
 import modulo.cadastro.negocio.TipoDeAtendimentoDoProfissional;
+import modulo.configuracao.negocio.TipoDeAtendimento;
 
 @Entity
-@Table(name="agenda", uniqueConstraints = {
+@Table(name="agendamento", uniqueConstraints = {
     @UniqueConstraint(columnNames={"dataagendada", "horarioagendado"})
 })
-public class Agenda implements Serializable {
+public class Agendamento implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +36,10 @@ public class Agenda implements Serializable {
     @ManyToOne
     @JoinColumn(name = "cliente_id", referencedColumnName = "id", nullable = false)
     private Cliente cliente;
+    
+    @ManyToOne
+    @JoinColumn(name = "profissional_id", referencedColumnName = "id", nullable = false)
+    private Profissional profissional;
     
     @ManyToOne
     @JoinColumn(name = "atendente_id", referencedColumnName = "id")
@@ -48,8 +54,12 @@ public class Agenda implements Serializable {
     private TipoDeRepeticao tipoDeRepeticao;
     
     @ManyToOne
-    @JoinColumn(name = "statusagenda_id", referencedColumnName = "id", nullable = false)
-    private StatusAgenda statusAgenda;
+    @JoinColumn(name = "statusagendamento_id", referencedColumnName = "id", nullable = false)
+    private StatusAgendamento statusAgenda;
+    
+    @ManyToOne
+    @JoinColumn(name = "tipodeatendimento_id", referencedColumnName = "id", nullable = false)
+    private TipoDeAtendimento tipoDeAtendimento;
     
     @Column(nullable = false)
     private Date dataRegistro;
@@ -82,6 +92,14 @@ public class Agenda implements Serializable {
         this.cliente = cliente;
     }
 
+    public Profissional getProfissional() {
+        return profissional;
+    }
+
+    public void setProfissional(Profissional profissional) {
+        this.profissional = profissional;
+    }
+
     public Atendente getAtendente() {
         return atendente;
     }
@@ -106,11 +124,11 @@ public class Agenda implements Serializable {
         this.tipoDeRepeticao = tipoDeRepeticao;
     }
 
-    public StatusAgenda getStatusAgenda() {
+    public StatusAgendamento getStatusAgenda() {
         return statusAgenda;
     }
 
-    public void setStatusAgenda(StatusAgenda statusAgenda) {
+    public void setStatusAgenda(StatusAgendamento statusAgenda) {
         this.statusAgenda = statusAgenda;
     }
 
@@ -152,5 +170,13 @@ public class Agenda implements Serializable {
 
     public void setObservacao(String observacao) {
         this.observacao = observacao;
+    }
+
+    public TipoDeAtendimento getTipoDeAtendimento() {
+        return tipoDeAtendimento;
+    }
+
+    public void setTipoDeAtendimento(TipoDeAtendimento tipoDeAtendimento) {
+        this.tipoDeAtendimento = tipoDeAtendimento;
     }
 }

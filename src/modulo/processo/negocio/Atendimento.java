@@ -26,7 +26,7 @@ public class Atendimento implements Serializable {
     
     @ManyToOne
     @JoinColumn(name = "agenda_id", referencedColumnName = "id", nullable = false)
-    private Agenda agenda;
+    private Agendamento agenda;
     
     @Column(nullable = false)
     private Time horarioRealIniciado;
@@ -42,11 +42,11 @@ public class Atendimento implements Serializable {
         this.id = id;
     }
 
-    public Agenda getAgenda() {
+    public Agendamento getAgenda() {
         return agenda;
     }
 
-    public void setAgenda(Agenda agenda) {
+    public void setAgenda(Agendamento agenda) {
         this.agenda = agenda;
     }
 
