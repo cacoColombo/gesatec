@@ -82,10 +82,8 @@ public class LoginVisao extends javax.swing.JFrame {
         jPanel1.setBackground(java.awt.SystemColor.controlLtHighlight);
 
         logoImage.setBackground(java.awt.SystemColor.controlLtHighlight);
-        logoImage.setBorder(null);
 
         loginLabel.setFont(new java.awt.Font("Ubuntu", 0, 15)); // NOI18N
-        loginLabel.setForeground(new java.awt.Color(51, 51, 51));
         loginLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         loginLabel.setText("Login");
         loginLabel.setAlignmentY(0.0F);
@@ -103,7 +101,6 @@ public class LoginVisao extends javax.swing.JFrame {
         });
 
         loginLabel1.setFont(new java.awt.Font("Ubuntu", 0, 15)); // NOI18N
-        loginLabel1.setForeground(new java.awt.Color(51, 51, 51));
         loginLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         loginLabel1.setText("Senha");
         loginLabel1.setAlignmentY(0.0F);
@@ -143,11 +140,12 @@ public class LoginVisao extends javax.swing.JFrame {
                     .addComponent(loginLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(32, 32, 32)
-                        .addComponent(logoImage, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(botaoLogar, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(logoImage, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(botaoSair, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(botaoSair, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(botaoLogar, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(

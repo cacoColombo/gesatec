@@ -32,6 +32,7 @@ public class CertificacaoBusca extends Busca {
     public CertificacaoBusca() {
         this.setName("certificacao");
         super.initComponents();
+        setTitle("Certificação");
     }
     
     @Override

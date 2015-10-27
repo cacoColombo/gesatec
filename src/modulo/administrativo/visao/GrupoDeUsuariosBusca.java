@@ -30,6 +30,7 @@ public class GrupoDeUsuariosBusca extends Busca {
     public GrupoDeUsuariosBusca() {
         this.setName("grupodeusuarios");
         initComponents();
+        setTitle("Grupo de usuários");
     }
     
     @Override

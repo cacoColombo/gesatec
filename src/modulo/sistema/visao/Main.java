@@ -1,10 +1,8 @@
 package modulo.sistema.visao;
 
-import com.alee.laf.WebLookAndFeel;
-import java.awt.Image;
+import de.javasoft.plaf.synthetica.SyntheticaAluOxideLookAndFeel;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
@@ -25,7 +23,7 @@ public class Main {
         
         try {
             //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); // Tema do OS
-            UIManager.setLookAndFeel(new WebLookAndFeel ()); // Tema do WebLaf
+            UIManager.setLookAndFeel(new SyntheticaAluOxideLookAndFeel());
             
             // Cria as tabelas na base de dados, com base nas entidades de negócio.
             EntityManagerFactory factory = Persistence.createEntityManagerFactory("crudHibernatePU");

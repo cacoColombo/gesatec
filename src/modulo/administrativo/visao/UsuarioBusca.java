@@ -32,6 +32,7 @@ public class UsuarioBusca extends Busca {
     public UsuarioBusca() {
         this.setName("usuario");
         super.initComponents();
+        setTitle("Usuários");
         
         this.getBotaoNovo().setEnabled(false);
         this.getBotaoExcluir().setEnabled(false);
