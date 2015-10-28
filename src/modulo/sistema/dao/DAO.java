@@ -77,7 +77,7 @@ public class DAO {
             entityManager.persist(object);
             entityManager.flush();
             entityManager.getTransaction().commit();
-            Object oId2 = (int) object.getClass().getMethod("getId").invoke(object);
+            Object oId2 = object.getClass().getMethod("getId").invoke(object);
             String className = object.getClass().toString();
             className = className.substring(className.lastIndexOf(".") + 1);
             if(oId instanceof String){
