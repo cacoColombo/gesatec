@@ -246,6 +246,7 @@ public abstract class Busca extends javax.swing.JInternalFrame {
         setClosable(true);
         setTitle("Nome da tela");
 
+		toolbar.setFloatable(false);
         toolbar.setRollover(true);
 
         botaoNovo.setText("Novo");
