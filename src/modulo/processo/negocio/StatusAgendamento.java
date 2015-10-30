@@ -18,16 +18,22 @@ import javax.persistence.Transient;
 public class StatusAgendamento implements Serializable {
     
     @Transient
-    final int STATUS_AGENDA_AGENDADO = 1;
+    final int STATUS_AGENDA_AGUARDANDO_CONFIRMACAO = 1;
     
     @Transient
-    final int STATUS_AGENDA_CONFIRMADO = 2;
+    final int STATUS_AGENDA_AGENDADO = 2;
     
     @Transient
-    final int STATUS_AGENDA_EM_ANDAMENTO = 3;
+    final int STATUS_AGENDA_REJEITADO = 3;
     
     @Transient
-    final int STATUS_AGENDA_FINALIZADO = 4;
+    final int STATUS_AGENDA_CANCELADO = 4;
+    
+    @Transient
+    final int STATUS_AGENDA_EM_ANDAMENTO = 5;
+    
+    @Transient
+    final int STATUS_AGENDA_FINALIZADO = 6;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +42,9 @@ public class StatusAgendamento implements Serializable {
     
     @Column(unique = true, nullable = false)
     private String nome;
+    
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE", nullable = false)
+    private boolean encerraAgendamento;
 
     public int getId() {
         return id;
@@ -51,5 +60,13 @@ public class StatusAgendamento implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public boolean isEncerraAgendamento() {
+        return encerraAgendamento;
+    }
+
+    public void setEncerraAgendamento(boolean encerraAgendamento) {
+        this.encerraAgendamento = encerraAgendamento;
     }
 }

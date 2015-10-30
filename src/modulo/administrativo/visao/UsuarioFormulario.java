@@ -42,6 +42,7 @@ public class UsuarioFormulario extends javax.swing.JDialog {
         initComponents();
         
         tabelaDeGrupos.setSelectionBackground(new java.awt.Color(22, 160, 133));
+        tabelaDeGrupos.setSelectionForeground(new java.awt.Color(255, 255, 255));
         
         botaoSalvar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/salvar.png")));
         botaoCancelar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/cancelar.png")));

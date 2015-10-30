@@ -46,6 +46,7 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
         botaoCancelar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/cancelar.png")));
         
         tabelaPermissoes.setSelectionBackground(new java.awt.Color(22, 160, 133));
+        tabelaPermissoes.setSelectionForeground(new java.awt.Color(255, 255, 255));
     }
     
     public void popularCampos(GrupoDeUsuarios grupoDeUsuarios) {

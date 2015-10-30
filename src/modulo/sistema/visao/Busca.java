@@ -155,6 +155,7 @@ public abstract class Busca extends javax.swing.JInternalFrame {
     private void customizacaoDosComponentes() {
         setBorder(null);
         tabela.setSelectionBackground(new java.awt.Color(22, 160, 133));
+        tabela.setSelectionForeground(new java.awt.Color(255, 255, 255));
 
         botaoNovo.setIcon(new ImageIcon(getClass().getResource("/publico/imagens/novo.png")));
         botaoEditar.setIcon(new ImageIcon(getClass().getResource("/publico/imagens/editar.png")));
