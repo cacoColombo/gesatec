@@ -15,13 +15,13 @@ RETURNS varchar AS
 $BODY$
 BEGIN
     RETURN CASE p_diaSemana
-        WHEN 1 THEN 'Domingo'
-        WHEN 2 THEN 'Segunda-feira'
-        WHEN 3 THEN 'Terça-feira'
-        WHEN 4 THEN 'Quarta-feira'
-        WHEN 5 THEN 'Quinta-feira'
-        WHEN 6 THEN 'Sexta-feira'
-        WHEN 7 THEN 'Sábado'
+        WHEN 0 THEN 'Domingo'
+        WHEN 1 THEN 'Segunda-feira'
+        WHEN 2 THEN 'Terça-feira'
+        WHEN 3 THEN 'Quarta-feira'
+        WHEN 4 THEN 'Quinta-feira'
+        WHEN 5 THEN 'Sexta-feira'
+        WHEN 6 THEN 'Sábado'
     END;
 END;
 $BODY$
