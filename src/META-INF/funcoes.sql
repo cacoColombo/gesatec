@@ -10,19 +10,15 @@ LANGUAGE 'plpgsql' IMMUTABLE;
 --
 
 --
-CREATE OR REPLACE FUNCTION obterDiaDaSemanaPorExtenso(p_diaSemana int)
-RETURNS varchar AS
+CREATE OR REPLACE FUNCTION obterDiaDaSemana(p_diaSemana int)
+RETURNS SETOF diaDaSemana AS
 $BODY$
 BEGIN
-    RETURN CASE p_diaSemana
-        WHEN 0 THEN 'Domingo'
-        WHEN 1 THEN 'Segunda-feira'
-        WHEN 2 THEN 'Terça-feira'
-        WHEN 3 THEN 'Quarta-feira'
-        WHEN 4 THEN 'Quinta-feira'
-        WHEN 5 THEN 'Sexta-feira'
-        WHEN 6 THEN 'Sábado'
-    END;
+    RETURN QUERY (
+        SELECT * 
+          FROM diaDaSemana
+         WHERE id = p_diaSemana
+    );
 END;
 $BODY$
 LANGUAGE 'plpgsql' IMMUTABLE;
@@ -61,6 +57,33 @@ BEGIN
 END;
 $BODY$
 LANGUAGE 'plpgsql' IMMUTABLE;
+--
+
+--
+CREATE OR REPLACE FUNCTION dataParaDb(p_date varchar)
+RETURNS date AS
+$BODY$
+BEGIN
+    RETURN TO_DATE(p_date, 'dd/mm/yyyy');
+END;
+$BODY$
+LANGUAGE 'plpgsql' IMMUTABLE;
+--
+
+--
+CREATE OR REPLACE FUNCTION dataParaUsuario(p_date date)
+RETURNS varchar AS
+$BODY$
+BEGIN
+    IF p_date IS NOT NULL
+    THEN
+        RETURN TO_CHAR(p_date, 'dd/mm/yyyy');
+    ELSE
+        RETURN NULL;
+    END IF;
+END;
+$BODY$
+LANGUAGE plpgsql IMMUTABLE;
 --
 
 --
@@ -173,4 +196,38 @@ BEGIN
 END;
 $BODY$
 LANGUAGE 'plpgsql' IMMUTABLE;
+--
+
+--
+CREATE OR REPLACE FUNCTION obterHorariosDoProfissionalParaAgendamento(p_profissional_id INT, p_data DATE)
+RETURNS TABLE (
+    descricao_horario VARCHAR,
+    data DATE,
+    horario TIME,
+    esta_agendado BOOLEAN
+) AS
+$BODY$
+BEGIN
+    RETURN QUERY (
+        SELECT horarios.descricao_horario,
+               horarios.horario::DATE AS data,
+               horarios.horario::TIME AS horario,
+               (agendamento.id IS NOT NULL) AS esta_agendado
+	  FROM (SELECT padraoDeAtendimento.nome AS descricao_horario,
+		       generate_series((dataParaUsuario(p_data) || ' ' || padraoDeAtendimento.horarioinicioexpediente::TEXT)::TIMESTAMP, (dataParaUsuario(p_data) || ' ' || padraoDeAtendimento.horariofimexpediente::TEXT)::TIMESTAMP, (padraoDeAtendimento.tempomedioconsulta::TEXT || 'minutes')::INTERVAL) AS horario
+		  FROM padraoDeAtendimentoDoProfissional
+	    INNER JOIN padraoDeAtendimento
+		    ON padraoDeAtendimento.id = padraoDeAtendimentoDoProfissional.padraoDeAtendimento_id
+		 WHERE padraoDeAtendimentoDoProfissional.profissional_id = p_profissional_id
+		   AND diadasemana_id = EXTRACT('DOW' FROM p_data)) horarios
+     LEFT JOIN agendamento
+	    ON agendamento.dataagendada = horarios.horario::DATE
+	   AND agendamento.horarioagendado = horarios.horario::TIME
+	   AND agendamento.profissional_id = p_profissional_id
+      ORDER BY horarios.horario ASC
+    );
+END;
+$BODY$
+LANGUAGE plpgsql IMMUTABLE;
+--
 
