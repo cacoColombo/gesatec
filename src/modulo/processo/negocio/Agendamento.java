@@ -19,12 +19,11 @@ import javax.persistence.UniqueConstraint;
 import modulo.cadastro.negocio.Atendente;
 import modulo.cadastro.negocio.Cliente;
 import modulo.cadastro.negocio.Profissional;
-import modulo.cadastro.negocio.TipoDeAtendimentoDoProfissional;
 import modulo.configuracao.negocio.TipoDeAtendimento;
 
 @Entity
 @Table(name="agendamento", uniqueConstraints = {
-    @UniqueConstraint(columnNames={"dataagendada", "horarioagendado"})
+    @UniqueConstraint(name="agendamento_uk", columnNames={"cliente_id", "dataagendada", "horarioagendado"})
 })
 public class Agendamento implements Serializable {
     
@@ -46,23 +45,16 @@ public class Agendamento implements Serializable {
     private Atendente atendente;
     
     @ManyToOne
-    @JoinColumn(name = "tipodeatendimentodoprofissional_id", referencedColumnName = "id", nullable = false)
-    private TipoDeAtendimentoDoProfissional tipoDeAtendimentoDoProfissional;
-    
-    @ManyToOne
     @JoinColumn(name = "tipoderepeticao_id", referencedColumnName = "id", nullable = false)
     private TipoDeRepeticao tipoDeRepeticao;
     
     @ManyToOne
     @JoinColumn(name = "statusagendamento_id", referencedColumnName = "id", nullable = false)
-    private StatusAgendamento statusAgenda;
+    private StatusAgendamento statusAgendamento;
     
     @ManyToOne
     @JoinColumn(name = "tipodeatendimento_id", referencedColumnName = "id", nullable = false)
     private TipoDeAtendimento tipoDeAtendimento;
-    
-    @Column(nullable = false)
-    private Date dataRegistro;
     
     @Column(nullable = false)
     private Date dataAgendada;
@@ -70,7 +62,7 @@ public class Agendamento implements Serializable {
     @Column(nullable = false)
     private Time horarioAgendado;
     
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Time horarioFimPrevisto;
     
     @Column
@@ -108,14 +100,6 @@ public class Agendamento implements Serializable {
         this.atendente = atendente;
     }
 
-    public TipoDeAtendimentoDoProfissional getTipoDeAtendimentoDoProfissional() {
-        return tipoDeAtendimentoDoProfissional;
-    }
-
-    public void setTipoDeAtendimentoDoProfissional(TipoDeAtendimentoDoProfissional tipoDeAtendimentoDoProfissional) {
-        this.tipoDeAtendimentoDoProfissional = tipoDeAtendimentoDoProfissional;
-    }
-
     public TipoDeRepeticao getTipoDeRepeticao() {
         return tipoDeRepeticao;
     }
@@ -124,20 +108,12 @@ public class Agendamento implements Serializable {
         this.tipoDeRepeticao = tipoDeRepeticao;
     }
 
-    public StatusAgendamento getStatusAgenda() {
-        return statusAgenda;
+    public StatusAgendamento getStatusAgendamento() {
+        return statusAgendamento;
     }
 
-    public void setStatusAgenda(StatusAgendamento statusAgenda) {
-        this.statusAgenda = statusAgenda;
-    }
-
-    public Date getDataRegistro() {
-        return dataRegistro;
-    }
-
-    public void setDataRegistro(Date dataRegistro) {
-        this.dataRegistro = dataRegistro;
+    public void setStatusAgendamento(StatusAgendamento statusAgendamento) {
+        this.statusAgendamento = statusAgendamento;
     }
 
     public Date getDataAgendada() {

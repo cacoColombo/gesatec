@@ -15,7 +15,7 @@ INSERT INTO permissaodogrupodeusuarios (id, admin, atualizar, excluir, inserir, 
 
 INSERT INTO diadasemana (id, nome, abreviatura) VALUES (0, 'Domingo', 'Dom'), (1, 'Segunda-feira', 'Seg'), (2, 'Terça-feira', 'Ter'), (3, 'Quarta-feira', 'Qua'), (4, 'Quinta-feira', 'Qui'), (5, 'Sexta-feira', 'Sex'), (6, 'Sábado', 'Sáb');
 INSERT INTO tipoderepeticao (id, nome) VALUES (1, 'Diária'), (2, 'Semanal'), (3, 'Mensal'), (4, 'Anual');
-INSERT INTO statusagenda (id, nome) VALUES (1, 'AGENDADO'), (2, 'CONFIRMADO'), (3, 'EM ANDAMENTO'), (4, 'FINALIZADO');
+INSERT INTO statusagendamento (id, nome, encerraagendamento) VALUES (1, 'Aguardando confirmação', false), (2, 'Agendado', false), (3, 'Rejeitado', true), (4, 'Cancelado', true), (5, 'Em andamento', false), (6, 'Finalizado', true);
 INSERT INTO campo (id, nome, tipo) VALUES (1, 'Texto simples', 'TextField'), (2, 'Texto longo', 'TextArea');
 
 INSERT INTO pais (nome, sigla, nacionalidade) VALUES ('Brasil', 'BR', 'brasileiro');	

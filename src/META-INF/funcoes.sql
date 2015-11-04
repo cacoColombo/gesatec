@@ -204,7 +204,7 @@ RETURNS TABLE (
     descricao_horario VARCHAR,
     data DATE,
     horario TIME,
-    esta_agendado BOOLEAN
+    esta_disponivel BOOLEAN
 ) AS
 $BODY$
 BEGIN
@@ -212,7 +212,7 @@ BEGIN
         SELECT horarios.descricao_horario,
                horarios.horario::DATE AS data,
                horarios.horario::TIME AS horario,
-               (agendamento.id IS NOT NULL) AS esta_agendado
+               (agendamento.id IS NULL AND horarios.horario >= NOW()::TIMESTAMP) AS esta_disponivel
 	  FROM (SELECT padraoDeAtendimento.nome AS descricao_horario,
 		       generate_series((dataParaUsuario(p_data) || ' ' || padraoDeAtendimento.horarioinicioexpediente::TEXT)::TIMESTAMP, (dataParaUsuario(p_data) || ' ' || padraoDeAtendimento.horariofimexpediente::TEXT)::TIMESTAMP, (padraoDeAtendimento.tempomedioconsulta::TEXT || 'minutes')::INTERVAL) AS horario
 		  FROM padraoDeAtendimentoDoProfissional
