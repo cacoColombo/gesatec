@@ -199,7 +199,7 @@ LANGUAGE 'plpgsql' IMMUTABLE;
 --
 
 --
-CREATE OR REPLACE FUNCTION obterHorariosDoProfissionalParaAgendamento(p_profissional_id INT, p_data DATE)
+CREATE OR REPLACE FUNCTION obterHorariosDoProfissionalParaAgendamento(p_profissional_id INT, p_data DATE, p_agendamento_id INT DEFAULT NULL)
 RETURNS TABLE (
     descricao_horario VARCHAR,
     data DATE,
@@ -212,7 +212,8 @@ BEGIN
         SELECT horarios.descricao_horario,
                horarios.horario::DATE AS data,
                horarios.horario::TIME AS horario,
-               (agendamento.id IS NULL AND horarios.horario >= NOW()::TIMESTAMP) AS esta_disponivel
+               ((agendamento.id IS NULL AND horarios.horario >= NOW()::TIMESTAMP) OR 
+                (p_agendamento_id IS NOT NULL AND p_agendamento_id = agendamento.id)) AS esta_disponivel
 	  FROM (SELECT padraoDeAtendimento.nome AS descricao_horario,
 		       generate_series((dataParaUsuario(p_data) || ' ' || padraoDeAtendimento.horarioinicioexpediente::TEXT)::TIMESTAMP, (dataParaUsuario(p_data) || ' ' || padraoDeAtendimento.horariofimexpediente::TEXT)::TIMESTAMP, (padraoDeAtendimento.tempomedioconsulta::TEXT || 'minutes')::INTERVAL) AS horario
 		  FROM padraoDeAtendimentoDoProfissional
