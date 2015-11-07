@@ -1,6 +1,6 @@
 BEGIN;
 
-INSERT INTO tipoDeAtendimento VALUES ('Exame de rotina'), ('Exame admissional'), ('Consulta odontológica'), ('Consulta pediátrica');
+INSERT INTO tipoDeAtendimento (nome) VALUES ('Exame de rotina'), ('Exame admissional'), ('Consulta odontológica'), ('Consulta pediátrica');
 
 --Registro de profissional
 INSERT INTO useraccount (login, password, name, active) VALUES ('prof1', MD5('prof1'), 'Profissional de Teste 1', true);
