@@ -227,6 +227,10 @@ public class SistemaVisao extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jPanel1.setBackground(java.awt.SystemColor.controlLtHighlight);
+
+        panelConteudo.setBackground(java.awt.SystemColor.controlLtHighlight);
+
         javax.swing.GroupLayout panelConteudoLayout = new javax.swing.GroupLayout(panelConteudo);
         panelConteudo.setLayout(panelConteudoLayout);
         panelConteudoLayout.setHorizontalGroup(
@@ -235,7 +239,7 @@ public class SistemaVisao extends javax.swing.JFrame {
         );
         panelConteudoLayout.setVerticalGroup(
             panelConteudoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 537, Short.MAX_VALUE)
+            .addGap(0, 553, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -304,7 +308,7 @@ public class SistemaVisao extends javax.swing.JFrame {
         menuProcessos.setText("Processos");
         menuProcessos.setName("processos"); // NOI18N
 
-        submenuAgenda.setText("Agenda");
+        submenuAgenda.setText("Agendamento");
         submenuAgenda.setName("agenda"); // NOI18N
         submenuAgenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
