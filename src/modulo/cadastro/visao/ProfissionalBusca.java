@@ -166,6 +166,9 @@ public class ProfissionalBusca extends Busca {
     @Override
     public void botaoNovoActionPerformed(ActionEvent evt) {
         form = new ProfissionalFormulario(this, true);
+        form.populaCertificacoes(null);
+        form.populaEspecializacoes(null);
+        form.populaPadroesDeAtendimento(null);
         form.setLocationRelativeTo(null);
         form.setVisible(true);
     }

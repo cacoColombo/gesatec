@@ -34,6 +34,8 @@ import modulo.cadastro.negocio.Cidade;
 import modulo.cadastro.negocio.Especializacao;
 import modulo.cadastro.negocio.EspecializacaoDoProfissional;
 import modulo.cadastro.negocio.Estado;
+import modulo.cadastro.negocio.PadraoDeAtendimentoDoProfissional;
+import modulo.configuracao.negocio.PadraoDeAtendimento;
 import modulo.sistema.dao.DAO;
 import modulo.sistema.negocio.SOptionPane;
 import org.hibernate.criterion.Conjunction;
@@ -50,7 +52,8 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     private String message;
     List<Object> especializacoesDoProfissional;
     List<Object> certificacoesDoProfissional;
-
+    List<Object> padroesDeAtendimentoDoProfissional;
+    
     /**
      * Creates new form ProfissionalFormulario
      */
@@ -62,11 +65,9 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
 
         botaoSalvar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/salvar.png")));
         botaoCancelar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/cancelar.png")));
-
-        populaEspecializacoes(null);
-        inicializaEspecializacoes();
-        populaCertificacoes(null);
         inicializaCertificacoes();
+        inicializaEspecializacoes();
+        inicializaPadroesDeAtendimento();
 
         MaskFormatter msk = null;
         try {
@@ -137,6 +138,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
 
             populaEspecializacoes(profissional);
             populaCertificacoes(profissional);
+            populaPadroesDeAtendimento(profissional);
         } catch (Exception err) {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
@@ -236,6 +238,13 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
         jLabel32 = new javax.swing.JLabel();
         jLabel33 = new javax.swing.JLabel();
         jLabel36 = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        padroesDeAtendimentoDosProfissionais = new javax.swing.JComboBox();
+        jLabel37 = new javax.swing.JLabel();
+        botaoAdicionarPadrao = new javax.swing.JButton();
+        botaoRemoverPadrao = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tabelaDePadroesDeAtendimento = new javax.swing.JTable();
 
         jLabel34.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         jLabel34.setForeground(java.awt.Color.red);
@@ -441,7 +450,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                     .addComponent(senha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel27)
                     .addComponent(jLabel10))
-                .addContainerGap(139, Short.MAX_VALUE))
+                .addContainerGap(120, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -565,7 +574,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel19)
                     .addComponent(complemento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(250, Short.MAX_VALUE))
+                .addContainerGap(231, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -644,7 +653,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel25)
                     .addComponent(telefoneTrabalho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(368, Short.MAX_VALUE))
+                .addContainerGap(349, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -741,7 +750,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                     .addComponent(botaoAdicionarEspecializacao)
                     .addComponent(botaoRemoverEspecializacao))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -882,11 +891,98 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                     .addComponent(botaoAdicionarCertificacao)
                     .addComponent(botaoRemoverCertificacao))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jTabbedPane1.addTab("Certificação", jPanel7);
+
+        padroesDeAtendimentoDosProfissionais.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                padroesDeAtendimentoDosProfissionaisActionPerformed(evt);
+            }
+        });
+
+        jLabel37.setText("Padrão de atendimento");
+
+        botaoAdicionarPadrao.setText("Adicionar padrão");
+        botaoAdicionarPadrao.setEnabled(false);
+        botaoAdicionarPadrao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoAdicionarPadraoActionPerformed(evt);
+            }
+        });
+
+        botaoRemoverPadrao.setText("Remover padrão");
+        botaoRemoverPadrao.setEnabled(false);
+        botaoRemoverPadrao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoRemoverPadraoActionPerformed(evt);
+            }
+        });
+
+        tabelaDePadroesDeAtendimento.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nome"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane4.setViewportView(tabelaDePadroesDeAtendimento);
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(jLabel37, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel8Layout.createSequentialGroup()
+                                .addComponent(botaoAdicionarPadrao)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(botaoRemoverPadrao)
+                                .addGap(0, 95, Short.MAX_VALUE))
+                            .addComponent(padroesDeAtendimentoDosProfissionais, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel37)
+                    .addComponent(padroesDeAtendimentoDosProfissionais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(botaoAdicionarPadrao)
+                    .addComponent(botaoRemoverPadrao))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Padrão de Atendimento", jPanel8);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1021,6 +1117,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
 
                 salvaEspecializacoes(profissional);
                 salvaCertificacoes(profissional);
+                salvaPadroesDeAtendimento(profissional);
 
                 JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
 
@@ -1176,6 +1273,42 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_certificacoesDeProfissionaisActionPerformed
 
+    private void padroesDeAtendimentoDosProfissionaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_padroesDeAtendimentoDosProfissionaisActionPerformed
+        if ( padroesDeAtendimentoDosProfissionais.getSelectedItem().toString().isEmpty() ) {
+            botaoAdicionarPadrao.setEnabled(false);
+        } else {
+            botaoAdicionarPadrao.setEnabled(true);
+        }
+    }//GEN-LAST:event_padroesDeAtendimentoDosProfissionaisActionPerformed
+
+    private void botaoAdicionarPadraoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAdicionarPadraoActionPerformed
+        try {
+            PadraoDeAtendimento padrao = (PadraoDeAtendimento) padroesDeAtendimentoDosProfissionais.getSelectedItem();
+            DefaultTableModel modelo = (DefaultTableModel) tabelaDePadroesDeAtendimento.getModel();
+            modelo.addRow(new Object[]{padrao.getId(), padrao.getNome()});
+            padroesDeAtendimentoDosProfissionais.removeItem(padrao);
+            padroesDeAtendimentoDosProfissionais.setSelectedItem("");
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_botaoAdicionarPadraoActionPerformed
+
+    private void botaoRemoverPadraoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoRemoverPadraoActionPerformed
+        try {
+            int selected = tabelaDePadroesDeAtendimento.getSelectedRow();
+            Object registro = tabelaDePadroesDeAtendimento.getValueAt(selected, 0);
+            int padrao_id = Integer.parseInt(registro.toString());
+
+            Object grupo = DAO.getInstance().getById(new PadraoDeAtendimento(), padrao_id);
+            DefaultTableModel modelo = (DefaultTableModel) tabelaDePadroesDeAtendimento.getModel();
+            modelo.removeRow(selected);
+            padroesDeAtendimentoDosProfissionais.addItem(grupo);
+            botaoRemoverPadrao.setEnabled(false);
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_botaoRemoverPadraoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1242,7 +1375,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
         });
     }
 
-    private void populaEspecializacoes(Profissional profissional) {
+    public void populaEspecializacoes(Profissional profissional) {
         if(profissional != null){
             Conjunction and = Restrictions.conjunction();
             and.add(Restrictions.eq("profissional", profissional));
@@ -1316,7 +1449,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
         });
     }
 
-    private void populaCertificacoes(Profissional profissional) {
+    public void populaCertificacoes(Profissional profissional) {
         if(profissional != null){
             Conjunction and = Restrictions.conjunction();
             and.add(Restrictions.eq("profissional", profissional));
@@ -1347,17 +1480,22 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             }
         }
 
-        // Popula tabela de grupos de usuários, com os grupos pertencentes ao usuário editado.
-        DefaultTableModel modelo = (DefaultTableModel) tabelaDeCertificacoes.getModel();
-        for (int g = 0; g < certificacoesDoProfissional.size(); g++) {
-            CertificacaoDoProfissional certificacaoDoProfissional = (CertificacaoDoProfissional) certificacoesDoProfissional.get(g);
-            modelo.addRow(new Object[]{
-                certificacaoDoProfissional.getCertificacao().getId(), 
-                certificacaoDoProfissional.getCertificacao().getNome(),
-                certificacaoDoProfissional.getDataExpedicao().toString(),
-                certificacaoDoProfissional.getRegistro(),
-                certificacaoDoProfissional.getOrgaoExpedidor()
-            });
+        try{
+            DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+            DefaultTableModel modelo = (DefaultTableModel) tabelaDeCertificacoes.getModel();
+            for (int g = 0; g < certificacoesDoProfissional.size(); g++) {
+                CertificacaoDoProfissional certificacaoDoProfissional = (CertificacaoDoProfissional) certificacoesDoProfissional.get(g);
+                modelo.addRow(new Object[]{
+                    certificacaoDoProfissional.getCertificacao().getId(), 
+                    certificacaoDoProfissional.getCertificacao().getNome(),
+                    format.format(certificacaoDoProfissional.getDataExpedicao()),
+                    certificacaoDoProfissional.getRegistro(),
+                    certificacaoDoProfissional.getOrgaoExpedidor()
+                });
+            }
+        }
+        catch(Exception err){
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -1389,14 +1527,94 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             }
         }
     }
+    
+    private void inicializaPadroesDeAtendimento(){
+        tabelaDePadroesDeAtendimento.setSelectionBackground(new java.awt.Color(22, 160, 133));
+        tabelaDePadroesDeAtendimento.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        botaoAdicionarPadrao.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/add.png")));
+        botaoRemoverPadrao.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/remover.png")));
+
+        tabelaDePadroesDeAtendimento.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent event) {
+                if (tabelaDeEspecializacoes.getSelectedRow() > tabelaDeEspecializacoes.getRowCount()) {
+                    botaoRemoverPadrao.setEnabled(false);
+                } else {
+                    botaoRemoverPadrao.setEnabled(true);
+                }
+            }
+        });
+    }
+    
+    public void populaPadroesDeAtendimento(Profissional profissional){
+        if(profissional != null){
+            Conjunction and = Restrictions.conjunction();
+            and.add(Restrictions.eq("profissional", profissional));
+            padroesDeAtendimentoDoProfissional = DAO.getInstance().findByCriteria(new PadraoDeAtendimentoDoProfissional(), and, Restrictions.disjunction());
+        }
+        else{
+            padroesDeAtendimentoDoProfissional = new ArrayList<>();
+        }
+
+        padroesDeAtendimentoDosProfissionais.addItem("");
+        List<Object> padroesDeAtendimento = DAO.getInstance().findAll(new PadraoDeAtendimento());
+
+        for (int i = 0; i < padroesDeAtendimento.size(); i++) {
+            PadraoDeAtendimento padraoDeAtendimento = (PadraoDeAtendimento) padroesDeAtendimento.get(i);
+            boolean possuiPadraoDeAtendimento = false;
+
+            for (int g = 0; g < padroesDeAtendimentoDoProfissional.size(); g++) {
+                PadraoDeAtendimentoDoProfissional padraoDeAtendimentoDoProfissional = (PadraoDeAtendimentoDoProfissional) padroesDeAtendimentoDoProfissional.get(g);
+
+                if (padraoDeAtendimentoDoProfissional.getPadraoDeAtendimento().getId() == padraoDeAtendimento.getId()) {
+                    possuiPadraoDeAtendimento = true;
+                    break;
+                }
+            }
+
+            if (!possuiPadraoDeAtendimento) {
+                padroesDeAtendimentoDosProfissionais.addItem(padraoDeAtendimento);
+            }
+        }
+
+        DefaultTableModel modelo = (DefaultTableModel) tabelaDePadroesDeAtendimento.getModel();
+        for (int g = 0; g < padroesDeAtendimentoDoProfissional.size(); g++) {
+            PadraoDeAtendimentoDoProfissional padraoDeAtendimentoDoProfissional = (PadraoDeAtendimentoDoProfissional) padroesDeAtendimentoDoProfissional.get(g);
+            modelo.addRow(new Object[]{
+                padraoDeAtendimentoDoProfissional.getPadraoDeAtendimento().getId(), 
+                padraoDeAtendimentoDoProfissional.getPadraoDeAtendimento().toString()
+            });
+        }
+    }
+    
+    private void salvaPadroesDeAtendimento(Profissional profissional){
+        System.out.println("Size -> " + padroesDeAtendimentoDoProfissional.size());
+        for (int g = 0; g < padroesDeAtendimentoDoProfissional.size(); g++) {
+            PadraoDeAtendimentoDoProfissional padraoDeAtendimentoDoProfissional = (PadraoDeAtendimentoDoProfissional) padroesDeAtendimentoDoProfissional.get(g);
+            DAO.getInstance().remove(padraoDeAtendimentoDoProfissional);
+        }
+
+        DefaultTableModel modelo = (DefaultTableModel) tabelaDePadroesDeAtendimento.getModel();
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            PadraoDeAtendimento padraoDeAtendimento = new PadraoDeAtendimento();
+            padraoDeAtendimento.setId((int) modelo.getValueAt(i, 0));
+
+            PadraoDeAtendimentoDoProfissional padraoDeAtendimentoDoProfissional = new PadraoDeAtendimentoDoProfissional();
+            padraoDeAtendimentoDoProfissional.setProfissional(profissional);
+            padraoDeAtendimentoDoProfissional.setPadraoDeAtendimento(padraoDeAtendimento);
+
+            DAO.getInstance().merge(padraoDeAtendimentoDoProfissional);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField bairro;
     private javax.swing.JButton botaoAdicionarCertificacao;
     private javax.swing.JButton botaoAdicionarEspecializacao;
+    private javax.swing.JButton botaoAdicionarPadrao;
     private javax.swing.JButton botaoCancelar;
     private javax.swing.JButton botaoRemoverCertificacao;
     private javax.swing.JButton botaoRemoverEspecializacao;
+    private javax.swing.JButton botaoRemoverPadrao;
     private javax.swing.JButton botaoSalvar;
     private javax.swing.JTextField cep;
     private javax.swing.JComboBox certificacoesDeProfissionais;
@@ -1440,6 +1658,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
+    private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -1453,9 +1672,11 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel labelsPainel;
     private javax.swing.JTextField login;
@@ -1463,6 +1684,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     private javax.swing.JTextField numero;
     private javax.swing.JTextArea observacao;
     private javax.swing.JTextField orgaoExpedidor;
+    private javax.swing.JComboBox padroesDeAtendimentoDosProfissionais;
     private javax.swing.JComboBox pais;
     private javax.swing.JTextField registro;
     private javax.swing.JTextField rg;
@@ -1471,6 +1693,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     private javax.swing.JRadioButton sexoM;
     private javax.swing.JTable tabelaDeCertificacoes;
     private javax.swing.JTable tabelaDeEspecializacoes;
+    private javax.swing.JTable tabelaDePadroesDeAtendimento;
     private javax.swing.JTextField telefoneCelular;
     private javax.swing.JTextField telefoneResidencial;
     private javax.swing.JTextField telefoneTrabalho;

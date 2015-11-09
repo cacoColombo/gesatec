@@ -5,6 +5,7 @@
 package modulo.cadastro.negocio;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,7 +28,7 @@ public class PadraoDeAtendimentoDoProfissional implements Serializable {
     @Column(unique = true, nullable = false)
     private int id;
     
-    @ManyToOne
+    @ManyToOne//(cascade=CascadeType.ALL)
     @JoinColumn(name = "profissional_id", referencedColumnName = "id", nullable = false)
     private Profissional profissional;
     

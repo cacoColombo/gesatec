@@ -90,4 +90,9 @@ public class PadraoDeAtendimento implements Serializable {
     public void setTempoMedioConsulta(int tempoMedioConsulta) {
         this.tempoMedioConsulta = tempoMedioConsulta;
     }
+    
+    @Override
+    public String toString(){
+        return this.nome + " " + horarioInicioExpediente.toString() + " - " + horarioFimExpediente.toString();
+    }
 }

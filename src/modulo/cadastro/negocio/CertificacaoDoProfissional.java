@@ -6,6 +6,7 @@ package modulo.cadastro.negocio;
 
 import java.io.Serializable;
 import java.sql.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,7 +28,7 @@ public class CertificacaoDoProfissional implements Serializable {
     @Column(unique = true, nullable = false)
     private int id;
     
-    @ManyToOne
+    @ManyToOne//(cascade=CascadeType.ALL)
     @JoinColumn(name = "profissional_id", referencedColumnName = "id", nullable = false)
     private Profissional profissional;
     
