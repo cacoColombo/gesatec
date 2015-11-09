@@ -17,9 +17,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import modulo.administrativo.dao.GrupoDeUsuariosDAO;
 import modulo.administrativo.dao.PermissaoDoGrupoDeUsuariosDAO;
-import modulo.administrativo.negocio.GrupoDeUsuarios;
 import modulo.administrativo.negocio.GrupoDoUsuario;
 import modulo.administrativo.negocio.PermissaoDoGrupoDeUsuarios;
 import modulo.administrativo.negocio.UserAccount;
@@ -31,6 +29,7 @@ import modulo.cadastro.visao.ClienteBusca;
 import modulo.cadastro.visao.EspecializacaoBusca;
 import modulo.cadastro.visao.ProfissionalBusca;
 import modulo.configuracao.visao.PadraoDeAtendimentoBusca;
+import modulo.processo.visao.AgendamentoBusca;
 import modulo.sistema.negocio.Auditoria;
 import modulo.sistema.negocio.SOptionPane;
 import modulo.sistema.negocio.UsuarioLogado;
@@ -398,22 +397,8 @@ public class SistemaVisao extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void submenuAgendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submenuAgendaActionPerformed
-        /**
-        OcorrenciaBusca ocorrenciaVisao = new OcorrenciaBusca();
-        panelConteudo.removeAll();
-        panelConteudo.add(ocorrenciaVisao);
-        
-        try 
-        {
-            ocorrenciaVisao.setMaximum(true);
-        } 
-        catch (PropertyVetoException ex) 
-        {
-            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        ocorrenciaVisao.setVisible(true);
-        */
+        AgendamentoBusca agendamentoBusca = new AgendamentoBusca(); 
+        this.carregarFrame(agendamentoBusca);
     }//GEN-LAST:event_submenuAgendaActionPerformed
 
     private void submenuAtendenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submenuAtendenteActionPerformed

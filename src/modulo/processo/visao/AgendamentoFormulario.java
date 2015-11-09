@@ -38,15 +38,20 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
     }
     
     public void popularCampos(Certificacao certificacao) {
+       /**
+        
         try {
             id.setText(Integer.toString(certificacao.getId()));
             nome.setText(certificacao.getNome());
         } catch (Exception err) {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
+        */
     }
     
     public boolean validarCampos() {
+        /**
+        
         try {
             if ( !(nome.getText().length() > 0) ) {
                 throw new Exception("O campo 'Nome' é requerido!");
@@ -57,6 +62,9 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+        */
+        
+        return true;
     }
 
     /**
@@ -188,6 +196,8 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
     }//GEN-LAST:event_botaoCancelarActionPerformed
 
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
+        
+        /**
         try {
             if ( this.validarCampos() )
             {
@@ -215,6 +225,7 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
         } catch (Exception err) {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
+        */
     }//GEN-LAST:event_botaoSalvarActionPerformed
 
     /**
