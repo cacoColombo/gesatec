@@ -4,6 +4,10 @@
  */
 package modulo.processo.visao;
 
+import java.text.SimpleDateFormat;
+import javax.swing.JOptionPane;
+import modulo.sistema.negocio.SOptionPane;
+
 /**
  *
  * @author augusto
@@ -17,6 +21,8 @@ public class AgendamentoBusca extends javax.swing.JInternalFrame {
         this.setName("agenda");
         initComponents();
         setTitle("Agendamento");
+        tabelaHorarios.setSelectionBackground(new java.awt.Color(22, 160, 133));
+        tabelaHorarios.setSelectionForeground(new java.awt.Color(255, 255, 255));
     }
 
     /**
@@ -37,6 +43,7 @@ public class AgendamentoBusca extends javax.swing.JInternalFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
+        calendario = new com.toedter.calendar.JCalendar();
         jLabel1 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox();
         jComboBox2 = new javax.swing.JComboBox();
@@ -44,7 +51,7 @@ public class AgendamentoBusca extends javax.swing.JInternalFrame {
         jButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabelaHorarios = new javax.swing.JTable();
 
         setBorder(null);
 
@@ -97,27 +104,31 @@ public class AgendamentoBusca extends javax.swing.JInternalFrame {
         jPanel1.setBackground(java.awt.SystemColor.controlLtHighlight);
 
         jPanel4.setBackground(java.awt.SystemColor.controlLtHighlight);
+        jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        calendario.setBackground(java.awt.SystemColor.controlLtHighlight);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addComponent(calendario, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 268, Short.MAX_VALUE)
+            .addComponent(calendario, javax.swing.GroupLayout.PREFERRED_SIZE, 205, Short.MAX_VALUE)
         );
 
         jLabel1.setText("Tipo de atendimento");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         jLabel2.setText("Profissional");
 
         jButton1.setText("Buscar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -142,7 +153,7 @@ public class AgendamentoBusca extends javax.swing.JInternalFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -152,14 +163,14 @@ public class AgendamentoBusca extends javax.swing.JInternalFrame {
                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(65, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Filtros", jPanel2);
 
         jPanel3.setBackground(java.awt.SystemColor.controlLtHighlight);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabelaHorarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -185,7 +196,7 @@ public class AgendamentoBusca extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tabelaHorarios);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -247,11 +258,19 @@ public class AgendamentoBusca extends javax.swing.JInternalFrame {
         //atualizarGrid(-1, new ArrayList());
     }//GEN-LAST:event_botaoAtualizarActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String dataFormatada = dateFormat.format(calendario.getDate());
+        
+        JOptionPane.showMessageDialog(null, dataFormatada);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoAtualizar;
     private javax.swing.JButton botaoEditar;
     private javax.swing.JButton botaoExcluir;
     private javax.swing.JButton botaoNovo;
+    private com.toedter.calendar.JCalendar calendario;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox2;
@@ -263,7 +282,7 @@ public class AgendamentoBusca extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tabelaHorarios;
     private javax.swing.JToolBar toolbar;
     // End of variables declaration//GEN-END:variables
 }
