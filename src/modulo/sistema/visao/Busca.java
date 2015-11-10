@@ -152,34 +152,34 @@ public abstract class Busca extends javax.swing.JInternalFrame {
         atualizarGrid(-1, new ArrayList());
     }//GEN-LAST:event_botaoAtualizarActionPerformed
     
-    private void customizacaoDosComponentes() {
+    public void customizacaoDosComponentes() {
         setBorder(null);
-        tabela.setSelectionBackground(new java.awt.Color(22, 160, 133));
-        tabela.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        getTabela().setSelectionBackground(new java.awt.Color(22, 160, 133));
+        getTabela().setSelectionForeground(new java.awt.Color(255, 255, 255));
 
-        botaoNovo.setIcon(new ImageIcon(getClass().getResource("/publico/imagens/novo.png")));
-        botaoEditar.setIcon(new ImageIcon(getClass().getResource("/publico/imagens/editar.png")));
-        botaoExcluir.setIcon(new ImageIcon(getClass().getResource("/publico/imagens/excluir.png")));
-        botaoAtualizar.setIcon(new ImageIcon(getClass().getResource("/publico/imagens/atualizar.png")));
-        botaoBuscar.setIcon(new ImageIcon(getClass().getResource("/publico/imagens/buscar.png")));
+        getBotaoNovo().setIcon(new ImageIcon(getClass().getResource("/publico/imagens/novo.png")));
+        getBotaoEditar().setIcon(new ImageIcon(getClass().getResource("/publico/imagens/editar.png")));
+        getBotaoExcluir().setIcon(new ImageIcon(getClass().getResource("/publico/imagens/excluir.png")));
+        getBotaoAtualizar().setIcon(new ImageIcon(getClass().getResource("/publico/imagens/atualizar.png")));
+        getBotaoBuscar().setIcon(new ImageIcon(getClass().getResource("/publico/imagens/buscar.png")));
         
-        botaoNovo.setEnabled(false);
-        botaoEditar.setEnabled(false);
-        botaoExcluir.setEnabled(false);
+        getBotaoNovo().setEnabled(false);
+        getBotaoEditar().setEnabled(false);
+        getBotaoExcluir().setEnabled(false);
         setForcarDesabilitarBotaoEditar(true);
         setForcarDesabilitarBotaoExcluir(true);
         
         atualizarGrid(-1, new ArrayList());
         
-        tabela.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+        getTabela().getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent event) {
-                if(tabela.getSelectedRow() > tabela.getRowCount()){
-                    botaoEditar.setEnabled(false);
-                    botaoExcluir.setEnabled(false);
+                if(getTabela().getSelectedRow() > getTabela().getRowCount()){
+                    getBotaoEditar().setEnabled(false);
+                    getBotaoExcluir().setEnabled(false);
                 }
                 else{
-                    botaoExcluir.setEnabled(!forcarDesabilitarBotaoExcluir);
-                    botaoEditar.setEnabled(!forcarDesabilitarBotaoEditar);
+                    getBotaoExcluir().setEnabled(!forcarDesabilitarBotaoExcluir);
+                    getBotaoEditar().setEnabled(!forcarDesabilitarBotaoEditar);
                 }
             }
         });
@@ -190,7 +190,7 @@ public abstract class Busca extends javax.swing.JInternalFrame {
     /**
      * Verifica e seta as permissões concebidas ao usuário na tela acessada.
      */
-    private void setaPermissoesDoUsuarioNaTela() {
+    public void setaPermissoesDoUsuarioNaTela() {
         try {
             LinkedList<Object> permissoes = UsuarioLogado.getInstance().getPermissoesDosGruposDoUsuarioLogado();
 
@@ -202,7 +202,7 @@ public abstract class Busca extends javax.swing.JInternalFrame {
                     // Usuário possui permissão de inserção.
                     if ( permissao.isInserir() || permissao.isAdmin() )
                     {
-                        botaoNovo.setEnabled(true);
+                        getBotaoNovo().setEnabled(true);
                     }
 
                     // Usuário possui permissão de edição.

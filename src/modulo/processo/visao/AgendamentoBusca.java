@@ -4,15 +4,22 @@
  */
 package modulo.processo.visao;
 
+import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
+import java.util.List;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.JToolBar;
+import javax.swing.table.DefaultTableModel;
 import modulo.sistema.negocio.SOptionPane;
+import modulo.sistema.visao.Busca;
 
 /**
  *
  * @author augusto
  */
-public class AgendamentoBusca extends javax.swing.JInternalFrame {
+public final class AgendamentoBusca extends Busca {
 
     /**
      * Creates new form AgendamentoBusca
@@ -21,8 +28,76 @@ public class AgendamentoBusca extends javax.swing.JInternalFrame {
         this.setName("agenda");
         initComponents();
         setTitle("Agendamento");
-        tabelaHorarios.setSelectionBackground(new java.awt.Color(22, 160, 133));
-        tabelaHorarios.setSelectionForeground(new java.awt.Color(255, 255, 255));
+    }
+    
+    @Override
+    public JButton getBotaoAtualizar() {
+        return this.botaoAtualizar;
+    }
+
+    @Override
+    public void setBotaoAtualizar(JButton botaoAtualizar) {
+        this.botaoAtualizar = botaoAtualizar;
+    }
+
+    @Override
+    public JButton getBotaoEditar() {
+        return this.botaoEditar;
+    }
+
+    @Override
+    public void setBotaoEditar(JButton botaoEditar) {
+        this.botaoEditar = botaoEditar;
+    }
+    
+    @Override
+    public JButton getBotaoExcluir() {
+        return this.botaoExcluir;
+    }
+
+    @Override
+    public void setBotaoExcluir(JButton botaoExcluir) {
+        this.botaoExcluir = botaoExcluir;
+    }
+
+    @Override
+    public JButton getBotaoNovo() {
+        return this.botaoNovo;
+    }
+
+    @Override
+    public void setBotaoNovo(JButton botaoNovo) {
+        this.botaoNovo = botaoNovo;
+    }
+    
+    @Override
+    public JTable getTabela() {
+        return this.tabela;
+    }
+
+    @Override
+    public void setTabela(JTable tabela) {
+        this.tabela = tabela;
+    }
+
+    @Override
+    public JToolBar getToolbar() {
+        return this.toolbar;
+    }
+
+    @Override
+    public void setToolbar(JToolBar toolbar) {
+        this.toolbar = toolbar;
+    }
+    
+    @Override
+    public JButton getBotaoBuscar() {
+        return this.botaoBuscar;
+    }
+
+    @Override
+    public void setBotaoBuscar(JButton botaoBuscar) {
+        this.botaoBuscar = botaoBuscar;
     }
 
     /**
@@ -32,7 +107,7 @@ public class AgendamentoBusca extends javax.swing.JInternalFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    public void initComponents() {
 
         toolbar = new javax.swing.JToolBar();
         botaoNovo = new javax.swing.JButton();
@@ -45,13 +120,13 @@ public class AgendamentoBusca extends javax.swing.JInternalFrame {
         jPanel4 = new javax.swing.JPanel();
         calendario = new com.toedter.calendar.JCalendar();
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jComboBox2 = new javax.swing.JComboBox();
+        tipoDeAtendimento = new javax.swing.JComboBox();
+        profissional = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        botaoBuscar = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tabelaHorarios = new javax.swing.JTable();
+        tabela = new javax.swing.JTable();
 
         setBorder(null);
 
@@ -123,10 +198,10 @@ public class AgendamentoBusca extends javax.swing.JInternalFrame {
 
         jLabel2.setText("Profissional");
 
-        jButton1.setText("Buscar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        botaoBuscar.setText("Buscar");
+        botaoBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                botaoBuscarActionPerformed(evt);
             }
         });
 
@@ -138,13 +213,13 @@ public class AgendamentoBusca extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tipoDeAtendimento, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(profissional, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(botaoBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 120, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -156,13 +231,13 @@ public class AgendamentoBusca extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tipoDeAtendimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(profissional, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
+                .addComponent(botaoBuscar)
                 .addContainerGap(65, Short.MAX_VALUE))
         );
 
@@ -170,7 +245,7 @@ public class AgendamentoBusca extends javax.swing.JInternalFrame {
 
         jPanel3.setBackground(java.awt.SystemColor.controlLtHighlight);
 
-        tabelaHorarios.setModel(new javax.swing.table.DefaultTableModel(
+        tabela.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -196,7 +271,7 @@ public class AgendamentoBusca extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tabelaHorarios);
+        jScrollPane1.setViewportView(tabela);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -240,40 +315,53 @@ public class AgendamentoBusca extends javax.swing.JInternalFrame {
         );
 
         pack();
+	customizacaoDosComponentes();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void botaoNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoNovoActionPerformed
+    @Override
+    public DefaultTableModel construirGrid() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void atualizarGrid(int selecionar, List<Object> registros) {
+        //throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void botaoNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoNovoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_botaoNovoActionPerformed
 
-    private void botaoEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEditarActionPerformed
+    @Override
+    public void botaoEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEditarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_botaoEditarActionPerformed
 
-    private void botaoExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoExcluirActionPerformed
+    @Override
+    public void botaoExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoExcluirActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_botaoExcluirActionPerformed
 
-    private void botaoAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAtualizarActionPerformed
+    public void botaoAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAtualizarActionPerformed
         //atualizarGrid(-1, new ArrayList());
     }//GEN-LAST:event_botaoAtualizarActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    @Override
+    public void botaoBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBuscarActionPerformed
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String dataFormatada = dateFormat.format(calendario.getDate());
         
         JOptionPane.showMessageDialog(null, dataFormatada);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_botaoBuscarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoAtualizar;
+    private javax.swing.JButton botaoBuscar;
     private javax.swing.JButton botaoEditar;
     private javax.swing.JButton botaoExcluir;
     private javax.swing.JButton botaoNovo;
     private com.toedter.calendar.JCalendar calendario;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
@@ -282,7 +370,9 @@ public class AgendamentoBusca extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable tabelaHorarios;
+    private javax.swing.JComboBox profissional;
+    private javax.swing.JTable tabela;
+    private javax.swing.JComboBox tipoDeAtendimento;
     private javax.swing.JToolBar toolbar;
     // End of variables declaration//GEN-END:variables
 }
