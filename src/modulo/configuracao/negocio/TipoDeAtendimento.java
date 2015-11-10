@@ -50,4 +50,9 @@ public class TipoDeAtendimento implements Serializable {
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
     }
+    
+    @Override
+    public String toString() {
+        return this.nome;
+    }
 }

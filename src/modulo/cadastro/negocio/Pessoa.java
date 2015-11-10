@@ -74,7 +74,7 @@ public class Pessoa implements Serializable {
     protected String endereco;
     
     @Column
-    protected int numero;
+    protected Integer numero;
     
     @Column(length = 45)
     protected String complemento;
@@ -205,11 +205,11 @@ public class Pessoa implements Serializable {
         this.endereco = endereco;
     }
 
-    public int getNumero() {
+    public Integer getNumero() {
         return numero;
     }
 
-    public void setNumero(int numero) {
+    public void setNumero(Integer numero) {
         this.numero = numero;
     }
 

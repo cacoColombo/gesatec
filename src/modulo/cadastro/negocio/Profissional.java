@@ -12,4 +12,9 @@ import javax.persistence.Table;
 @Table(name = "profissional")
 public class Profissional extends Pessoa implements Serializable {
     
+    @Override
+    public String toString() {
+        return this.nome;
+    }
+    
 }

@@ -4,7 +4,6 @@
  */
 package modulo.processo.visao;
 
-import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.JButton;
@@ -12,8 +11,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
+import modulo.cadastro.dao.TipoDeAtendimentoDoProfissionalDAO;
+import modulo.cadastro.negocio.Profissional;
+import modulo.cadastro.negocio.TipoDeAtendimentoDoProfissional;
+import modulo.configuracao.dao.TipoDeAtendimentoDAO;
+import modulo.configuracao.negocio.TipoDeAtendimento;
 import modulo.sistema.negocio.SOptionPane;
 import modulo.sistema.visao.Busca;
+import org.hibernate.criterion.Conjunction;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -28,6 +34,24 @@ public final class AgendamentoBusca extends Busca {
         this.setName("agenda");
         initComponents();
         setTitle("Agendamento");
+        
+        //customizacaoDosComponentes();
+        
+        try {
+            Profissional prof = new Profissional();
+            prof.setNome(" ");
+            TipoDeAtendimento tipoDeAtend = new TipoDeAtendimento();
+            tipoDeAtend.setNome(" ");
+            profissional.addItem(prof);
+            tipoDeAtendimento.addItem(tipoDeAtend);
+            List<Object> tiposDeAtendimento = TipoDeAtendimentoDAO.getInstance().findAll(new TipoDeAtendimento());
+            for ( Object object : tiposDeAtendimento ) { 
+                TipoDeAtendimento tipoDeAtendimentoObj = (TipoDeAtendimento) object;
+                tipoDeAtendimento.addItem(tipoDeAtendimentoObj);
+            } 
+        } catch ( Exception err ) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     @Override
@@ -196,6 +220,12 @@ public final class AgendamentoBusca extends Busca {
 
         jLabel1.setText("Tipo de atendimento");
 
+        tipoDeAtendimento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tipoDeAtendimentoActionPerformed(evt);
+            }
+        });
+
         jLabel2.setText("Profissional");
 
         botaoBuscar.setText("Buscar");
@@ -247,20 +277,20 @@ public final class AgendamentoBusca extends Busca {
 
         tabela.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Horário inicial", "Horário final", "Situaçao", "Tipo de atendimento", "Cliente"
+                "Data", "Horário", "Situaçao", "Tipo de atendimento", "Profissional", "Cliente"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -354,6 +384,32 @@ public final class AgendamentoBusca extends Busca {
         
         JOptionPane.showMessageDialog(null, dataFormatada);
     }//GEN-LAST:event_botaoBuscarActionPerformed
+
+    private void tipoDeAtendimentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tipoDeAtendimentoActionPerformed
+        try {
+            // Obtém todos os profissionais do tipo de atendimento selecionado.
+            TipoDeAtendimento tipoDeAtendimentoSelecionado = (TipoDeAtendimento) tipoDeAtendimento.getSelectedItem();
+            
+            if ( !(tipoDeAtendimentoSelecionado.toString().equals(" ")) )
+            {
+                Conjunction and = Restrictions.conjunction();
+                and.add(Restrictions.eq("tipoDeAtendimento", tipoDeAtendimentoSelecionado));
+                List<Object> tiposDeAtendimentosDosProfissionais = TipoDeAtendimentoDoProfissionalDAO.getInstance().findByCriteria(new TipoDeAtendimentoDoProfissional(), and, Restrictions.disjunction());
+
+                Profissional prof = new Profissional();
+                prof.setNome(" ");
+                profissional.removeAllItems();
+                profissional.addItem(prof);
+
+                for ( Object object : tiposDeAtendimentosDosProfissionais ) { 
+                    TipoDeAtendimentoDoProfissional tipoDeAtendimentoDoProfissional = (TipoDeAtendimentoDoProfissional) object;
+                    profissional.addItem(tipoDeAtendimentoDoProfissional.getProfissional());
+                } 
+            }
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_tipoDeAtendimentoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoAtualizar;
