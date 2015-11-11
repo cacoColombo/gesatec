@@ -4,6 +4,7 @@
  */
 package modulo.processo.visao;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.JButton;
@@ -12,15 +13,12 @@ import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
 import modulo.cadastro.dao.ProfissionalDAO;
-import modulo.cadastro.dao.TipoDeAtendimentoDoProfissionalDAO;
 import modulo.cadastro.negocio.Profissional;
-import modulo.cadastro.negocio.TipoDeAtendimentoDoProfissional;
 import modulo.configuracao.dao.TipoDeAtendimentoDAO;
 import modulo.configuracao.negocio.TipoDeAtendimento;
+import modulo.processo.dao.AgendamentoDAO;
 import modulo.sistema.negocio.SOptionPane;
 import modulo.sistema.visao.Busca;
-import org.hibernate.criterion.Conjunction;
-import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -37,8 +35,8 @@ public final class AgendamentoBusca extends Busca {
         setTitle("Agendamento");
         
         try {
-            this.populaComboDeTiposDeAtendimentos();
-            this.populaComboDeProfissionais();
+            this.populaComboDeTiposDeAtendimentos(false);
+            this.populaComboDeProfissionais(false);
         } catch ( Exception err ) {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
@@ -48,31 +46,37 @@ public final class AgendamentoBusca extends Busca {
      * Popula combo de tipos de atendimentos.
      * 
      */
-    private void populaComboDeTiposDeAtendimentos() {
+    private void populaComboDeTiposDeAtendimentos(boolean empty) {
         TipoDeAtendimento tipoDeAtend = new TipoDeAtendimento();
         tipoDeAtend.setNome(" ");
         tipoDeAtendimento.removeAllItems();
         tipoDeAtendimento.addItem(tipoDeAtend);
-        List<Object> tiposDeAtendimento = TipoDeAtendimentoDAO.getInstance().findAll(new TipoDeAtendimento());
-        for ( Object object : tiposDeAtendimento ) { 
-            TipoDeAtendimento tipoDeAtendimentoObj = (TipoDeAtendimento) object;
-            tipoDeAtendimento.addItem(tipoDeAtendimentoObj);
+        
+        if ( !empty ) {
+            List<Object> tiposDeAtendimento = TipoDeAtendimentoDAO.getInstance().findAll(new TipoDeAtendimento());
+            for ( Object object : tiposDeAtendimento ) { 
+                TipoDeAtendimento tipoDeAtendimentoObj = (TipoDeAtendimento) object;
+                tipoDeAtendimento.addItem(tipoDeAtendimentoObj);
+            }
         }
     }
     
     /**
      * Popula combo de profissionais
      */
-    private void populaComboDeProfissionais() {
+    private void populaComboDeProfissionais(boolean empty) {
         Profissional prof = new Profissional();
         prof.setNome(" ");
         profissional.removeAllItems();
         profissional.addItem(prof);
-        List<Object> profissionais = ProfissionalDAO.getInstance().findAll(new Profissional());
-        for ( Object object : profissionais ) { 
-            Profissional profiss = (Profissional) object;
-            profissional.addItem(profiss);
-        } 
+        
+        if ( !empty ) {
+            List<Object> profissionais = ProfissionalDAO.getInstance().findAll(new Profissional());
+            for ( Object object : profissionais ) { 
+                Profissional profiss = (Profissional) object;
+                profissional.addItem(profiss);
+            } 
+        }
     }
     
     @Override
@@ -409,6 +413,10 @@ public final class AgendamentoBusca extends Busca {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String dataFormatada = dateFormat.format(calendario.getDate());
         
+        AgendamentoDAO agendamentoDao = new AgendamentoDAO();
+        System.out.println(agendamentoDao.obterHorariosDoProfissionalParaAgendamento(new Date(calendario.getDate().getTime())));
+        
+        
         JOptionPane.showMessageDialog(null, dataFormatada);
     }//GEN-LAST:event_botaoBuscarActionPerformed
 
@@ -434,7 +442,7 @@ public final class AgendamentoBusca extends Busca {
                     profissional.addItem(tipoDeAtendimentoDoProfissional.getProfissional());
                 } 
             } else {
-                this.populaComboDeProfissionais();
+                this.populaComboDeProfissionais(false);
             }
         } catch (Exception err) {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
@@ -444,7 +452,6 @@ public final class AgendamentoBusca extends Busca {
 
     private void profissionalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profissionalActionPerformed
         /**
-        
         try {
             // Obtém todos os tipos de atendimento do profissional selecionado.
             Profissional profissionalSelecionado = (Profissional) profissional.getSelectedItem();
@@ -465,7 +472,7 @@ public final class AgendamentoBusca extends Busca {
                     tipoDeAtendimento.addItem(tipoDeAtendimentoDoProfissional.getTipoDeAtendimento());
                 } 
             } else {
-                this.populaComboDeTiposDeAtendimentos();
+                this.populaComboDeTiposDeAtendimentos(false);
             }
         } catch (Exception err) {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);

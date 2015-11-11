@@ -33,7 +33,7 @@ public class DAO {
         return instance;
     }
 
-    private EntityManager getEntityManager() {
+    public EntityManager getEntityManager() {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("crudHibernatePU");
 
         if (entityManager == null) {
