@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
+import modulo.cadastro.dao.ProfissionalDAO;
 import modulo.cadastro.dao.TipoDeAtendimentoDoProfissionalDAO;
 import modulo.cadastro.negocio.Profissional;
 import modulo.cadastro.negocio.TipoDeAtendimentoDoProfissional;
@@ -35,23 +36,43 @@ public final class AgendamentoBusca extends Busca {
         initComponents();
         setTitle("Agendamento");
         
-        //customizacaoDosComponentes();
-        
         try {
-            Profissional prof = new Profissional();
-            prof.setNome(" ");
-            TipoDeAtendimento tipoDeAtend = new TipoDeAtendimento();
-            tipoDeAtend.setNome(" ");
-            profissional.addItem(prof);
-            tipoDeAtendimento.addItem(tipoDeAtend);
-            List<Object> tiposDeAtendimento = TipoDeAtendimentoDAO.getInstance().findAll(new TipoDeAtendimento());
-            for ( Object object : tiposDeAtendimento ) { 
-                TipoDeAtendimento tipoDeAtendimentoObj = (TipoDeAtendimento) object;
-                tipoDeAtendimento.addItem(tipoDeAtendimentoObj);
-            } 
+            this.populaComboDeTiposDeAtendimentos();
+            this.populaComboDeProfissionais();
         } catch ( Exception err ) {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    
+    /**
+     * Popula combo de tipos de atendimentos.
+     * 
+     */
+    private void populaComboDeTiposDeAtendimentos() {
+        TipoDeAtendimento tipoDeAtend = new TipoDeAtendimento();
+        tipoDeAtend.setNome(" ");
+        tipoDeAtendimento.removeAllItems();
+        tipoDeAtendimento.addItem(tipoDeAtend);
+        List<Object> tiposDeAtendimento = TipoDeAtendimentoDAO.getInstance().findAll(new TipoDeAtendimento());
+        for ( Object object : tiposDeAtendimento ) { 
+            TipoDeAtendimento tipoDeAtendimentoObj = (TipoDeAtendimento) object;
+            tipoDeAtendimento.addItem(tipoDeAtendimentoObj);
+        }
+    }
+    
+    /**
+     * Popula combo de profissionais
+     */
+    private void populaComboDeProfissionais() {
+        Profissional prof = new Profissional();
+        prof.setNome(" ");
+        profissional.removeAllItems();
+        profissional.addItem(prof);
+        List<Object> profissionais = ProfissionalDAO.getInstance().findAll(new Profissional());
+        for ( Object object : profissionais ) { 
+            Profissional profiss = (Profissional) object;
+            profissional.addItem(profiss);
+        } 
     }
     
     @Override
@@ -226,6 +247,12 @@ public final class AgendamentoBusca extends Busca {
             }
         });
 
+        profissional.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                profissionalActionPerformed(evt);
+            }
+        });
+
         jLabel2.setText("Profissional");
 
         botaoBuscar.setText("Buscar");
@@ -386,6 +413,7 @@ public final class AgendamentoBusca extends Busca {
     }//GEN-LAST:event_botaoBuscarActionPerformed
 
     private void tipoDeAtendimentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tipoDeAtendimentoActionPerformed
+        /**
         try {
             // Obtém todos os profissionais do tipo de atendimento selecionado.
             TipoDeAtendimento tipoDeAtendimentoSelecionado = (TipoDeAtendimento) tipoDeAtendimento.getSelectedItem();
@@ -405,11 +433,45 @@ public final class AgendamentoBusca extends Busca {
                     TipoDeAtendimentoDoProfissional tipoDeAtendimentoDoProfissional = (TipoDeAtendimentoDoProfissional) object;
                     profissional.addItem(tipoDeAtendimentoDoProfissional.getProfissional());
                 } 
+            } else {
+                this.populaComboDeProfissionais();
             }
         } catch (Exception err) {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
+        */
     }//GEN-LAST:event_tipoDeAtendimentoActionPerformed
+
+    private void profissionalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profissionalActionPerformed
+        /**
+        
+        try {
+            // Obtém todos os tipos de atendimento do profissional selecionado.
+            Profissional profissionalSelecionado = (Profissional) profissional.getSelectedItem();
+            
+            if ( !(profissionalSelecionado.toString().equals(" ")) )
+            {
+                Conjunction and = Restrictions.conjunction();
+                and.add(Restrictions.eq("profissional", profissionalSelecionado));
+                List<Object> tiposDeAtendimentosDosProfissionais = TipoDeAtendimentoDoProfissionalDAO.getInstance().findByCriteria(new TipoDeAtendimentoDoProfissional(), and, Restrictions.disjunction());
+
+                TipoDeAtendimento tipoDeAtend = new TipoDeAtendimento();
+                tipoDeAtend.setNome(" ");
+                tipoDeAtendimento.removeAllItems();
+                tipoDeAtendimento.addItem(tipoDeAtend);
+
+                for ( Object object : tiposDeAtendimentosDosProfissionais ) { 
+                    TipoDeAtendimentoDoProfissional tipoDeAtendimentoDoProfissional = (TipoDeAtendimentoDoProfissional) object;
+                    tipoDeAtendimento.addItem(tipoDeAtendimentoDoProfissional.getTipoDeAtendimento());
+                } 
+            } else {
+                this.populaComboDeTiposDeAtendimentos();
+            }
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
+        */
+    }//GEN-LAST:event_profissionalActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoAtualizar;

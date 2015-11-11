@@ -199,12 +199,20 @@ LANGUAGE 'plpgsql' IMMUTABLE;
 --
 
 --
-CREATE OR REPLACE FUNCTION obterHorariosDoProfissionalParaAgendamento(p_profissional_id INT, p_data DATE, p_agendamento_id INT DEFAULT NULL)
+CREATE OR REPLACE FUNCTION obterHorariosDoProfissionalParaAgendamento(p_data DATE, p_profissional_id INT DEFAULT NULL, p_tipodeatendimento_id INT DEFAULT NULL, p_agendamento_id INT DEFAULT NULL)
 RETURNS TABLE (
     descricao_horario VARCHAR,
     data DATE,
     horario TIME,
-    esta_disponivel BOOLEAN
+    esta_disponivel BOOLEAN,
+    agendamento_id INT,
+    statusagendamento VARCHAR,
+    tipodeatendimento_id INT,
+    tipodeatendimento VARCHAR,
+    cliente_id INT,
+    cliente VARCHAR,
+    profissional_id INT,
+    profissional VARCHAR
 ) AS
 $BODY$
 BEGIN
@@ -213,18 +221,52 @@ BEGIN
                horarios.horario::DATE AS data,
                horarios.horario::TIME AS horario,
                ((agendamento.id IS NULL AND horarios.horario >= NOW()::TIMESTAMP) OR 
-                (p_agendamento_id IS NOT NULL AND p_agendamento_id = agendamento.id)) AS esta_disponivel
+                (p_agendamento_id IS NOT NULL AND p_agendamento_id = agendamento.id)) AS esta_disponivel,
+	       agendamento.id AS agendamento_id,
+	       statusagendamento.nome AS statusagendamento,
+	       tipodeatendimento.id AS tipodeatendimento_id,
+	       tipodeatendimento.nome AS tipodeatendimento,
+	       pessoa.id AS cliente_id,
+	       pessoa.nome AS cliente,
+	       horarios.profissional_id,
+	       horarios.profissional
 	  FROM (SELECT padraoDeAtendimento.nome AS descricao_horario,
+		       pessoa.id AS profissional_id,
+		       pessoa.nome AS profissional,
 		       generate_series((dataParaUsuario(p_data) || ' ' || padraoDeAtendimento.horarioinicioexpediente::TEXT)::TIMESTAMP, (dataParaUsuario(p_data) || ' ' || padraoDeAtendimento.horariofimexpediente::TEXT)::TIMESTAMP, (padraoDeAtendimento.tempomedioconsulta::TEXT || 'minutes')::INTERVAL) AS horario
 		  FROM padraoDeAtendimentoDoProfissional
 	    INNER JOIN padraoDeAtendimento
 		    ON padraoDeAtendimento.id = padraoDeAtendimentoDoProfissional.padraoDeAtendimento_id
-		 WHERE padraoDeAtendimentoDoProfissional.profissional_id = p_profissional_id
-		   AND diadasemana_id = EXTRACT('DOW' FROM p_data)) horarios
+	    INNER JOIN pessoa
+		    ON pessoa.id = padraoDeAtendimentoDoProfissional.profissional_id
+		 WHERE diadasemana_id = EXTRACT('DOW' FROM p_data)
+                   AND (CASE WHEN p_profissional_id IS NOT NULL
+                             THEN
+                                  padraoDeAtendimentoDoProfissional.profissional_id = p_profissional_id
+                             ELSE
+                                  TRUE
+                        END)) horarios
      LEFT JOIN agendamento
 	    ON agendamento.dataagendada = horarios.horario::DATE
 	   AND agendamento.horarioagendado = horarios.horario::TIME
-	   AND agendamento.profissional_id = p_profissional_id
+	   AND (CASE WHEN p_profissional_id IS NOT NULL
+                     THEN
+                          agendamento.profissional_id = p_profissional_id
+                     ELSE
+                          TRUE
+                END)
+     LEFT JOIN statusagendamento
+	    ON statusagendamento.id = agendamento.statusagendamento_id
+     LEFT JOIN pessoa
+	    ON pessoa.id = agendamento.cliente_id
+     LEFT JOIN tipodeatendimento
+	    ON tipodeatendimento.id = agendamento.tipodeatendimento_id
+	 WHERE (CASE WHEN p_tipodeatendimento_id IS NOT NULL
+		     THEN
+			  agendamento.tipodeatendimento_id = p_tipodeatendimento_id
+		     ELSE
+		          TRUE
+		END)
       ORDER BY horarios.horario ASC
     );
 END;
