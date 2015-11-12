@@ -245,7 +245,16 @@ BEGIN
                                   padraoDeAtendimentoDoProfissional.profissional_id = p_profissional_id
                              ELSE
                                   TRUE
-                        END)) horarios
+                        END)
+		   AND (CASE WHEN p_tipodeatendimento_id IS NOT NULL
+			     THEN
+			          EXISTS (SELECT tipoDeAtendimentoDoProfissional.id
+					    FROM tipoDeAtendimentoDoProfissional
+					   WHERE tipoDeAtendimentoDoProfissional.profissional_id = pessoa.id
+					     AND tipoDeAtendimentoDoProfissional.tipoDeAtendimento_id = p_tipodeatendimento_id)
+			     ELSE
+			          TRUE
+			END)) horarios
      LEFT JOIN agendamento
 	    ON agendamento.dataagendada = horarios.horario::DATE
 	   AND agendamento.horarioagendado = horarios.horario::TIME
@@ -263,11 +272,12 @@ BEGIN
 	    ON tipodeatendimento.id = agendamento.tipodeatendimento_id
 	 WHERE (CASE WHEN p_tipodeatendimento_id IS NOT NULL
 		     THEN
-			  agendamento.tipodeatendimento_id = p_tipodeatendimento_id
+			  (agendamento.id IS NULL OR agendamento.tipodeatendimento_id = p_tipodeatendimento_id)
 		     ELSE
 		          TRUE
 		END)
-      ORDER BY horarios.horario ASC
+      ORDER BY horarios.horario ASC,
+	       horarios.profissional
     );
 END;
 $BODY$
