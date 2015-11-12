@@ -414,7 +414,7 @@ public final class AgendamentoBusca extends Busca {
         String dataFormatada = dateFormat.format(calendario.getDate());
         
         AgendamentoDAO agendamentoDao = new AgendamentoDAO();
-        System.out.println(agendamentoDao.obterHorariosDoProfissionalParaAgendamento(new Date(calendario.getDate().getTime())));
+        System.out.println(agendamentoDao.obterHorariosParaAgendamento(new Date(calendario.getDate().getTime())));
         
         
         JOptionPane.showMessageDialog(null, dataFormatada);

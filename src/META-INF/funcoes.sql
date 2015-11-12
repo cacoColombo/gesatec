@@ -199,7 +199,7 @@ LANGUAGE 'plpgsql' IMMUTABLE;
 --
 
 --
-CREATE OR REPLACE FUNCTION obterHorariosDoProfissionalParaAgendamento(p_data DATE, p_profissional_id INT DEFAULT NULL, p_tipodeatendimento_id INT DEFAULT NULL, p_agendamento_id INT DEFAULT NULL)
+CREATE OR REPLACE FUNCTION obterHorariosParaAgendamento(p_data DATE, p_profissional_id INT DEFAULT NULL, p_tipodeatendimento_id INT DEFAULT NULL, p_agendamento_id INT DEFAULT NULL)
 RETURNS TABLE (
     descricao_horario VARCHAR,
     data DATE,
