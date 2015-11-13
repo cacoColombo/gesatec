@@ -13,12 +13,16 @@ import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
 import modulo.cadastro.dao.ProfissionalDAO;
+import modulo.cadastro.dao.TipoDeAtendimentoDoProfissionalDAO;
 import modulo.cadastro.negocio.Profissional;
+import modulo.cadastro.negocio.TipoDeAtendimentoDoProfissional;
 import modulo.configuracao.dao.TipoDeAtendimentoDAO;
 import modulo.configuracao.negocio.TipoDeAtendimento;
 import modulo.processo.dao.AgendamentoDAO;
 import modulo.sistema.negocio.SOptionPane;
 import modulo.sistema.visao.Busca;
+import org.hibernate.criterion.Conjunction;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -35,7 +39,6 @@ public final class AgendamentoBusca extends Busca {
         setTitle("Agendamento");
         
         try {
-            this.populaComboDeTiposDeAtendimentos(false);
             this.populaComboDeProfissionais(false);
         } catch ( Exception err ) {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
@@ -243,7 +246,7 @@ public final class AgendamentoBusca extends Busca {
             .addComponent(calendario, javax.swing.GroupLayout.PREFERRED_SIZE, 205, Short.MAX_VALUE)
         );
 
-        jLabel1.setText("Tipo de atendimento");
+        jLabel1.setText("Profissional");
 
         tipoDeAtendimento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -257,7 +260,7 @@ public final class AgendamentoBusca extends Busca {
             }
         });
 
-        jLabel2.setText("Profissional");
+        jLabel2.setText("Tipo de atendimento");
 
         botaoBuscar.setText("Buscar");
         botaoBuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -273,15 +276,15 @@ public final class AgendamentoBusca extends Busca {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tipoDeAtendimento, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(profissional, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
                             .addComponent(botaoBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 120, Short.MAX_VALUE)))
+                        .addGap(0, 120, Short.MAX_VALUE))
+                    .addComponent(tipoDeAtendimento, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -292,11 +295,11 @@ public final class AgendamentoBusca extends Busca {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tipoDeAtendimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(profissional, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(profissional, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tipoDeAtendimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(botaoBuscar)
                 .addContainerGap(65, Short.MAX_VALUE))
@@ -451,7 +454,6 @@ public final class AgendamentoBusca extends Busca {
     }//GEN-LAST:event_tipoDeAtendimentoActionPerformed
 
     private void profissionalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profissionalActionPerformed
-        /**
         try {
             // Obtém todos os tipos de atendimento do profissional selecionado.
             Profissional profissionalSelecionado = (Profissional) profissional.getSelectedItem();
@@ -477,7 +479,6 @@ public final class AgendamentoBusca extends Busca {
         } catch (Exception err) {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
-        */
     }//GEN-LAST:event_profissionalActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
