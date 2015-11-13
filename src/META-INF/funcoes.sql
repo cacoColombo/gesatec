@@ -212,7 +212,9 @@ RETURNS TABLE (
     cliente_id INT,
     cliente VARCHAR,
     profissional_id INT,
-    profissional VARCHAR
+    profissional VARCHAR,
+    data_formatada VARCHAR,
+    horario_formatado VARCHAR
 ) AS
 $BODY$
 BEGIN
@@ -223,13 +225,23 @@ BEGIN
                ((agendamento.id IS NULL AND horarios.horario >= NOW()::TIMESTAMP) OR 
                 (p_agendamento_id IS NOT NULL AND p_agendamento_id = agendamento.id)) AS esta_disponivel,
 	       agendamento.id AS agendamento_id,
-	       statusagendamento.nome AS statusagendamento,
+               (CASE WHEN statusagendamento.nome IS NOT NULL
+                     THEN
+                          statusagendamento.nome
+                     WHEN (NOW()::TIMESTAMP > horarios.horario)
+                     THEN
+                          'Indisponível'
+                     ELSE
+                          'Livre'
+                END) AS statusagendamento,
 	       tipodeatendimento.id AS tipodeatendimento_id,
 	       tipodeatendimento.nome AS tipodeatendimento,
 	       pessoa.id AS cliente_id,
 	       pessoa.nome AS cliente,
 	       horarios.profissional_id,
-	       horarios.profissional
+	       horarios.profissional,
+               TO_CHAR(horarios.horario::DATE, 'dd/mm/yyyy')::VARCHAR AS data_formatada,
+               TO_CHAR(horarios.horario::TIME, 'hh24:mi')::VARCHAR AS horario_formatado
 	  FROM (SELECT padraoDeAtendimento.nome AS descricao_horario,
 		       pessoa.id AS profissional_id,
 		       pessoa.nome AS profissional,

@@ -311,20 +311,17 @@ public final class AgendamentoBusca extends Busca {
 
         tabela.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
-                "Data", "Horário", "Situaçao", "Tipo de atendimento", "Profissional", "Cliente"
+                "ID", "Data", "Horário", "Situaçao", "Tipo de atendimento", "Profissional", "Cliente"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -336,6 +333,9 @@ public final class AgendamentoBusca extends Busca {
             }
         });
         jScrollPane1.setViewportView(tabela);
+        tabela.getColumnModel().getColumn(0).setPreferredWidth(15);
+        tabela.getColumnModel().getColumn(1).setPreferredWidth(20);
+        tabela.getColumnModel().getColumn(2).setPreferredWidth(15);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -388,8 +388,39 @@ public final class AgendamentoBusca extends Busca {
     }
 
     @Override
-    public void atualizarGrid(int selecionar, List<Object> registros) {
-        //throw new UnsupportedOperationException("Not supported yet.");
+    public void atualizarGrid(int selecionar, List<Object> horarios) {
+        try {
+            // Default
+            if ( horarios.isEmpty() )
+            {                
+                AgendamentoDAO agendamentoDao = new AgendamentoDAO();
+                horarios = agendamentoDao.obterHorariosParaAgendamento(new Date(calendario.getDate().getTime()));
+            }
+            
+            DefaultTableModel modelo = (DefaultTableModel) getTabela().getModel();
+            modelo.setNumRows(0);
+            
+            for ( int i = 0; i < horarios.size(); i ++ ) { 
+                Object[] horario = (Object[]) horarios.get(i);
+                modelo.addRow(new Object[]{
+                    horario[4], //ID Agendamento
+                    horario[12], //Data
+                    horario[13], //Horário
+                    horario[5], //Situação
+                    horario[7], //Tipo de atendimento
+                    horario[11], //Profissional
+                    horario[9], //Cliente
+                });
+                
+                // Verifica item a selecionar
+                if ( (horario[4] != null) && horario[4].toString().equals(Integer.toString(selecionar)) )
+                {
+                    getTabela().addRowSelectionInterval(i, i);
+                }
+            }
+        } catch ( Exception err ) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     @Override
@@ -413,14 +444,13 @@ public final class AgendamentoBusca extends Busca {
 
     @Override
     public void botaoBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBuscarActionPerformed
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String dataFormatada = dateFormat.format(calendario.getDate());
-        
-        AgendamentoDAO agendamentoDao = new AgendamentoDAO();
-        System.out.println(agendamentoDao.obterHorariosParaAgendamento(new Date(calendario.getDate().getTime())));
-        
-        
-        JOptionPane.showMessageDialog(null, dataFormatada);
+        try {
+            AgendamentoDAO agendamentoDao = new AgendamentoDAO();
+            List<Object> horarios = agendamentoDao.obterHorariosParaAgendamento(new Date(calendario.getDate().getTime()));
+            atualizarGrid(-1, horarios);
+        } catch ( Exception err ) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_botaoBuscarActionPerformed
 
     private void tipoDeAtendimentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tipoDeAtendimentoActionPerformed
