@@ -30,7 +30,6 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
-    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -200,7 +199,7 @@
                                   </Group>
                               </Group>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="77" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -261,7 +260,7 @@
                               <Component id="jLabel27" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="120" max="32767" attributes="0"/>
+                          <EmptySpace pref="147" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -550,7 +549,7 @@
                               <Component id="jLabel19" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="complemento" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="231" max="32767" attributes="0"/>
+                          <EmptySpace pref="268" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -678,36 +677,34 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                  <Component id="jLabel22" min="-2" pref="200" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="jLabel24" min="-2" pref="200" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="telefoneCelular" min="-2" pref="336" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabel23" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+                                  <Component id="telefoneResidencial" min="-2" pref="336" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="jLabel25" min="-2" pref="200" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="telefoneTrabalho" min="-2" pref="336" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
                                           <Component id="jLabel20" min="-2" pref="200" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="email" min="-2" pref="336" max="-2" attributes="0"/>
+                                          <Component id="email" max="32767" attributes="0"/>
                                       </Group>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="jLabel24" min="-2" pref="200" max="-2" attributes="0"/>
+                                      <Group type="102" attributes="0">
+                                          <Component id="jLabel22" min="-2" pref="200" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="telefoneResidencial" min="-2" pref="336" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="jLabel25" min="-2" pref="200" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="telefoneTrabalho" min="-2" pref="336" max="-2" attributes="0"/>
+                                          <Component id="telefoneCelular" min="-2" pref="336" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <EmptySpace max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jLabel23" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
+                          <EmptySpace pref="77" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -735,7 +732,7 @@
                               <Component id="jLabel25" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="telefoneTrabalho" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="349" max="32767" attributes="0"/>
+                          <EmptySpace pref="400" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -808,10 +805,10 @@
                                       <Component id="botaoAdicionarEspecializacao" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="botaoRemoverEspecializacao" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="0" pref="11" max="32767" attributes="0"/>
                                   </Group>
-                                  <Component id="especializacaoDosProfissionais" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="especializacaoDosProfissionais" min="-2" pref="336" max="-2" attributes="0"/>
                               </Group>
+                              <EmptySpace min="0" pref="45" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -832,7 +829,7 @@
                           <Component id="botaoRemoverEspecializacao" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jScrollPane2" pref="367" max="32767" attributes="0"/>
+                      <Component id="jScrollPane2" pref="440" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -846,7 +843,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="botaoAdicionarEspecializacao">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Adicionar Especializa&#xe7;&#xe3;o"/>
+                <Property name="text" type="java.lang.String" value="Adicionar especializa&#xe7;&#xe3;o"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
@@ -887,7 +884,7 @@
             </Container>
             <Component class="javax.swing.JButton" name="botaoRemoverEspecializacao">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Remover Especializa&#xe7;&#xe3;o"/>
+                <Property name="text" type="java.lang.String" value="Remover especializa&#xe7;&#xe3;o"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
@@ -921,29 +918,27 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="certificacoesDeProfissionais" alignment="1" max="32767" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="botaoAdicionarCertificacao" min="-2" pref="172" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="botaoRemoverCertificacao" min="-2" pref="170" max="-2" attributes="0"/>
+                                  </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="botaoAdicionarCertificacao" min="-2" pref="172" max="-2" attributes="0"/>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="botaoRemoverCertificacao" pref="170" max="32767" attributes="0"/>
-                                          </Group>
                                           <Component id="orgaoExpedidor" alignment="0" max="32767" attributes="0"/>
                                           <Component id="registro" alignment="0" max="32767" attributes="0"/>
                                           <Component id="dataExpedicao" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="certificacoesDeProfissionais" alignment="0" pref="336" max="32767" attributes="0"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jLabel32" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel33" min="-2" max="-2" attributes="0"/>
                                           <Component id="jLabel36" min="-2" max="-2" attributes="0"/>
-                                          <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                                              <Component id="jLabel33" min="-2" max="-2" attributes="0"/>
-                                              <Component id="jLabel32" min="-2" max="-2" attributes="0"/>
-                                          </Group>
                                       </Group>
-                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
+                              <EmptySpace min="0" pref="65" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -982,7 +977,7 @@
                           <Component id="botaoRemoverCertificacao" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane3" pref="292" max="32767" attributes="0"/>
+                      <Component id="jScrollPane3" pref="347" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -1006,7 +1001,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="botaoAdicionarCertificacao">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Adicionar Certifica&#xe7;&#xe3;o"/>
+                <Property name="text" type="java.lang.String" value="Adicionar certifica&#xe7;&#xe3;o"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
@@ -1015,7 +1010,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="botaoRemoverCertificacao">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Remover Certifica&#xe7;&#xe3;o"/>
+                <Property name="text" type="java.lang.String" value="Remover certifica&#xe7;&#xe3;o"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
@@ -1159,10 +1154,10 @@
                                       <Component id="botaoAdicionarPadrao" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="botaoRemoverPadrao" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="0" pref="95" max="32767" attributes="0"/>
                                   </Group>
-                                  <Component id="padroesDeAtendimentoDosProfissionais" max="32767" attributes="0"/>
+                                  <Component id="padroesDeAtendimentoDosProfissionais" min="-2" pref="336" max="-2" attributes="0"/>
                               </Group>
+                              <EmptySpace min="0" pref="85" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -1183,7 +1178,7 @@
                           <Component id="botaoRemoverPadrao" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane4" pref="369" max="32767" attributes="0"/>
+                      <Component id="jScrollPane4" pref="442" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>

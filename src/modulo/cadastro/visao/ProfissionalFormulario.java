@@ -280,6 +280,8 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
         });
         toolbar.add(botaoCancelar);
 
+        labelsPainel.setBackground(java.awt.SystemColor.controlLtHighlight);
+
         jLabel1.setText("Nome:");
 
         jLabel2.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
@@ -293,6 +295,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
 
         jLabel4.setText("RG:");
 
+        sexoM.setBackground(java.awt.SystemColor.controlLtHighlight);
         sexoM.setSelected(true);
         sexoM.setText("Masculino");
         sexoM.addActionListener(new java.awt.event.ActionListener() {
@@ -301,6 +304,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             }
         });
 
+        sexoF.setBackground(java.awt.SystemColor.controlLtHighlight);
         sexoF.setText("Feminino");
         sexoF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -401,7 +405,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                             .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(dataNascimento)
                                 .addComponent(cpf)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
         labelsPainelLayout.setVerticalGroup(
             labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -450,7 +454,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                     .addComponent(senha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel27)
                     .addComponent(jLabel10))
-                .addContainerGap(120, Short.MAX_VALUE))
+                .addContainerGap(147, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -465,6 +469,8 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
         );
 
         jTabbedPane1.addTab("Dados pessoais", jPanel2);
+
+        jPanel3.setBackground(java.awt.SystemColor.controlLtHighlight);
 
         jLabel12.setText("País:");
 
@@ -574,7 +580,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel19)
                     .addComponent(complemento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(231, Short.MAX_VALUE))
+                .addContainerGap(268, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -589,6 +595,8 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
         );
 
         jTabbedPane1.addTab("Endereço", jPanel1);
+
+        jPanel5.setBackground(java.awt.SystemColor.controlLtHighlight);
 
         jLabel20.setText("E-mail:");
 
@@ -610,28 +618,26 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(telefoneCelular, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel23)
-                        .addGap(24, 24, 24))
+                        .addComponent(telefoneResidencial, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(telefoneTrabalho, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
                                 .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(email))
                             .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(telefoneResidencial, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(telefoneTrabalho, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(telefoneCelular, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel23)))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -653,7 +659,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel25)
                     .addComponent(telefoneTrabalho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(349, Short.MAX_VALUE))
+                .addContainerGap(400, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -671,7 +677,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
 
         jLabel8.setText("Especialização");
 
-        botaoAdicionarEspecializacao.setText("Adicionar Especialização");
+        botaoAdicionarEspecializacao.setText("Adicionar especialização");
         botaoAdicionarEspecializacao.setEnabled(false);
         botaoAdicionarEspecializacao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -710,7 +716,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
         });
         jScrollPane2.setViewportView(tabelaDeEspecializacoes);
 
-        botaoRemoverEspecializacao.setText("Remover Especialização");
+        botaoRemoverEspecializacao.setText("Remover especialização");
         botaoRemoverEspecializacao.setEnabled(false);
         botaoRemoverEspecializacao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -733,9 +739,9 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                             .addGroup(jPanel6Layout.createSequentialGroup()
                                 .addComponent(botaoAdicionarEspecializacao)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(botaoRemoverEspecializacao)
-                                .addGap(0, 11, Short.MAX_VALUE))
-                            .addComponent(especializacaoDosProfissionais, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(botaoRemoverEspecializacao))
+                            .addComponent(especializacaoDosProfissionais, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 45, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -750,7 +756,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                     .addComponent(botaoAdicionarEspecializacao)
                     .addComponent(botaoRemoverEspecializacao))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -764,7 +770,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             }
         });
 
-        botaoAdicionarCertificacao.setText("Adicionar Certificação");
+        botaoAdicionarCertificacao.setText("Adicionar certificação");
         botaoAdicionarCertificacao.setEnabled(false);
         botaoAdicionarCertificacao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -772,7 +778,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             }
         });
 
-        botaoRemoverCertificacao.setText("Remover Certificação");
+        botaoRemoverCertificacao.setText("Remover certificação");
         botaoRemoverCertificacao.setEnabled(false);
         botaoRemoverCertificacao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -845,23 +851,22 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                             .addComponent(jLabel31))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(certificacoesDeProfissionais, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addComponent(botaoAdicionarCertificacao, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(botaoRemoverCertificacao, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel7Layout.createSequentialGroup()
                                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel7Layout.createSequentialGroup()
-                                        .addComponent(botaoAdicionarCertificacao, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(botaoRemoverCertificacao, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))
                                     .addComponent(orgaoExpedidor, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(registro, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(dataExpedicao, javax.swing.GroupLayout.Alignment.LEADING))
+                                    .addComponent(dataExpedicao, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(certificacoesDeProfissionais, javax.swing.GroupLayout.Alignment.LEADING, 0, 336, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel36)
-                                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel33)
-                                        .addComponent(jLabel32)))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                    .addComponent(jLabel32)
+                                    .addComponent(jLabel33)
+                                    .addComponent(jLabel36))))
+                        .addGap(0, 65, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
@@ -891,7 +896,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                     .addComponent(botaoAdicionarCertificacao)
                     .addComponent(botaoRemoverCertificacao))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -961,9 +966,9 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                             .addGroup(jPanel8Layout.createSequentialGroup()
                                 .addComponent(botaoAdicionarPadrao)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(botaoRemoverPadrao)
-                                .addGap(0, 95, Short.MAX_VALUE))
-                            .addComponent(padroesDeAtendimentoDosProfissionais, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(botaoRemoverPadrao))
+                            .addComponent(padroesDeAtendimentoDosProfissionais, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 85, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
@@ -978,7 +983,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                     .addComponent(botaoAdicionarPadrao)
                     .addComponent(botaoRemoverPadrao))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE)
                 .addContainerGap())
         );
 

@@ -173,18 +173,24 @@ public abstract class Busca extends javax.swing.JInternalFrame {
         
         getTabela().getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent event) {
-                if(getTabela().getSelectedRow() > getTabela().getRowCount()){
-                    getBotaoEditar().setEnabled(false);
-                    getBotaoExcluir().setEnabled(false);
-                }
-                else{
-                    getBotaoExcluir().setEnabled(!forcarDesabilitarBotaoExcluir);
-                    getBotaoEditar().setEnabled(!forcarDesabilitarBotaoEditar);
-                }
+               eventoAoSelecionarNaTabela();
             }
         });
         
         this.setaPermissoesDoUsuarioNaTela();
+    }
+    
+    /**
+     * Evento executado ao selecionar um registro na tabela.
+     */
+    public void eventoAoSelecionarNaTabela() {
+        if (getTabela().getSelectedRow() > getTabela().getRowCount()) {
+            getBotaoEditar().setEnabled(false);
+            getBotaoExcluir().setEnabled(false);
+        } else {
+            getBotaoExcluir().setEnabled(!forcarDesabilitarBotaoExcluir);
+            getBotaoEditar().setEnabled(!forcarDesabilitarBotaoEditar);
+        }
     }
     
     /**
