@@ -16,9 +16,13 @@ import org.hibernate.Session;
  */
 public class AgendamentoDAO extends DAO {
     
-    public List<Object> obterHorariosParaAgendamento(Date data) {
+    public List<Object> obterHorariosParaAgendamento(Date data, int profissionalId, int tipoDeAtendimentoId) {
         Session session = super.getEntityManager().unwrap(Session.class);
-        Query query = session.createSQLQuery("SELECT * FROM obterHorariosParaAgendamento(:data)").setParameter("data", data);
+        Query query = session.createSQLQuery("SELECT * FROM obterHorariosParaAgendamento(:data, :profissional_id, :tipodeatendimento_id)")
+                             .setParameter("data", data)
+                             .setParameter("profissional_id", profissionalId)
+                             .setParameter("tipodeatendimento_id", tipoDeAtendimentoId);
+        
         return query.list();
     }
     

@@ -252,13 +252,13 @@ BEGIN
 	    INNER JOIN pessoa
 		    ON pessoa.id = padraoDeAtendimentoDoProfissional.profissional_id
 		 WHERE diadasemana_id = EXTRACT('DOW' FROM p_data)
-                   AND (CASE WHEN p_profissional_id IS NOT NULL
+                   AND (CASE WHEN p_profissional_id IS NOT NULL AND p_profissional_id <> 0
                              THEN
                                   padraoDeAtendimentoDoProfissional.profissional_id = p_profissional_id
                              ELSE
                                   TRUE
                         END)
-		   AND (CASE WHEN p_tipodeatendimento_id IS NOT NULL
+		   AND (CASE WHEN p_tipodeatendimento_id IS NOT NULL AND p_tipodeatendimento_id <> 0
 			     THEN
 			          EXISTS (SELECT tipoDeAtendimentoDoProfissional.id
 					    FROM tipoDeAtendimentoDoProfissional
@@ -270,7 +270,7 @@ BEGIN
      LEFT JOIN agendamento
 	    ON agendamento.dataagendada = horarios.horario::DATE
 	   AND agendamento.horarioagendado = horarios.horario::TIME
-	   AND (CASE WHEN p_profissional_id IS NOT NULL
+	   AND (CASE WHEN p_profissional_id IS NOT NULL AND p_profissional_id <> 0
                      THEN
                           agendamento.profissional_id = p_profissional_id
                      ELSE
@@ -282,7 +282,7 @@ BEGIN
 	    ON pessoa.id = agendamento.cliente_id
      LEFT JOIN tipodeatendimento
 	    ON tipodeatendimento.id = agendamento.tipodeatendimento_id
-	 WHERE (CASE WHEN p_tipodeatendimento_id IS NOT NULL
+	 WHERE (CASE WHEN p_tipodeatendimento_id IS NOT NULL AND p_tipodeatendimento_id <> 0
 		     THEN
 			  (agendamento.id IS NULL OR agendamento.tipodeatendimento_id = p_tipodeatendimento_id)
 		     ELSE

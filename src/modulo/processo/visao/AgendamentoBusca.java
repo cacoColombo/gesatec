@@ -5,6 +5,7 @@
 package modulo.processo.visao;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -416,9 +417,10 @@ public final class AgendamentoBusca extends Busca {
         try {
             // Default
             if ( horarios.isEmpty() )
-            {                
+            {      
+                Date data = new Date(calendario.getDate().getTime());
                 AgendamentoDAO agendamentoDao = new AgendamentoDAO();
-                horarios = agendamentoDao.obterHorariosParaAgendamento(new Date(calendario.getDate().getTime()));
+                horarios = agendamentoDao.obterHorariosParaAgendamento(data, 0, 0);
             }
             
             DefaultTableModel modelo = (DefaultTableModel) getTabela().getModel();
@@ -463,48 +465,33 @@ public final class AgendamentoBusca extends Busca {
     }//GEN-LAST:event_botaoExcluirActionPerformed
 
     public void botaoAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAtualizarActionPerformed
-        //atualizarGrid(-1, new ArrayList());
+        atualizarGrid(-1, new ArrayList());
     }//GEN-LAST:event_botaoAtualizarActionPerformed
 
     @Override
     public void botaoBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBuscarActionPerformed
         try {
+            Date data = new Date(calendario.getDate().getTime());
+            Profissional profiss = (Profissional) profissional.getSelectedItem();
+            TipoDeAtendimento tipoDeAtend = (TipoDeAtendimento) tipoDeAtendimento.getSelectedItem();
+            
             AgendamentoDAO agendamentoDao = new AgendamentoDAO();
-            List<Object> horarios = agendamentoDao.obterHorariosParaAgendamento(new Date(calendario.getDate().getTime()));
-            atualizarGrid(-1, horarios);
+            List<Object> horarios = agendamentoDao.obterHorariosParaAgendamento(data, profiss.getId(), tipoDeAtend.getId());
+            
+            DefaultTableModel modelo = (DefaultTableModel) getTabela().getModel();
+            modelo.setNumRows(0);
+            
+            if ( !horarios.isEmpty() ) {
+                atualizarGrid(-1, horarios);
+            }
+            
         } catch ( Exception err ) {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botaoBuscarActionPerformed
 
     private void tipoDeAtendimentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tipoDeAtendimentoActionPerformed
-        /**
-        try {
-            // Obtém todos os profissionais do tipo de atendimento selecionado.
-            TipoDeAtendimento tipoDeAtendimentoSelecionado = (TipoDeAtendimento) tipoDeAtendimento.getSelectedItem();
-            
-            if ( !(tipoDeAtendimentoSelecionado.toString().equals(" ")) )
-            {
-                Conjunction and = Restrictions.conjunction();
-                and.add(Restrictions.eq("tipoDeAtendimento", tipoDeAtendimentoSelecionado));
-                List<Object> tiposDeAtendimentosDosProfissionais = TipoDeAtendimentoDoProfissionalDAO.getInstance().findByCriteria(new TipoDeAtendimentoDoProfissional(), and, Restrictions.disjunction());
-
-                Profissional prof = new Profissional();
-                prof.setNome(" ");
-                profissional.removeAllItems();
-                profissional.addItem(prof);
-
-                for ( Object object : tiposDeAtendimentosDosProfissionais ) { 
-                    TipoDeAtendimentoDoProfissional tipoDeAtendimentoDoProfissional = (TipoDeAtendimentoDoProfissional) object;
-                    profissional.addItem(tipoDeAtendimentoDoProfissional.getProfissional());
-                } 
-            } else {
-                this.populaComboDeProfissionais(false);
-            }
-        } catch (Exception err) {
-            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
-        }
-        */
+       
     }//GEN-LAST:event_tipoDeAtendimentoActionPerformed
 
     private void profissionalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profissionalActionPerformed
