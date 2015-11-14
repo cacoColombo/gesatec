@@ -31,6 +31,8 @@ import org.hibernate.criterion.Restrictions;
  */
 public final class AgendamentoBusca extends Busca {
 
+    public static AgendamentoFormulario form;
+    
     /**
      * Creates new form AgendamentoBusca
      */
@@ -451,7 +453,9 @@ public final class AgendamentoBusca extends Busca {
 
     @Override
     public void botaoNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoNovoActionPerformed
-        // TODO add your handling code here:
+        form = new AgendamentoFormulario(this, true);
+        form.setLocationRelativeTo(null);
+        form.setVisible(true);
     }//GEN-LAST:event_botaoNovoActionPerformed
 
     @Override
