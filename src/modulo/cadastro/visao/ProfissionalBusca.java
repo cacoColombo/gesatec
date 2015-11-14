@@ -35,6 +35,7 @@ public class ProfissionalBusca extends Busca {
     public ProfissionalBusca() {
         this.setName("profissional");
         super.initComponents();
+        this.setTitle("Profissional");
     }
     
     @Override

@@ -5,7 +5,6 @@
 package modulo.processo.visao;
 
 import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -19,6 +18,7 @@ import modulo.cadastro.negocio.TipoDeAtendimentoDoProfissional;
 import modulo.configuracao.dao.TipoDeAtendimentoDAO;
 import modulo.configuracao.negocio.TipoDeAtendimento;
 import modulo.processo.dao.AgendamentoDAO;
+import modulo.processo.negocio.StatusAgendamento;
 import modulo.sistema.negocio.SOptionPane;
 import modulo.sistema.visao.Busca;
 import org.hibernate.criterion.Conjunction;
@@ -37,6 +37,7 @@ public final class AgendamentoBusca extends Busca {
         this.setName("agenda");
         initComponents();
         setTitle("Agendamento");
+        getBotaoNovo().setEnabled(false);
         
         try {
             this.populaComboDeProfissionais(false);
@@ -79,6 +80,29 @@ public final class AgendamentoBusca extends Busca {
                 Profissional profiss = (Profissional) object;
                 profissional.addItem(profiss);
             } 
+        }
+    }
+    
+    @Override
+    public void eventoAoSelecionarNaTabela() {
+        getBotaoNovo().setEnabled(false);
+        getBotaoEditar().setEnabled(false);
+        getBotaoExcluir().setEnabled(false);
+        
+        int selected = getTabela().getSelectedRow();
+        
+        if ( selected != -1 ) {        
+            Object registro = getTabela().getValueAt(selected, 3);
+            String status = registro.toString();
+
+            StatusAgendamento statusAgendamento = new StatusAgendamento();
+
+            if ( status.equals(statusAgendamento.STATUS_AGENDA_LIVRE) ) {
+                getBotaoNovo().setEnabled(true);
+            } else if ( !status.equals(statusAgendamento.STATUS_AGENDA_INDISPONIVEL) ) {
+                getBotaoEditar().setEnabled(true);
+                getBotaoExcluir().setEnabled(true);
+            }
         }
     }
     

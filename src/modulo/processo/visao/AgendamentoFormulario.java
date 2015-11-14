@@ -171,7 +171,7 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
             .addComponent(labelsPainel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Certificação", jPanel2);
+        jTabbedPane1.addTab("Agendamento", jPanel2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

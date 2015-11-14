@@ -18,22 +18,28 @@ import javax.persistence.Transient;
 public class StatusAgendamento implements Serializable {
     
     @Transient
-    final int STATUS_AGENDA_AGUARDANDO_CONFIRMACAO = 1;
+    public final int STATUS_AGENDA_AGUARDANDO_CONFIRMACAO = 1;
     
     @Transient
-    final int STATUS_AGENDA_AGENDADO = 2;
+    public final int STATUS_AGENDA_AGENDADO = 2;
     
     @Transient
-    final int STATUS_AGENDA_REJEITADO = 3;
+    public final int STATUS_AGENDA_REJEITADO = 3;
     
     @Transient
-    final int STATUS_AGENDA_CANCELADO = 4;
+    public final int STATUS_AGENDA_CANCELADO = 4;
     
     @Transient
-    final int STATUS_AGENDA_EM_ANDAMENTO = 5;
+    public final int STATUS_AGENDA_EM_ANDAMENTO = 5;
     
     @Transient
-    final int STATUS_AGENDA_FINALIZADO = 6;
+    public final int STATUS_AGENDA_FINALIZADO = 6;
+    
+    @Transient
+    public final String STATUS_AGENDA_LIVRE = "Livre";
+    
+    @Transient
+    public final String STATUS_AGENDA_INDISPONIVEL = "Indisponível";
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
