@@ -285,7 +285,7 @@
                         <Column editable="false" title="Hor&#xe1;rio" type="java.lang.String"/>
                         <Column editable="false" title="Situa&#xe7;ao" type="java.lang.String"/>
                         <Column editable="false" title="Tipo de atendimento" type="java.lang.String"/>
-                        <Column editable="false" title="Profissional" type="java.lang.String"/>
+                        <Column editable="false" title="Profissional" type="java.lang.Object"/>
                         <Column editable="false" title="Cliente" type="java.lang.String"/>
                       </Table>
                     </Property>

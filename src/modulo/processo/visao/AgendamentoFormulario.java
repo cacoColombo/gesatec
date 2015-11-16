@@ -4,16 +4,28 @@
  */
 package modulo.processo.visao;
 
-import modulo.cadastro.visao.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import modulo.sistema.visao.*;
 import javax.swing.ImageIcon;
-import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
-import modulo.cadastro.dao.CertificacaoDAO;
-import modulo.cadastro.negocio.Certificacao;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.MaskFormatter;
+import modulo.cadastro.dao.ClienteDAO;
+import modulo.cadastro.dao.ProfissionalDAO;
+import modulo.cadastro.dao.TipoDeAtendimentoDoProfissionalDAO;
+import modulo.cadastro.negocio.Cliente;
+import modulo.cadastro.negocio.Profissional;
+import modulo.cadastro.negocio.TipoDeAtendimentoDoProfissional;
+import modulo.configuracao.negocio.TipoDeAtendimento;
+import modulo.processo.dao.AgendamentoDAO;
+import modulo.processo.dao.StatusAgendamentoDAO;
+import modulo.processo.negocio.Agendamento;
+import modulo.processo.negocio.StatusAgendamento;
+import modulo.processo.negocio.TipoDeRepeticao;
 import modulo.sistema.negocio.SOptionPane;
+import org.hibernate.criterion.Conjunction;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -36,28 +48,105 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
         botaoSalvar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/salvar.png")));
         botaoCancelar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/cancelar.png")));
         
+        try {
+            telefoneCelularCliente.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("(##) ####-####")));
+        } catch ( Exception err ) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
+            
+        statusAgendamento.setEnabled(false);
         data.setEnabled(false);
         horario.setEnabled(false);
     }
     
-    public void popularCampos(Certificacao certificacao) {
-       /**
-        
+    public void popularCampos(Agendamento agendamento) {
         try {
-            id.setText(Integer.toString(certificacao.getId()));
-            nome.setText(certificacao.getNome());
+            // Popula combo de status de agendamento.
+            List<Object> status = StatusAgendamentoDAO.getInstance().findAll(new StatusAgendamento());
+            for ( Object object : status ) { 
+                StatusAgendamento statusAgendament = (StatusAgendamento) object;
+                statusAgendamento.addItem(statusAgendament);
+                
+                if ( agendamento.getStatusAgendamento() != null ) {
+                    
+                    if ( statusAgendament.getId() == agendamento.getStatusAgendamento().getId() ) {    
+                        statusAgendamento.setSelectedItem(statusAgendament);
+                        statusAgendamento.setEnabled(true);
+                    }
+                } else if ( statusAgendament.getId() == statusAgendament.STATUS_AGENDA_AGENDADO ) {
+                    // Para novos agendamentos, status inicial é sempre AGENDADO.
+                    statusAgendamento.setSelectedItem(statusAgendament);
+                }
+            }            
+           
+            // Popula combo de profisisonal
+            Profissional prof = new Profissional();
+            prof.setNome(" ");
+            profissional.removeAllItems();
+            profissional.addItem(prof);
+            List<Object> profissionais = ProfissionalDAO.getInstance().findAll(new Profissional());
+            for ( Object object : profissionais ) { 
+                Profissional profiss = (Profissional) object;
+                profissional.addItem(profiss);
+                
+                if ( profiss.getId() == agendamento.getProfissional().getId() ) {
+                    profissional.setSelectedItem(profiss);
+                }
+            }
+
+            // Popula combo de clientes.
+            Cliente cli = new Cliente();
+            cli.setNome(" ");
+            cliente.removeAllItems();
+            cliente.addItem(cli);
+            List<Object> clientes = ClienteDAO.getInstance().findAll(new Cliente());
+            for ( Object object : clientes ) { 
+                Cliente client = (Cliente) object;
+                cliente.addItem(client);
+            }
+            
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm");
+           
+            data.setText(simpleDateFormat.format(agendamento.getDataAgendada()));
+            horario.setText(simpleTimeFormat.format(agendamento.getHorarioAgendado()));
+           
+           
         } catch (Exception err) {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
-        */
     }
     
     public boolean validarCampos() {
-        /**
+        String erro = "";
         
         try {
-            if ( !(nome.getText().length() > 0) ) {
-                throw new Exception("O campo 'Nome' é requerido!");
+            if ( statusAgendamento.getSelectedItem() == null ) {
+                erro += "O campo 'Status do agendamento' é requerido!\n";
+            }
+            
+            if ( data.getText().isEmpty() ) {
+                erro += "O campo 'Data' é requerido!\n";
+            }
+            
+            if ( profissional.getSelectedItem().toString().equals(" ") ) {
+                erro += "O campo 'Profissional' é requerido!\n";
+            }
+            
+            if ( tipoDeAtendimento.getSelectedItem().toString().equals(" ") ) {
+                erro += "O campo 'Tipo de atendimento' é requerido!\n";
+            }
+            
+            if ( nomeCliente.getText().isEmpty() && cliente.getSelectedItem().toString().equals(" ") ) {
+                erro += "O campo 'Cliente' é requerido!\n";
+            }
+            
+            if ( horario.getText().isEmpty() ) {
+                erro += "O campo 'Horário' é requerido!\n";
+            }
+            
+            if ( !erro.isEmpty() ) {
+                throw new Exception(erro);
             }
             
             return true;
@@ -65,9 +154,6 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        */
-        
-        return true;
     }
 
     /**
@@ -96,15 +182,22 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
         tipoDeAtendimento = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        data = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         horario = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        observacao = new javax.swing.JTextArea();
         jLabel12 = new javax.swing.JLabel();
+        cliente = new javax.swing.JComboBox();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        nomeCliente = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        data = new javax.swing.JFormattedTextField();
+        telefoneCelularCliente = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -144,6 +237,12 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
 
         id.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
 
+        profissional.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                profissionalActionPerformed(evt);
+            }
+        });
+
         jLabel2.setText("Tipo de atendimento:");
 
         jLabel5.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
@@ -168,11 +267,27 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
 
         jLabel11.setText("Horário:");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        observacao.setColumns(20);
+        observacao.setRows(5);
+        jScrollPane1.setViewportView(observacao);
 
         jLabel12.setText("Observação:");
+
+        cliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clienteActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        jLabel13.setForeground(java.awt.Color.red);
+        jLabel13.setText("*");
+
+        jLabel14.setText("Cliente:");
+
+        jLabel15.setText("Nome do cliente:");
+
+        jLabel16.setText("Telefone celular do cliente:");
 
         javax.swing.GroupLayout labelsPainelLayout = new javax.swing.GroupLayout(labelsPainel);
         labelsPainel.setLayout(labelsPainelLayout);
@@ -192,16 +307,22 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
                                 .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel14)
+                            .addComponent(jLabel15)
+                            .addComponent(jLabel16)
                             .addComponent(jLabel11)
                             .addComponent(jLabel12))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(data)
                             .addComponent(statusAgendamento, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(tipoDeAtendimento, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(profissional, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cliente, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(nomeCliente)
                             .addComponent(horario)
                             .addComponent(jScrollPane1)
-                            .addComponent(tipoDeAtendimento, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(profissional, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(data)
+                            .addComponent(telefoneCelularCliente))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -211,6 +332,7 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
                                 .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING))
                             .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(jLabel13)
                     .addComponent(jLabel10))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -228,9 +350,9 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
                     .addComponent(statusAgendamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(data, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
-                    .addComponent(jLabel9))
+                    .addComponent(jLabel9)
+                    .addComponent(data, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
@@ -243,17 +365,27 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
                     .addComponent(tipoDeAtendimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel14))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(telefoneCelularCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(horario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10)
                     .addComponent(jLabel11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(labelsPainelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(labelsPainelLayout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addComponent(jLabel12)))
-                .addContainerGap(117, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel12))
+                .addContainerGap(90, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -281,7 +413,7 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(toolbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1))
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE))
         );
 
         pack();
@@ -292,37 +424,85 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
     }//GEN-LAST:event_botaoCancelarActionPerformed
 
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
-        
-        /**
         try {
             if ( this.validarCampos() )
             {
-                Certificacao certificacao = new Certificacao();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm");
+                java.util.Date date = simpleDateFormat.parse(data.getText());
+                java.util.Date time = simpleTimeFormat.parse(horario.getText());
+                
+                TipoDeRepeticao tipoderepeticao = new TipoDeRepeticao();
+                tipoderepeticao.setId(tipoderepeticao.TIPO_DE_REPETICAO_NENHUMA);
+                
+                Agendamento agendamento = new Agendamento();
+                agendamento.setTipoDeRepeticao(tipoderepeticao);
                 if ( id.getText().length() > 0 )
                 {
-                    certificacao.setId(Integer.parseInt(id.getText()));
+                    agendamento.setId(Integer.parseInt(id.getText()));
                 }
-                certificacao.setNome(nome.getText());
+                agendamento.setStatusAgendamento((StatusAgendamento) statusAgendamento.getSelectedItem());
+                agendamento.setDataAgendada(new java.sql.Date(date.getTime()));
+                agendamento.setProfissional((Profissional) profissional.getSelectedItem());
+                agendamento.setTipoDeAtendimento((TipoDeAtendimento) tipoDeAtendimento.getSelectedItem());
+                agendamento.setCliente((Cliente) cliente.getSelectedItem());
+                agendamento.setHorarioAgendado(new java.sql.Time(time.getTime()));
+                agendamento.setObservacao(observacao.getText());
 
                 if ( id.getText().length() > 0 ) {
-                    CertificacaoDAO.getInstance().merge(certificacao);
+                    AgendamentoDAO.getInstance().merge(agendamento);
                 } else {
-                    CertificacaoDAO.getInstance().persist(certificacao);
+                    AgendamentoDAO.getInstance().persist(agendamento);
                 }
 
-                JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);                
 
-                List<Object> registro = new ArrayList();
-                registro.add(certificacao);
-
-                parent.atualizarGrid(certificacao.getId(), registro);
+                parent.atualizarGrid(agendamento.getId(), new ArrayList());
                 this.setVisible(false);
             }
         } catch (Exception err) {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
-        */
     }//GEN-LAST:event_botaoSalvarActionPerformed
+
+    private void profissionalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profissionalActionPerformed
+        try {
+            // Obtém todos os tipos de atendimento do profissional selecionado.
+            Profissional profissionalSelecionado = (Profissional) profissional.getSelectedItem();
+            
+            if ( !(profissionalSelecionado.toString().equals(" ")) )
+            {
+                Conjunction and = Restrictions.conjunction();
+                and.add(Restrictions.eq("profissional", profissionalSelecionado));
+                List<Object> tiposDeAtendimentosDosProfissionais = TipoDeAtendimentoDoProfissionalDAO.getInstance().findByCriteria(new TipoDeAtendimentoDoProfissional(), and, Restrictions.disjunction());
+
+                TipoDeAtendimento tipoDeAtend = new TipoDeAtendimento();
+                tipoDeAtend.setNome(" ");
+                tipoDeAtendimento.removeAllItems();
+                tipoDeAtendimento.addItem(tipoDeAtend);
+
+                for ( Object object : tiposDeAtendimentosDosProfissionais ) { 
+                    TipoDeAtendimentoDoProfissional tipoDeAtendimentoDoProfissional = (TipoDeAtendimentoDoProfissional) object;
+                    tipoDeAtendimento.addItem(tipoDeAtendimentoDoProfissional.getTipoDeAtendimento());
+                } 
+            }
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_profissionalActionPerformed
+
+    private void clienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clienteActionPerformed
+        Cliente cli = (Cliente) cliente.getSelectedItem();
+        nomeCliente.setEnabled(true);
+        telefoneCelularCliente.setEnabled(true);
+        
+        if ( !(cli.toString().equals(" ")) ) {
+            nomeCliente.setText(null);
+            nomeCliente.setEnabled(false);
+            telefoneCelularCliente.setText(null);
+            telefoneCelularCliente.setEnabled(false);
+        }
+    }//GEN-LAST:event_clienteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -368,13 +548,18 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoCancelar;
     private javax.swing.JButton botaoSalvar;
-    private javax.swing.JTextField data;
+    private javax.swing.JComboBox cliente;
+    private javax.swing.JFormattedTextField data;
     private javax.swing.JTextField horario;
     private javax.swing.JLabel id;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -386,10 +571,12 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JPanel labelsPainel;
+    private javax.swing.JTextField nomeCliente;
+    private javax.swing.JTextArea observacao;
     private javax.swing.JComboBox profissional;
     private javax.swing.JComboBox statusAgendamento;
+    private javax.swing.JFormattedTextField telefoneCelularCliente;
     private javax.swing.JComboBox tipoDeAtendimento;
     private javax.swing.JToolBar toolbar;
     // End of variables declaration//GEN-END:variables

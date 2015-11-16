@@ -34,6 +34,7 @@ public class ClienteBusca extends Busca {
     public ClienteBusca() {
         this.setName("cliente");
         super.initComponents();
+        this.setTitle("Cliente");
     }
     
     @Override

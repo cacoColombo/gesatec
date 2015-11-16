@@ -35,6 +35,7 @@ public class AtendenteBusca extends Busca {
     public AtendenteBusca() {
         this.setName("atendente");
         super.initComponents();
+        this.setTitle("Atendente");
     }
     
     @Override

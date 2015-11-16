@@ -5,6 +5,8 @@
 package modulo.processo.visao;
 
 import java.sql.Date;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
@@ -19,6 +21,7 @@ import modulo.cadastro.negocio.TipoDeAtendimentoDoProfissional;
 import modulo.configuracao.dao.TipoDeAtendimentoDAO;
 import modulo.configuracao.negocio.TipoDeAtendimento;
 import modulo.processo.dao.AgendamentoDAO;
+import modulo.processo.negocio.Agendamento;
 import modulo.processo.negocio.StatusAgendamento;
 import modulo.sistema.negocio.SOptionPane;
 import modulo.sistema.visao.Busca;
@@ -345,7 +348,7 @@ public final class AgendamentoBusca extends Busca {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false
@@ -430,13 +433,18 @@ public final class AgendamentoBusca extends Busca {
             
             for ( int i = 0; i < horarios.size(); i ++ ) { 
                 Object[] horario = (Object[]) horarios.get(i);
+                
+                Profissional profissa = new Profissional();
+                profissa.setId((int) horario[10]);
+                profissa.setNome((String) horario[11]);
+                
                 modelo.addRow(new Object[]{
                     horario[4], //ID Agendamento
                     horario[12], //Data
                     horario[13], //Horário
                     horario[5], //Situação
                     horario[7], //Tipo de atendimento
-                    horario[11], //Profissional
+                    profissa, //Profissional
                     horario[9], //Cliente
                 });
                 
@@ -453,9 +461,26 @@ public final class AgendamentoBusca extends Busca {
 
     @Override
     public void botaoNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoNovoActionPerformed
-        form = new AgendamentoFormulario(this, true);
-        form.setLocationRelativeTo(null);
-        form.setVisible(true);
+        try {
+            int selected = getTabela().getSelectedRow();
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm");
+            java.util.Date data = simpleDateFormat.parse(getTabela().getValueAt(selected, 1).toString());
+            java.util.Date horario = simpleTimeFormat.parse(getTabela().getValueAt(selected, 2).toString());
+
+            Agendamento agendamento = new Agendamento();
+            agendamento.setDataAgendada(new java.sql.Date(data.getTime()));
+            agendamento.setHorarioAgendado(new java.sql.Time(horario.getTime()));
+            agendamento.setProfissional((Profissional) getTabela().getValueAt(selected, 5));
+
+            form = new AgendamentoFormulario(this, true);
+            form.popularCampos(agendamento);
+            form.setLocationRelativeTo(null);
+            form.setVisible(true);
+        } catch ( Exception err ) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_botaoNovoActionPerformed
 
     @Override

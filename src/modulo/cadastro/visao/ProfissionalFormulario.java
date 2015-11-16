@@ -74,6 +74,9 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             cpf.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("###.###.###-##")));
             dataNascimento.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("##/##/####")));
             dataExpedicao.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("##/##/####")));
+            
+            
+            
         } catch (ParseException ex) {
             Logger.getLogger(ProfissionalFormulario.class.getName()).log(Level.SEVERE, null, ex);
         }

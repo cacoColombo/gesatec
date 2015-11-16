@@ -18,16 +18,19 @@ import javax.persistence.Transient;
 public class TipoDeRepeticao implements Serializable {
     
     @Transient
-    final int TIPO_DE_REPETICAO_DIARIA = 1;
+    public final int TIPO_DE_REPETICAO_NENHUMA = 1;
     
     @Transient
-    final int TIPO_DE_REPETICAO_SEMANAL = 2;
+    public final int TIPO_DE_REPETICAO_DIARIA = 2;
     
     @Transient
-    final int TIPO_DE_REPETICAO_MENSAL = 3;
+    public final int TIPO_DE_REPETICAO_SEMANAL = 3;
     
     @Transient
-    final int TIPO_DE_REPETICAO_ANUAL = 4;
+    public final int TIPO_DE_REPETICAO_MENSAL = 4;
+    
+    @Transient
+    public final int TIPO_DE_REPETICAO_ANUAL = 5;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -75,4 +75,9 @@ public class StatusAgendamento implements Serializable {
     public void setEncerraAgendamento(boolean encerraAgendamento) {
         this.encerraAgendamento = encerraAgendamento;
     }
+    
+    @Override
+    public String toString() {
+        return this.nome;
+    }
 }

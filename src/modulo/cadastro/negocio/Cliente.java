@@ -11,4 +11,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "cliente")
 public class Cliente extends Pessoa implements Serializable {
+    
+    @Override
+    public String toString() {
+        return this.nome;
+    }
+    
 }
