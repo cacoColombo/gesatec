@@ -108,10 +108,9 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
             SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm");
            
+            id.setText(Integer.toString(agendamento.getId()));
             data.setText(simpleDateFormat.format(agendamento.getDataAgendada()));
-            horario.setText(simpleTimeFormat.format(agendamento.getHorarioAgendado()));
-           
-           
+            horario.setText(simpleTimeFormat.format(agendamento.getHorarioAgendado()));           
         } catch (Exception err) {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }

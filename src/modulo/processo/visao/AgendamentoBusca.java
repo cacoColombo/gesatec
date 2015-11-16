@@ -485,7 +485,27 @@ public final class AgendamentoBusca extends Busca {
 
     @Override
     public void botaoEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEditarActionPerformed
-        // TODO add your handling code here:
+        try {
+            int selected = getTabela().getSelectedRow();
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm");
+            java.util.Date data = simpleDateFormat.parse(getTabela().getValueAt(selected, 1).toString());
+            java.util.Date horario = simpleTimeFormat.parse(getTabela().getValueAt(selected, 2).toString());
+
+            Agendamento agendamento = new Agendamento();
+            agendamento.setId(Integer.parseInt(getTabela().getValueAt(selected, 0).toString()));
+            agendamento.setDataAgendada(new java.sql.Date(data.getTime()));
+            agendamento.setHorarioAgendado(new java.sql.Time(horario.getTime()));
+            agendamento.setProfissional((Profissional) getTabela().getValueAt(selected, 5));
+
+            form = new AgendamentoFormulario(this, true);
+            form.popularCampos(agendamento);
+            form.setLocationRelativeTo(null);
+            form.setVisible(true);
+        } catch ( Exception err ) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_botaoEditarActionPerformed
 
     @Override
