@@ -1070,7 +1070,6 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
 
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
         try {
-            System.out.println("Saving data....");
             if (verificaCampos()) {
                 Profissional profissional = new Profissional();
 
@@ -1121,8 +1120,22 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                 usuario.setName(nome.getText());
                 profissional.setUsuario(usuario);
 
-                ProfissionalDAO.getInstance().merge(profissional);
-
+                DAO.getInstance().merge(profissional);
+                
+                Conjunction and = Restrictions.conjunction();
+                and.add(Restrictions.eq("nome", profissional.getNome()));
+                List<Object> novoProfissional = DAO.getInstance().findByCriteria(new Profissional(), and, Restrictions.disjunction());
+                
+                
+                int id = Integer.MIN_VALUE;
+                if(this.id.getText().isEmpty()){
+                    for(Object o : novoProfissional)
+                        if(((Profissional) o).getId() > id)
+                            id = ((Profissional) o).getId();
+                
+                    profissional.setId(id);
+                }
+                
                 salvaEspecializacoes(profissional);
                 salvaCertificacoes(profissional);
                 salvaPadroesDeAtendimento(profissional);
