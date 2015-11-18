@@ -5,7 +5,6 @@
 package modulo.processo.visao;
 
 import java.sql.Date;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +15,7 @@ import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
 import modulo.cadastro.dao.ProfissionalDAO;
 import modulo.cadastro.dao.TipoDeAtendimentoDoProfissionalDAO;
+import modulo.cadastro.negocio.Cliente;
 import modulo.cadastro.negocio.Profissional;
 import modulo.cadastro.negocio.TipoDeAtendimentoDoProfissional;
 import modulo.configuracao.dao.TipoDeAtendimentoDAO;
@@ -180,6 +180,34 @@ public final class AgendamentoBusca extends Busca {
     @Override
     public void setBotaoBuscar(JButton botaoBuscar) {
         this.botaoBuscar = botaoBuscar;
+    }
+    
+    public void abrirFormularioDeAgendamento() {
+        try {
+            int selected = getTabela().getSelectedRow();
+            String agendamento_id = (getTabela().getValueAt(selected, 0) != null) ? getTabela().getValueAt(selected, 0).toString() : "";
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm");
+            java.util.Date data = simpleDateFormat.parse(getTabela().getValueAt(selected, 1).toString());
+            java.util.Date horario = simpleTimeFormat.parse(getTabela().getValueAt(selected, 2).toString());
+
+            Agendamento agendamento = new Agendamento();
+            agendamento.setId(!agendamento_id.isEmpty() ? Integer.parseInt(agendamento_id) : 0);
+            agendamento.setDataAgendada(new java.sql.Date(data.getTime()));
+            agendamento.setHorarioAgendado(new java.sql.Time(horario.getTime()));
+            agendamento.setProfissional((Profissional) getTabela().getValueAt(selected, 5));
+            agendamento.setTipoDeAtendimento((TipoDeAtendimento) getTabela().getValueAt(selected, 4));
+            agendamento.setStatusAgendamento((StatusAgendamento) getTabela().getValueAt(selected, 3));
+            agendamento.setCliente((Cliente) getTabela().getValueAt(selected, 6));
+
+            form = new AgendamentoFormulario(this, true);
+            form.popularCampos(agendamento);
+            form.setLocationRelativeTo(null);
+            form.setVisible(true);
+        } catch ( Exception err ) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
@@ -348,7 +376,7 @@ public final class AgendamentoBusca extends Busca {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false
@@ -438,14 +466,26 @@ public final class AgendamentoBusca extends Busca {
                 profissa.setId((int) horario[10]);
                 profissa.setNome((String) horario[11]);
                 
+                StatusAgendamento status = new StatusAgendamento();
+                status.setId((horario[14] != null) ? (int) horario[14] : 0);
+                status.setNome((String) horario[5]);
+                
+                TipoDeAtendimento tipoDeAtend = new TipoDeAtendimento();
+                tipoDeAtend.setId((horario[6] != null) ? (int) horario[6] : 0);
+                tipoDeAtend.setNome((String) horario[7]);
+                
+                Cliente cliente = new Cliente();
+                cliente.setId((horario[8] != null) ? (int) horario[8] : 0);
+                cliente.setNome((String) horario[9]);
+                
                 modelo.addRow(new Object[]{
                     horario[4], //ID Agendamento
                     horario[12], //Data
                     horario[13], //Horário
-                    horario[5], //Situação
-                    horario[7], //Tipo de atendimento
+                    status, //Situação
+                    tipoDeAtend, //Tipo de atendimento
                     profissa, //Profissional
-                    horario[9], //Cliente
+                    cliente, //Cliente
                 });
                 
                 // Verifica item a selecionar
@@ -461,51 +501,12 @@ public final class AgendamentoBusca extends Busca {
 
     @Override
     public void botaoNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoNovoActionPerformed
-        try {
-            int selected = getTabela().getSelectedRow();
-
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm");
-            java.util.Date data = simpleDateFormat.parse(getTabela().getValueAt(selected, 1).toString());
-            java.util.Date horario = simpleTimeFormat.parse(getTabela().getValueAt(selected, 2).toString());
-
-            Agendamento agendamento = new Agendamento();
-            agendamento.setDataAgendada(new java.sql.Date(data.getTime()));
-            agendamento.setHorarioAgendado(new java.sql.Time(horario.getTime()));
-            agendamento.setProfissional((Profissional) getTabela().getValueAt(selected, 5));
-
-            form = new AgendamentoFormulario(this, true);
-            form.popularCampos(agendamento);
-            form.setLocationRelativeTo(null);
-            form.setVisible(true);
-        } catch ( Exception err ) {
-            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
-        }
+        this.abrirFormularioDeAgendamento();
     }//GEN-LAST:event_botaoNovoActionPerformed
 
     @Override
     public void botaoEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEditarActionPerformed
-        try {
-            int selected = getTabela().getSelectedRow();
-
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm");
-            java.util.Date data = simpleDateFormat.parse(getTabela().getValueAt(selected, 1).toString());
-            java.util.Date horario = simpleTimeFormat.parse(getTabela().getValueAt(selected, 2).toString());
-
-            Agendamento agendamento = new Agendamento();
-            agendamento.setId(Integer.parseInt(getTabela().getValueAt(selected, 0).toString()));
-            agendamento.setDataAgendada(new java.sql.Date(data.getTime()));
-            agendamento.setHorarioAgendado(new java.sql.Time(horario.getTime()));
-            agendamento.setProfissional((Profissional) getTabela().getValueAt(selected, 5));
-
-            form = new AgendamentoFormulario(this, true);
-            form.popularCampos(agendamento);
-            form.setLocationRelativeTo(null);
-            form.setVisible(true);
-        } catch ( Exception err ) {
-            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
-        }
+        this.abrirFormularioDeAgendamento();
     }//GEN-LAST:event_botaoEditarActionPerformed
 
     @Override

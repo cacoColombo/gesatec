@@ -199,6 +199,7 @@ LANGUAGE 'plpgsql' IMMUTABLE;
 --
 
 --
+DROP FUNCTION obterHorariosParaAgendamento(DATE, INT, INT, INT);
 CREATE OR REPLACE FUNCTION obterHorariosParaAgendamento(p_data DATE, p_profissional_id INT DEFAULT NULL, p_tipodeatendimento_id INT DEFAULT NULL, p_agendamento_id INT DEFAULT NULL)
 RETURNS TABLE (
     descricao_horario VARCHAR,
@@ -214,7 +215,8 @@ RETURNS TABLE (
     profissional_id INT,
     profissional VARCHAR,
     data_formatada VARCHAR,
-    horario_formatado VARCHAR
+    horario_formatado VARCHAR,
+    statusagendamento_id INT
 ) AS
 $BODY$
 BEGIN
@@ -241,7 +243,8 @@ BEGIN
 	       horarios.profissional_id,
 	       horarios.profissional,
                TO_CHAR(horarios.horario::DATE, 'dd/mm/yyyy')::VARCHAR AS data_formatada,
-               TO_CHAR(horarios.horario::TIME, 'hh24:mi')::VARCHAR AS horario_formatado
+               TO_CHAR(horarios.horario::TIME, 'hh24:mi')::VARCHAR AS horario_formatado,
+               statusagendamento.id AS statusagendamento_id
 	  FROM (SELECT padraoDeAtendimento.nome AS descricao_horario,
 		       pessoa.id AS profissional_id,
 		       pessoa.nome AS profissional,

@@ -34,6 +34,7 @@ import org.hibernate.criterion.Restrictions;
 public class AgendamentoFormulario extends javax.swing.JDialog {
 
     public static AgendamentoBusca parent;
+    public Agendamento agendamento;
     
     /**
      * Creates new form AtendenteFormulario
@@ -61,15 +62,17 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
     
     public void popularCampos(Agendamento agendamento) {
         try {
+            this.agendamento = agendamento;
+            
             // Popula combo de status de agendamento.
             List<Object> status = StatusAgendamentoDAO.getInstance().findAll(new StatusAgendamento());
             for ( Object object : status ) { 
                 StatusAgendamento statusAgendament = (StatusAgendamento) object;
                 statusAgendamento.addItem(statusAgendament);
                 
-                if ( agendamento.getStatusAgendamento() != null ) {
+                if ( agendamento.getStatusAgendamento().getId() != 0 ) {
                     
-                    if ( statusAgendament.getId() == agendamento.getStatusAgendamento().getId() ) {    
+                    if ( statusAgendament.getId() == agendamento.getStatusAgendamento().getId() ) {
                         statusAgendamento.setSelectedItem(statusAgendament);
                         statusAgendamento.setEnabled(true);
                     }
@@ -103,14 +106,21 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
             for ( Object object : clientes ) { 
                 Cliente client = (Cliente) object;
                 cliente.addItem(client);
+                
+                if ( client.getId() == agendamento.getCliente().getId() ) {
+                    cliente.setSelectedItem(client);
+                }
             }
             
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
             SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm");
            
-            id.setText(Integer.toString(agendamento.getId()));
+            id.setText((agendamento.getId() != 0) ? Integer.toString(agendamento.getId()) : "");
             data.setText(simpleDateFormat.format(agendamento.getDataAgendada()));
-            horario.setText(simpleTimeFormat.format(agendamento.getHorarioAgendado()));           
+            horario.setText(simpleTimeFormat.format(agendamento.getHorarioAgendado()));
+            tipoDeAtendimento.setSelectedItem(agendamento.getTipoDeAtendimento());
+            observacao.setText(agendamento.getObservacao());
+            
         } catch (Exception err) {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
@@ -454,9 +464,8 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
                     AgendamentoDAO.getInstance().persist(agendamento);
                 }
 
-                JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);                
-
                 parent.atualizarGrid(agendamento.getId(), new ArrayList());
+                JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);                
                 this.setVisible(false);
             }
         } catch (Exception err) {
@@ -483,6 +492,10 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
                 for ( Object object : tiposDeAtendimentosDosProfissionais ) { 
                     TipoDeAtendimentoDoProfissional tipoDeAtendimentoDoProfissional = (TipoDeAtendimentoDoProfissional) object;
                     tipoDeAtendimento.addItem(tipoDeAtendimentoDoProfissional.getTipoDeAtendimento());
+                    
+                    if ( tipoDeAtendimentoDoProfissional.getTipoDeAtendimento().getId() == agendamento.getTipoDeAtendimento().getId() ) {
+                        tipoDeAtendimento.setSelectedItem(tipoDeAtendimentoDoProfissional.getTipoDeAtendimento());
+                    }
                 } 
             }
         } catch (Exception err) {
