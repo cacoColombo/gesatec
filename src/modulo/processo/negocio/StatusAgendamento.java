@@ -51,6 +51,9 @@ public class StatusAgendamento implements Serializable {
     
     @Column(columnDefinition = "BOOLEAN DEFAULT FALSE", nullable = false)
     private boolean encerraAgendamento;
+    
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE", nullable = false)
+    private boolean liberaHorario;    
 
     public int getId() {
         return id;
@@ -74,6 +77,14 @@ public class StatusAgendamento implements Serializable {
 
     public void setEncerraAgendamento(boolean encerraAgendamento) {
         this.encerraAgendamento = encerraAgendamento;
+    }
+
+    public boolean isLiberaHorario() {
+        return liberaHorario;
+    }
+
+    public void setLiberaHorario(boolean liberaHorario) {
+        this.liberaHorario = liberaHorario;
     }
     
     @Override

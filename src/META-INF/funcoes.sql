@@ -279,6 +279,9 @@ BEGIN
                      ELSE
                           TRUE
                 END)
+           AND (SELECT (liberaHorario IS FALSE)
+                  FROM statusagendamento
+                 WHERE id = agendamento.statusagendamento_id)
      LEFT JOIN statusagendamento
 	    ON statusagendamento.id = agendamento.statusagendamento_id
      LEFT JOIN pessoa
