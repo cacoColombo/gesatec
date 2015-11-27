@@ -15,7 +15,7 @@ INSERT INTO permissaodogrupodeusuarios (id, admin, atualizar, excluir, inserir, 
 
 INSERT INTO diadasemana (id, nome, abreviatura) VALUES (0, 'Domingo', 'Dom'), (1, 'Segunda-feira', 'Seg'), (2, 'Terça-feira', 'Ter'), (3, 'Quarta-feira', 'Qua'), (4, 'Quinta-feira', 'Qui'), (5, 'Sexta-feira', 'Sex'), (6, 'Sábado', 'Sáb');
 INSERT INTO tipoderepeticao (id, nome) VALUES (1, 'Nenhuma'), (2, 'Diária'), (3, 'Semanal'), (4, 'Mensal'), (5, 'Anual');
-INSERT INTO statusagendamento (id, nome, encerraagendamento, liberahorario, cor) VALUES (1, 'Aguardando confirmação', false, false, '#FFFF00'), (2, 'Agendado', false, false, '#0000FF'), (3, 'Rejeitado', true, true, '#FF0000'), (4, 'Cancelado', true, true, '#BEBEBE'), (5, 'Em andamento', false, false, '#00FF00'), (6, 'Finalizado', true, false, '#008B8B');
+INSERT INTO statusagendamento (id, nome, encerraagendamento, liberahorario, cor) VALUES (1, 'Aguardando confirmação', false, false, '#FFFF00'), (2, 'Agendado', false, false, '#8EE5EE'), (3, 'Rejeitado', true, true, '#FF8C69'), (4, 'Cancelado', true, true, '#BEBEBE'), (5, 'Em andamento', false, false, '#00FF7F'), (6, 'Finalizado', true, false, '#FFFFFF');
 INSERT INTO campo (id, nome, tipo) VALUES (1, 'Texto simples', 'TextField'), (2, 'Texto longo', 'TextArea');
 
 INSERT INTO pais (nome, sigla, nacionalidade) VALUES ('Brasil', 'BR', 'brasileiro');	
