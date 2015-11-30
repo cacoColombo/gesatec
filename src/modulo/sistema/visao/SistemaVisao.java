@@ -29,6 +29,7 @@ import modulo.cadastro.visao.ClienteBusca;
 import modulo.cadastro.visao.EspecializacaoBusca;
 import modulo.cadastro.visao.ProfissionalBusca;
 import modulo.configuracao.visao.PadraoDeAtendimentoBusca;
+import modulo.configuracao.visao.TipoDeAtendimentoBusca;
 import modulo.processo.visao.AgendamentoBusca;
 import modulo.sistema.negocio.Auditoria;
 import modulo.sistema.negocio.SOptionPane;
@@ -226,10 +227,6 @@ public class SistemaVisao extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(java.awt.SystemColor.controlLtHighlight);
-
-        panelConteudo.setBackground(java.awt.SystemColor.controlLtHighlight);
-
         javax.swing.GroupLayout panelConteudoLayout = new javax.swing.GroupLayout(panelConteudo);
         panelConteudo.setLayout(panelConteudoLayout);
         panelConteudoLayout.setHorizontalGroup(
@@ -238,7 +235,7 @@ public class SistemaVisao extends javax.swing.JFrame {
         );
         panelConteudoLayout.setVerticalGroup(
             panelConteudoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 553, Short.MAX_VALUE)
+            .addGap(0, 557, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -340,6 +337,11 @@ public class SistemaVisao extends javax.swing.JFrame {
 
         submenuTipoDeAtendimento.setText("Tipo de atendimento");
         submenuTipoDeAtendimento.setName("tipodeatendimento"); // NOI18N
+        submenuTipoDeAtendimento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submenuTipoDeAtendimentoActionPerformed(evt);
+            }
+        });
         menuConfiguracoes.add(submenuTipoDeAtendimento);
 
         submenuTipoDeProntuario.setText("Tipo de prontuário");
@@ -453,6 +455,11 @@ public class SistemaVisao extends javax.swing.JFrame {
         PadraoDeAtendimentoBusca padraoDeAtendimentoBusca = new PadraoDeAtendimentoBusca();
         this.carregarFrame(padraoDeAtendimentoBusca);
     }//GEN-LAST:event_submenuPadraoDeAtendimentoActionPerformed
+
+    private void submenuTipoDeAtendimentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submenuTipoDeAtendimentoActionPerformed
+        TipoDeAtendimentoBusca tipoDeAtendimentoBusca = new TipoDeAtendimentoBusca();
+        this.carregarFrame(tipoDeAtendimentoBusca);
+    }//GEN-LAST:event_submenuTipoDeAtendimentoActionPerformed
 
     /**
      * @param args the command line arguments

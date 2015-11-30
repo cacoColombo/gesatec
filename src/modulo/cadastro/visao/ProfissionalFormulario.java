@@ -35,7 +35,9 @@ import modulo.cadastro.negocio.Especializacao;
 import modulo.cadastro.negocio.EspecializacaoDoProfissional;
 import modulo.cadastro.negocio.Estado;
 import modulo.cadastro.negocio.PadraoDeAtendimentoDoProfissional;
+import modulo.cadastro.negocio.TipoDeAtendimentoDoProfissional;
 import modulo.configuracao.negocio.PadraoDeAtendimento;
+import modulo.configuracao.negocio.TipoDeAtendimento;
 import modulo.sistema.dao.DAO;
 import modulo.sistema.negocio.SOptionPane;
 import org.hibernate.criterion.Conjunction;
@@ -53,6 +55,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     List<Object> especializacoesDoProfissional;
     List<Object> certificacoesDoProfissional;
     List<Object> padroesDeAtendimentoDoProfissional;
+    List<Object> tiposDeAtendimentoDoProfissional;
     
     /**
      * Creates new form ProfissionalFormulario
@@ -68,6 +71,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
         inicializaCertificacoes();
         inicializaEspecializacoes();
         inicializaPadroesDeAtendimento();
+        inicializaTiposDeAtendimento();
 
         MaskFormatter msk = null;
         try {
@@ -142,6 +146,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             populaEspecializacoes(profissional);
             populaCertificacoes(profissional);
             populaPadroesDeAtendimento(profissional);
+            populaTiposDeAtendimento(profissional);
         } catch (Exception err) {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
@@ -248,6 +253,13 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
         botaoRemoverPadrao = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         tabelaDePadroesDeAtendimento = new javax.swing.JTable();
+        jPanel9 = new javax.swing.JPanel();
+        jLabel38 = new javax.swing.JLabel();
+        tipoDeAtendimentoDosProfissionais = new javax.swing.JComboBox();
+        botaoAdicionarTipoAtend = new javax.swing.JButton();
+        botaoRemoverTipoAtend = new javax.swing.JButton();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        tabelaDeTipoDeAtendimento = new javax.swing.JTable();
 
         jLabel34.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         jLabel34.setForeground(java.awt.Color.red);
@@ -283,8 +295,6 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
         });
         toolbar.add(botaoCancelar);
 
-        labelsPainel.setBackground(java.awt.SystemColor.controlLtHighlight);
-
         jLabel1.setText("Nome:");
 
         jLabel2.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
@@ -298,7 +308,6 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
 
         jLabel4.setText("RG:");
 
-        sexoM.setBackground(java.awt.SystemColor.controlLtHighlight);
         sexoM.setSelected(true);
         sexoM.setText("Masculino");
         sexoM.addActionListener(new java.awt.event.ActionListener() {
@@ -307,7 +316,6 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             }
         });
 
-        sexoF.setBackground(java.awt.SystemColor.controlLtHighlight);
         sexoF.setText("Feminino");
         sexoF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -457,7 +465,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                     .addComponent(senha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel27)
                     .addComponent(jLabel10))
-                .addContainerGap(147, Short.MAX_VALUE))
+                .addContainerGap(174, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -472,8 +480,6 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
         );
 
         jTabbedPane1.addTab("Dados pessoais", jPanel2);
-
-        jPanel3.setBackground(java.awt.SystemColor.controlLtHighlight);
 
         jLabel12.setText("País:");
 
@@ -583,7 +589,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel19)
                     .addComponent(complemento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(268, Short.MAX_VALUE))
+                .addContainerGap(285, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -598,8 +604,6 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
         );
 
         jTabbedPane1.addTab("Endereço", jPanel1);
-
-        jPanel5.setBackground(java.awt.SystemColor.controlLtHighlight);
 
         jLabel20.setText("E-mail:");
 
@@ -662,7 +666,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel25)
                     .addComponent(telefoneTrabalho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(400, Short.MAX_VALUE))
+                .addContainerGap(403, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -759,7 +763,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                     .addComponent(botaoAdicionarEspecializacao)
                     .addComponent(botaoRemoverEspecializacao))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -899,7 +903,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                     .addComponent(botaoAdicionarCertificacao)
                     .addComponent(botaoRemoverCertificacao))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -986,18 +990,105 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                     .addComponent(botaoAdicionarPadrao)
                     .addComponent(botaoRemoverPadrao))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE)
+                .addComponent(jScrollPane4)
                 .addContainerGap())
         );
 
         jTabbedPane1.addTab("Padrão de Atendimento", jPanel8);
 
+        jLabel38.setText("Tipo de Atendimento");
+
+        tipoDeAtendimentoDosProfissionais.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tipoDeAtendimentoDosProfissionaisActionPerformed(evt);
+            }
+        });
+
+        botaoAdicionarTipoAtend.setText("Adicionar tipo");
+        botaoAdicionarTipoAtend.setEnabled(false);
+        botaoAdicionarTipoAtend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoAdicionarTipoAtendActionPerformed(evt);
+            }
+        });
+
+        botaoRemoverTipoAtend.setText("Remover tipo");
+        botaoRemoverTipoAtend.setEnabled(false);
+        botaoRemoverTipoAtend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoRemoverTipoAtendActionPerformed(evt);
+            }
+        });
+
+        tabelaDeTipoDeAtendimento.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nome"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane5.setViewportView(tabelaDeTipoDeAtendimento);
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane5)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addComponent(jLabel38, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel9Layout.createSequentialGroup()
+                                .addComponent(botaoAdicionarTipoAtend)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(botaoRemoverTipoAtend))
+                            .addComponent(tipoDeAtendimentoDosProfissionais, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 85, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel38)
+                    .addComponent(tipoDeAtendimentoDosProfissionais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(botaoAdicionarTipoAtend)
+                    .addComponent(botaoRemoverTipoAtend))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane5)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Tipo de Atendimento", jPanel9);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
             .addComponent(toolbar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1132,13 +1223,13 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                     for(Object o : novoProfissional)
                         if(((Profissional) o).getId() > id)
                             id = ((Profissional) o).getId();
-                
                     profissional.setId(id);
                 }
                 
                 salvaEspecializacoes(profissional);
                 salvaCertificacoes(profissional);
                 salvaPadroesDeAtendimento(profissional);
+                salvaTiposDeAtendimento(profissional);
 
                 JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
 
@@ -1329,6 +1420,42 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botaoRemoverPadraoActionPerformed
+
+    private void tipoDeAtendimentoDosProfissionaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tipoDeAtendimentoDosProfissionaisActionPerformed
+        if ( tipoDeAtendimentoDosProfissionais.getSelectedItem().toString().isEmpty() ) {
+            botaoAdicionarTipoAtend.setEnabled(false);
+        } else {
+            botaoAdicionarTipoAtend.setEnabled(true);
+        }
+    }//GEN-LAST:event_tipoDeAtendimentoDosProfissionaisActionPerformed
+
+    private void botaoAdicionarTipoAtendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAdicionarTipoAtendActionPerformed
+        try {
+            TipoDeAtendimento tipo = (TipoDeAtendimento) tipoDeAtendimentoDosProfissionais.getSelectedItem();
+            DefaultTableModel modelo = (DefaultTableModel) tabelaDeTipoDeAtendimento.getModel();
+            modelo.addRow(new Object[]{tipo.getId(), tipo.getNome()});
+            tipoDeAtendimentoDosProfissionais.removeItem(tipo);
+            tipoDeAtendimentoDosProfissionais.setSelectedItem("");
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_botaoAdicionarTipoAtendActionPerformed
+
+    private void botaoRemoverTipoAtendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoRemoverTipoAtendActionPerformed
+        try {
+            int selected = tabelaDeTipoDeAtendimento.getSelectedRow();
+            Object registro = tabelaDeTipoDeAtendimento.getValueAt(selected, 0);
+            int tipo_id = Integer.parseInt(registro.toString());
+
+            Object grupo = DAO.getInstance().getById(new TipoDeAtendimento(), tipo_id);
+            DefaultTableModel modelo = (DefaultTableModel) tabelaDeTipoDeAtendimento.getModel();
+            modelo.removeRow(selected);
+            tipoDeAtendimentoDosProfissionais.addItem(grupo);
+            botaoRemoverTipoAtend.setEnabled(false);
+        } catch (Exception err) {
+            SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_botaoRemoverTipoAtendActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1626,16 +1753,96 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             DAO.getInstance().merge(padraoDeAtendimentoDoProfissional);
         }
     }
+    
+    private void inicializaTiposDeAtendimento(){
+        tabelaDeTipoDeAtendimento.setSelectionBackground(new java.awt.Color(22, 160, 133));
+        tabelaDeTipoDeAtendimento.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        botaoAdicionarTipoAtend.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/add.png")));
+        botaoRemoverTipoAtend.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/remover.png")));
+
+        tabelaDeTipoDeAtendimento.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent event) {
+                if (tabelaDeTipoDeAtendimento.getSelectedRow() > tabelaDeTipoDeAtendimento.getRowCount()) {
+                    botaoRemoverTipoAtend.setEnabled(false);
+                } else {
+                    botaoRemoverTipoAtend.setEnabled(true);
+                }
+            }
+        });
+    }
+    
+    public void populaTiposDeAtendimento(Profissional profissional){
+        if(profissional != null){
+            Conjunction and = Restrictions.conjunction();
+            and.add(Restrictions.eq("profissional", profissional));
+            tiposDeAtendimentoDoProfissional = DAO.getInstance().findByCriteria(new TipoDeAtendimentoDoProfissional(), and, Restrictions.disjunction());
+        }
+        else{
+            tiposDeAtendimentoDoProfissional = new ArrayList<>();
+        }
+
+        tipoDeAtendimentoDosProfissionais.addItem("");
+        List<Object> tiposDeAtendimento = DAO.getInstance().findAll(new TipoDeAtendimento());
+
+        for (int i = 0; i < tiposDeAtendimento.size(); i++) {
+            TipoDeAtendimento tipoDeAtendimento = (TipoDeAtendimento) tiposDeAtendimento.get(i);
+            boolean possuiTipoDeAtendimento = false;
+
+            for (int g = 0; g < tiposDeAtendimentoDoProfissional.size(); g++) {
+                TipoDeAtendimentoDoProfissional tipoDeAtendimentoDoProfissional = (TipoDeAtendimentoDoProfissional) tiposDeAtendimentoDoProfissional.get(g);
+
+                if (tipoDeAtendimentoDoProfissional.getTipoDeAtendimento().getId() == tipoDeAtendimento.getId()) {
+                    possuiTipoDeAtendimento = true;
+                    break;
+                }
+            }
+
+            if (!possuiTipoDeAtendimento) {
+                tipoDeAtendimentoDosProfissionais.addItem(tipoDeAtendimento);
+            }
+        }
+
+        DefaultTableModel modelo = (DefaultTableModel) tabelaDeTipoDeAtendimento.getModel();
+        for (int g = 0; g < tiposDeAtendimentoDoProfissional.size(); g++) {
+            TipoDeAtendimentoDoProfissional tipoDeAtendimentoDoProfissional = (TipoDeAtendimentoDoProfissional) tiposDeAtendimentoDoProfissional.get(g);
+            modelo.addRow(new Object[]{
+                tipoDeAtendimentoDoProfissional.getTipoDeAtendimento().getId(), 
+                tipoDeAtendimentoDoProfissional.getTipoDeAtendimento().toString()
+            });
+        }
+    }
+    
+    private void salvaTiposDeAtendimento(Profissional profissional){
+        for (int g = 0; g < tiposDeAtendimentoDoProfissional.size(); g++) {
+            TipoDeAtendimentoDoProfissional tipoDeAtendimentoDoProfissional = (TipoDeAtendimentoDoProfissional) tiposDeAtendimentoDoProfissional.get(g);
+            DAO.getInstance().remove(tipoDeAtendimentoDoProfissional);
+        }
+
+        DefaultTableModel modelo = (DefaultTableModel) tabelaDeTipoDeAtendimento.getModel();
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            TipoDeAtendimento tipoDeAtendimento = new TipoDeAtendimento();
+            tipoDeAtendimento.setId((int) modelo.getValueAt(i, 0));
+            tipoDeAtendimento.setNome((String) modelo.getValueAt(i, 1));
+
+            TipoDeAtendimentoDoProfissional tipoDeAtendimentoDoProfissional = new TipoDeAtendimentoDoProfissional();
+            tipoDeAtendimentoDoProfissional.setProfissional(profissional);
+            tipoDeAtendimentoDoProfissional.setTipoDeAtendimento(tipoDeAtendimento);
+
+            DAO.getInstance().merge(tipoDeAtendimentoDoProfissional);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField bairro;
     private javax.swing.JButton botaoAdicionarCertificacao;
     private javax.swing.JButton botaoAdicionarEspecializacao;
     private javax.swing.JButton botaoAdicionarPadrao;
+    private javax.swing.JButton botaoAdicionarTipoAtend;
     private javax.swing.JButton botaoCancelar;
     private javax.swing.JButton botaoRemoverCertificacao;
     private javax.swing.JButton botaoRemoverEspecializacao;
     private javax.swing.JButton botaoRemoverPadrao;
+    private javax.swing.JButton botaoRemoverTipoAtend;
     private javax.swing.JButton botaoSalvar;
     private javax.swing.JTextField cep;
     private javax.swing.JComboBox certificacoesDeProfissionais;
@@ -1680,6 +1887,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel37;
+    private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -1694,10 +1902,12 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel labelsPainel;
     private javax.swing.JTextField login;
@@ -1715,9 +1925,11 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     private javax.swing.JTable tabelaDeCertificacoes;
     private javax.swing.JTable tabelaDeEspecializacoes;
     private javax.swing.JTable tabelaDePadroesDeAtendimento;
+    private javax.swing.JTable tabelaDeTipoDeAtendimento;
     private javax.swing.JTextField telefoneCelular;
     private javax.swing.JTextField telefoneResidencial;
     private javax.swing.JTextField telefoneTrabalho;
+    private javax.swing.JComboBox tipoDeAtendimentoDosProfissionais;
     private javax.swing.JToolBar toolbar;
     private javax.swing.JLabel usuario_id;
     // End of variables declaration//GEN-END:variables
