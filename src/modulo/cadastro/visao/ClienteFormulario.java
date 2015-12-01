@@ -18,6 +18,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
 import modulo.administrativo.negocio.UserAccount;
@@ -76,6 +78,42 @@ public class ClienteFormulario extends javax.swing.JDialog {
         botaoCancelar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/cancelar.png")));
         
         sexoM.setEnabled(false);
+    }
+
+    public ClienteFormulario() {
+        initComponents();
+    }
+
+    public JTextField getLogin() {
+        return login;
+    }
+
+    public void setLogin(JTextField login) {
+        this.login = login;
+    }
+
+    public JTextField getNome() {
+        return nome;
+    }
+
+    public void setNome(JTextField nome) {
+        this.nome = nome;
+    }
+
+    public JPasswordField getSenha() {
+        return senha;
+    }
+
+    public void setSenha(JPasswordField senha) {
+        this.senha = senha;
+    }
+
+    public JTextField getTelefoneCelular() {
+        return telefoneCelular;
+    }
+
+    public void setTelefoneCelular(JTextField telefoneCelular) {
+        this.telefoneCelular = telefoneCelular;
     }
     
     public void popularCampos(Cliente cliente) {
@@ -688,81 +726,87 @@ public class ClienteFormulario extends javax.swing.JDialog {
         return ok;
     }
     
+    /**
+     * Método separado do evento, para que possa ser reutilizado.
+     * 
+     * @return Cliente
+     */
+    public Cliente salvarCliente() {
+        Cliente cliente = new Cliente();
+        
+        if ( id.getText().length() > 0 )
+        {
+            cliente.setId(Integer.parseInt(id.getText()));
+        }
+
+        cliente.setNome(nome.getText());
+        cliente.setRg(rg.getText());
+        cliente.setCpf(cpf.getText());
+
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");  
+            java.sql.Date data = new java.sql.Date(format.parse(dataNascimento.getText()).getTime());
+            cliente.setDataNascimento(data);
+        } catch (ParseException ex) {
+        }
+
+        cliente.setSexo(sexoM.isSelected()?'M':'F');
+        cliente.setObservacao(observacao.getText());
+        try{
+            cliente.setCidade((Cidade) cidade.getSelectedItem());
+        }
+        catch(ClassCastException e){
+        }
+        cliente.setCep(cep.getText());
+        cliente.setBairro(bairro.getText());
+        cliente.setEndereco(endereco.getText());
+        cliente.setComplemento(complemento.getText());
+        try{
+            cliente.setNumero(Integer.parseInt(numero.getText()));
+        }
+        catch(NumberFormatException e){
+            cliente.setNumero(0);
+        }
+        cliente.setTelefoneCelular(telefoneCelular.getText());
+        cliente.setTelefoneResidencial(telefoneResidencial.getText());
+        cliente.setTelefoneTrabalho(telefoneTrabalho.getText());
+        cliente.setEmail(email.getText());
+        cliente.setTipo("cliente");
+
+        UserAccount usuario = new UserAccount();
+
+        if ( usuario_id.getText().length() > 0 )
+        {
+            usuario.setId(Integer.parseInt(usuario_id.getText()));
+        }
+
+        usuario.setActive(true);
+        usuario.setLogin(login.getText());
+        usuario.setPassword(senha.getText());
+        usuario.setName(nome.getText());
+        cliente.setUsuario(usuario);
+
+        if ( id.getText().length() > 0 ) {
+            ClienteDAO.getInstance().merge(cliente);
+        } else {
+            ClienteDAO.getInstance().persist(cliente);
+        }        
+            
+        return cliente;
+    }
+    
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
         try {
-            System.out.println("Saving data....");
-            if (verificaCampos())
-            {
-                Cliente cliente = new Cliente();
-
-                if ( id.getText().length() > 0 )
-                {
-                    cliente.setId(Integer.parseInt(id.getText()));
-                }
-
-                cliente.setNome(nome.getText());
-                cliente.setRg(rg.getText());
-                cliente.setCpf(cpf.getText());
-
-                try {
-                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");  
-                    java.sql.Date data = new java.sql.Date(format.parse(dataNascimento.getText()).getTime());
-                    cliente.setDataNascimento(data);
-                } catch (ParseException ex) {
-                }
-
-                cliente.setSexo(sexoM.isSelected()?'M':'F');
-                cliente.setObservacao(observacao.getText());
-                try{
-                    cliente.setCidade((Cidade) cidade.getSelectedItem());
-                }
-                catch(ClassCastException e){
-                }
-                cliente.setCep(cep.getText());
-                cliente.setBairro(bairro.getText());
-                cliente.setEndereco(endereco.getText());
-                cliente.setComplemento(complemento.getText());
-                try{
-                    cliente.setNumero(Integer.parseInt(numero.getText()));
-                }
-                catch(NumberFormatException e){
-                    cliente.setNumero(0);
-                }
-                cliente.setTelefoneCelular(telefoneCelular.getText());
-                cliente.setTelefoneResidencial(telefoneResidencial.getText());
-                cliente.setTelefoneTrabalho(telefoneTrabalho.getText());
-                cliente.setEmail(email.getText());
-                cliente.setTipo("cliente");
-
-                UserAccount usuario = new UserAccount();
-
-                if ( usuario_id.getText().length() > 0 )
-                {
-                    usuario.setId(Integer.parseInt(usuario_id.getText()));
-                }
-
-                usuario.setActive(true);
-                usuario.setLogin(login.getText());
-                usuario.setPassword(senha.getText());
-                usuario.setName(nome.getText());
-                cliente.setUsuario(usuario);
-
-                if ( id.getText().length() > 0 ) {
-                    ClienteDAO.getInstance().merge(cliente);
-                } else {
-                    ClienteDAO.getInstance().persist(cliente);
-                }
-
-                SOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+            if ( verificaCampos() ) {
+                Cliente cliente = this.salvarCliente();
 
                 List<Object> registro = new ArrayList();
                 registro.add(cliente);
 
                 parent.atualizarGrid(cliente.getId(), registro);
+                SOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
                 this.setVisible(false);
-            }
-            else
-            {
+            } else {
                 throw new Exception(message);
             }
         } catch (Exception err) {

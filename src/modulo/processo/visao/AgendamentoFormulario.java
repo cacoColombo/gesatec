@@ -11,12 +11,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
+import modulo.administrativo.negocio.UserAccount;
 import modulo.cadastro.dao.ClienteDAO;
 import modulo.cadastro.dao.ProfissionalDAO;
 import modulo.cadastro.dao.TipoDeAtendimentoDoProfissionalDAO;
 import modulo.cadastro.negocio.Cliente;
 import modulo.cadastro.negocio.Profissional;
 import modulo.cadastro.negocio.TipoDeAtendimentoDoProfissional;
+import modulo.cadastro.visao.ClienteFormulario;
 import modulo.configuracao.negocio.TipoDeAtendimento;
 import modulo.processo.dao.AgendamentoDAO;
 import modulo.processo.dao.StatusAgendamentoDAO;
@@ -454,7 +456,20 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
                 agendamento.setDataAgendada(new java.sql.Date(date.getTime()));
                 agendamento.setProfissional((Profissional) profissional.getSelectedItem());
                 agendamento.setTipoDeAtendimento((TipoDeAtendimento) tipoDeAtendimento.getSelectedItem());
-                agendamento.setCliente((Cliente) cliente.getSelectedItem());
+                
+                // Caso não tenha sido selecionado um cliente já cadastrado, registra um novo.
+                if ( cliente.getSelectedItem().toString().equals(" ") ) {
+                    ClienteFormulario clienteForm = new ClienteFormulario();
+                    clienteForm.getNome().setText(nomeCliente.getText());
+                    clienteForm.getTelefoneCelular().setText(telefoneCelularCliente.getText());
+                    clienteForm.getLogin().setText(nomeCliente.getText().replace(" ", "_").toLowerCase());
+                    clienteForm.getSenha().setText(UserAccount.DEFAULT_PASSWORD);
+                    agendamento.setCliente(clienteForm.salvarCliente());
+                    
+                } else {
+                    agendamento.setCliente((Cliente) cliente.getSelectedItem());
+                }                
+                
                 agendamento.setHorarioAgendado(new java.sql.Time(time.getTime()));
                 agendamento.setObservacao(observacao.getText());
 

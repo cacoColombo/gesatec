@@ -32,6 +32,7 @@ public class TipoDeAtendimentoBusca extends Busca {
     public TipoDeAtendimentoBusca() {
         this.setName("tipodeatendimento");
         super.initComponents();
+        this.setTitle("Tipo de atendimento");
     }
     
     @Override

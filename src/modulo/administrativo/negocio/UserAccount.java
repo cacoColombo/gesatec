@@ -11,10 +11,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "useraccount")
 public class UserAccount implements Serializable {
+    
+    @Transient
+    public static final String DEFAULT_PASSWORD = "12345678";
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

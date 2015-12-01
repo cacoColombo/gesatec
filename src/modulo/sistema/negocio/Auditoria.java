@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import modulo.administrativo.negocio.UserAccount;
 import modulo.sistema.dao.DAOAuditoria;
 
 @Entity
@@ -91,9 +92,16 @@ public class Auditoria implements Serializable {
     public static void registra(String message){
         Auditoria auditoria = new Auditoria();
         java.util.Date agora = new java.util.Date();
-        auditoria.setHorario(new Date(agora.getTime()));
-        auditoria.setUsuario(UsuarioLogado.getInstance().getUsuarioLogado().getName()+"("+UsuarioLogado.getInstance().getUsuarioLogado().getLogin()+")");
+        auditoria.setHorario(new Date(agora.getTime()));        
         auditoria.setMessage(message);
+        
+        UserAccount usuario = UsuarioLogado.getInstance().getUsuarioLogado();
+        auditoria.setUsuario("(Sem usuário definido)");
+        
+        if ( usuario != null ) {
+            auditoria.setUsuario(UsuarioLogado.getInstance().getUsuarioLogado().getName()+"("+UsuarioLogado.getInstance().getUsuarioLogado().getLogin()+")");
+        }
+        
         DAOAuditoria.getInstance().merge(auditoria);
     }
 }
