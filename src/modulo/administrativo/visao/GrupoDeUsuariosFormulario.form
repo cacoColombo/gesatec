@@ -6,6 +6,7 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -224,8 +225,8 @@
                                 <Column editable="false" title="M&#xf3;dulo" type="java.lang.String"/>
                                 <Column editable="false" title="Tela" type="java.lang.String"/>
                                 <Column editable="true" title="VISUALIZAR" type="java.lang.Boolean"/>
-                                <Column editable="true" title="INSERIR" type="java.lang.Boolean"/>
-                                <Column editable="true" title="ATUALIZAR" type="java.lang.Boolean"/>
+                                <Column editable="true" title="NOVO" type="java.lang.Boolean"/>
+                                <Column editable="true" title="EDITAR" type="java.lang.Boolean"/>
                                 <Column editable="true" title="EXCLUIR" type="java.lang.Boolean"/>
                                 <Column editable="true" title="ADMIN" type="java.lang.Boolean"/>
                               </Table>

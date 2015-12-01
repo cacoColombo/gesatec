@@ -29,30 +29,15 @@ import modulo.sistema.negocio.UsuarioLogado;
  */
 public abstract class Busca extends javax.swing.JInternalFrame {
     
-    private boolean forcarDesabilitarBotaoExcluir = false;
-    private boolean forcarDesabilitarBotaoEditar = false;
+    public boolean forcarDesabilitarBotaoNovo = false;
+    public boolean forcarDesabilitarBotaoExcluir = false;
+    public boolean forcarDesabilitarBotaoEditar = false;
     
     /**
      * Creates new form ModeloBusca
      */
     public Busca() {
         initComponents();
-    }
-
-    public boolean isForcarDesabilitarBotaoExcluir() {
-        return forcarDesabilitarBotaoExcluir;
-    }
-
-    public void setForcarDesabilitarBotaoExcluir(boolean forcarDesabilitarBotaoExcluir) {
-        this.forcarDesabilitarBotaoExcluir = forcarDesabilitarBotaoExcluir;
-    }
-
-    public boolean isForcarDesabilitarBotaoEditar() {
-        return forcarDesabilitarBotaoEditar;
-    }
-
-    public void setForcarDesabilitarBotaoEditar(boolean forcarDesabilitarBotaoEditar) {
-        this.forcarDesabilitarBotaoEditar = forcarDesabilitarBotaoEditar;
     }
 
     public JButton getBotaoAtualizar() {
@@ -166,8 +151,9 @@ public abstract class Busca extends javax.swing.JInternalFrame {
         getBotaoNovo().setEnabled(false);
         getBotaoEditar().setEnabled(false);
         getBotaoExcluir().setEnabled(false);
-        setForcarDesabilitarBotaoEditar(true);
-        setForcarDesabilitarBotaoExcluir(true);
+        forcarDesabilitarBotaoNovo = true;
+        forcarDesabilitarBotaoEditar = true;
+        forcarDesabilitarBotaoExcluir = true;
         
         atualizarGrid(-1, new ArrayList());
         
@@ -204,23 +190,24 @@ public abstract class Busca extends javax.swing.JInternalFrame {
                 PermissaoDoGrupoDeUsuarios permissao = (PermissaoDoGrupoDeUsuarios) permissoes.get(i);
 
                 if ( permissao.getId().equals(this.getName()) ) {
-
+                    
                     // Usuário possui permissão de inserção.
                     if ( permissao.isInserir() || permissao.isAdmin() )
                     {
                         getBotaoNovo().setEnabled(true);
+                        forcarDesabilitarBotaoNovo = false;
                     }
 
                     // Usuário possui permissão de edição.
                     if ( permissao.isAtualizar() || permissao.isAdmin() )
                     {
-                        setForcarDesabilitarBotaoEditar(false);
+                        forcarDesabilitarBotaoEditar = false;
                     }
 
                     // Usuário possui permissão de exclusão.
                     if ( permissao.isExcluir() || permissao.isAdmin() )
                     {
-                        setForcarDesabilitarBotaoExcluir(false);
+                        forcarDesabilitarBotaoExcluir = false;
                     }
                 }
             }

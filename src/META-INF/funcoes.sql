@@ -199,7 +199,7 @@ LANGUAGE 'plpgsql' IMMUTABLE;
 --
 
 --
-DROP FUNCTION obterHorariosParaAgendamento(DATE, INT, INT, INT);
+DROP FUNCTION IF EXISTS obterHorariosParaAgendamento(DATE, INT, INT, INT);
 CREATE OR REPLACE FUNCTION obterHorariosParaAgendamento(p_data DATE, p_profissional_id INT DEFAULT NULL, p_tipodeatendimento_id INT DEFAULT NULL, p_agendamento_id INT DEFAULT NULL)
 RETURNS TABLE (
     descricao_horario VARCHAR,

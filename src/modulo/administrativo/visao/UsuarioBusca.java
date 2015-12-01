@@ -36,7 +36,7 @@ public class UsuarioBusca extends Busca {
         
         this.getBotaoNovo().setEnabled(false);
         this.getBotaoExcluir().setEnabled(false);
-        this.setForcarDesabilitarBotaoExcluir(true);
+        super.forcarDesabilitarBotaoExcluir = true;
     }
     
     @Override

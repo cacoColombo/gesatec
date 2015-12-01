@@ -222,7 +222,7 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
 
             },
             new String [] {
-                "ID", "Módulo", "Tela", "VISUALIZAR", "INSERIR", "ATUALIZAR", "EXCLUIR", "ADMIN"
+                "ID", "Módulo", "Tela", "VISUALIZAR", "NOVO", "EDITAR", "EXCLUIR", "ADMIN"
             }
         ) {
             Class[] types = new Class [] {
@@ -251,7 +251,7 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout labelsPainelLayout = new javax.swing.GroupLayout(labelsPainel);
@@ -320,7 +320,7 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(toolbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1))
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 555, Short.MAX_VALUE))
         );
 
         pack();

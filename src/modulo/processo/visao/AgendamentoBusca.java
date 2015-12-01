@@ -104,10 +104,10 @@ public final class AgendamentoBusca extends Busca {
             StatusAgendamento statusAgendamento = new StatusAgendamento();
 
             if ( status.equals(statusAgendamento.STATUS_AGENDA_LIVRE) ) {
-                getBotaoNovo().setEnabled(true);
+                getBotaoNovo().setEnabled(!super.forcarDesabilitarBotaoNovo);
             } else if ( !status.equals(statusAgendamento.STATUS_AGENDA_INDISPONIVEL) ) {
-                getBotaoEditar().setEnabled(true);
-                getBotaoExcluir().setEnabled(true);
+                getBotaoEditar().setEnabled(!super.forcarDesabilitarBotaoEditar);
+                getBotaoExcluir().setEnabled(!super.forcarDesabilitarBotaoExcluir);
             }
         }
     }
