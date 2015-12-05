@@ -27,7 +27,7 @@ public class EspecializacaoDoProfissional implements Serializable {
     @Column(unique = true, nullable = false)
     private int id;
     
-    @ManyToOne//(cascade=CascadeType.ALL)
+    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "profissional_id", referencedColumnName = "id", nullable = false)
     private Profissional profissional;
     

@@ -200,7 +200,7 @@
                                   </Group>
                               </Group>
                           </Group>
-                          <EmptySpace pref="77" max="32767" attributes="0"/>
+                          <EmptySpace pref="87" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -677,35 +677,30 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="jLabel25" min="-2" pref="200" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="telefoneTrabalho" max="32767" attributes="0"/>
+                              </Group>
                               <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jLabel20" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
+                                      <Component id="jLabel22" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="telefoneCelular" max="32767" attributes="0"/>
+                                      <Component id="email" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Group type="102" attributes="0">
                                   <Component id="jLabel24" min="-2" pref="200" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="telefoneResidencial" min="-2" pref="336" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jLabel25" min="-2" pref="200" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="telefoneTrabalho" min="-2" pref="336" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="jLabel20" min="-2" pref="200" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="email" max="32767" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" attributes="0">
-                                          <Component id="jLabel22" min="-2" pref="200" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="telefoneCelular" min="-2" pref="336" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabel23" min="-2" max="-2" attributes="0"/>
-                              </Group>
                           </Group>
-                          <EmptySpace pref="77" max="32767" attributes="0"/>
+                          <EmptySpace min="107" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -720,7 +715,6 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel22" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel23" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="telefoneCelular" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -733,7 +727,7 @@
                               <Component id="jLabel25" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="telefoneTrabalho" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="403" max="32767" attributes="0"/>
+                          <EmptySpace pref="427" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -751,32 +745,21 @@
                     <Property name="text" type="java.lang.String" value="Telefone celular:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="telefoneCelular">
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel23">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Ubuntu" size="15" style="1"/>
-                    </Property>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="*"/>
-                  </Properties>
-                </Component>
                 <Component class="javax.swing.JLabel" name="jLabel24">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Telefone residencial:"/>
                   </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="telefoneResidencial">
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel25">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Telefone de trabalho:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="telefoneTrabalho">
+                <Component class="javax.swing.JFormattedTextField" name="telefoneCelular">
+                </Component>
+                <Component class="javax.swing.JFormattedTextField" name="telefoneResidencial">
+                </Component>
+                <Component class="javax.swing.JFormattedTextField" name="telefoneTrabalho">
                 </Component>
               </SubComponents>
             </Container>
@@ -809,7 +792,7 @@
                                   </Group>
                                   <Component id="especializacaoDosProfissionais" min="-2" pref="336" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="45" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="70" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -939,7 +922,7 @@
                                       </Group>
                                   </Group>
                               </Group>
-                              <EmptySpace min="0" pref="65" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="75" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -1158,7 +1141,7 @@
                                   </Group>
                                   <Component id="padroesDeAtendimentoDosProfissionais" min="-2" pref="336" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="85" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="95" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -1270,7 +1253,7 @@
                                   </Group>
                                   <Component id="tipoDeAtendimentoDosProfissionais" alignment="0" min="-2" pref="336" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="85" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="95" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>

@@ -24,9 +24,13 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
 import modulo.administrativo.negocio.UserAccount;
+import modulo.cadastro.dao.CertificacaoDoProfissionalDAO;
 import modulo.cadastro.dao.ProfissionalDAO;
 import modulo.cadastro.dao.CidadeDAO;
+import modulo.cadastro.dao.EspecializacaoDoProfissionalDAO;
 import modulo.cadastro.dao.EstadoDAO;
+import modulo.cadastro.dao.PadraoDeAtendimentoDoProfissionalDAO;
+import modulo.cadastro.dao.TipoDeAtendimentoDoProfissionalDAO;
 import modulo.cadastro.negocio.Certificacao;
 import modulo.cadastro.negocio.CertificacaoDoProfissional;
 import modulo.cadastro.negocio.Profissional;
@@ -78,9 +82,9 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             cpf.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("###.###.###-##")));
             dataNascimento.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("##/##/####")));
             dataExpedicao.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("##/##/####")));
-            
-            
-            
+            telefoneCelular.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("(##) ####-####")));
+            telefoneResidencial.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("(##) ####-####")));
+            telefoneTrabalho.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("(##) ####-####")));
         } catch (ParseException ex) {
             Logger.getLogger(ProfissionalFormulario.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -108,7 +112,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
 
     public void popularCampos(Profissional profissional) {
         try {
-            id.setText("" + profissional.getId());
+            id.setText((profissional.getId() != 0) ? Integer.toString(profissional.getId()) : "");
             nome.setText(profissional.getNome());
             rg.setText(profissional.getRg());
             cpf.setText(profissional.getCpf());
@@ -123,8 +127,11 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             }
             observacao.setText(profissional.getObservacao());
 
-            usuario_id.setText("" + profissional.getUsuario().getId());
-            login.setText(profissional.getUsuario().getLogin());
+            if ( profissional.getUsuario() != null ) {
+                usuario_id.setText("" + profissional.getUsuario().getId());
+                login.setText(profissional.getUsuario().getLogin());
+                login.setEditable(false);
+            }
             senha.setText("");
             cep.setText(profissional.getCep());
             if (profissional.getCidade() != null) {
@@ -134,14 +141,12 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             }
             bairro.setText(profissional.getBairro());
             endereco.setText(profissional.getEndereco());
-            numero.setText(profissional.getNumero() + "");
+            numero.setText((profissional.getNumero() != null) ? Integer.toString(profissional.getNumero()) : "");
             complemento.setText(profissional.getComplemento());
             email.setText(profissional.getEmail());
             telefoneCelular.setText(profissional.getTelefoneCelular());
             telefoneResidencial.setText(profissional.getTelefoneResidencial());
             telefoneTrabalho.setText(profissional.getTelefoneTrabalho());
-
-            login.setEditable(false);
 
             populaEspecializacoes(profissional);
             populaCertificacoes(profissional);
@@ -217,12 +222,11 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
         jLabel20 = new javax.swing.JLabel();
         email = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
-        telefoneCelular = new javax.swing.JTextField();
-        jLabel23 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
-        telefoneResidencial = new javax.swing.JTextField();
         jLabel25 = new javax.swing.JLabel();
-        telefoneTrabalho = new javax.swing.JTextField();
+        telefoneCelular = new javax.swing.JFormattedTextField();
+        telefoneResidencial = new javax.swing.JFormattedTextField();
+        telefoneTrabalho = new javax.swing.JFormattedTextField();
         jPanel6 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         botaoAdicionarEspecializacao = new javax.swing.JButton();
@@ -295,6 +299,8 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
         });
         toolbar.add(botaoCancelar);
 
+        labelsPainel.setBackground(java.awt.SystemColor.controlLtHighlight);
+
         jLabel1.setText("Nome:");
 
         jLabel2.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
@@ -308,6 +314,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
 
         jLabel4.setText("RG:");
 
+        sexoM.setBackground(java.awt.SystemColor.controlLtHighlight);
         sexoM.setSelected(true);
         sexoM.setText("Masculino");
         sexoM.addActionListener(new java.awt.event.ActionListener() {
@@ -316,6 +323,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             }
         });
 
+        sexoF.setBackground(java.awt.SystemColor.controlLtHighlight);
         sexoF.setText("Feminino");
         sexoF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -416,7 +424,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                             .addGroup(labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(dataNascimento)
                                 .addComponent(cpf)))))
-                .addContainerGap(77, Short.MAX_VALUE))
+                .addContainerGap(87, Short.MAX_VALUE))
         );
         labelsPainelLayout.setVerticalGroup(
             labelsPainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -480,6 +488,8 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
         );
 
         jTabbedPane1.addTab("Dados pessoais", jPanel2);
+
+        jPanel3.setBackground(java.awt.SystemColor.controlLtHighlight);
 
         jLabel12.setText("País:");
 
@@ -605,13 +615,11 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
 
         jTabbedPane1.addTab("Endereço", jPanel1);
 
+        jPanel5.setBackground(java.awt.SystemColor.controlLtHighlight);
+
         jLabel20.setText("E-mail:");
 
         jLabel22.setText("Telefone celular:");
-
-        jLabel23.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
-        jLabel23.setForeground(java.awt.Color.red);
-        jLabel23.setText("*");
 
         jLabel24.setText("Telefone residencial:");
 
@@ -623,28 +631,24 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(telefoneResidencial, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(telefoneTrabalho, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(telefoneTrabalho))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(email))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(telefoneCelular, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel23)))
-                .addContainerGap(77, Short.MAX_VALUE))
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(telefoneCelular)
+                            .addComponent(email)))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(telefoneResidencial, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -656,7 +660,6 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel22)
-                    .addComponent(jLabel23)
                     .addComponent(telefoneCelular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -666,7 +669,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel25)
                     .addComponent(telefoneTrabalho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(403, Short.MAX_VALUE))
+                .addContainerGap(427, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -748,7 +751,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(botaoRemoverEspecializacao))
                             .addComponent(especializacaoDosProfissionais, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 45, Short.MAX_VALUE)))
+                        .addGap(0, 70, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -873,7 +876,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                                     .addComponent(jLabel32)
                                     .addComponent(jLabel33)
                                     .addComponent(jLabel36))))
-                        .addGap(0, 65, Short.MAX_VALUE)))
+                        .addGap(0, 75, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
@@ -975,7 +978,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(botaoRemoverPadrao))
                             .addComponent(padroesDeAtendimentoDosProfissionais, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 85, Short.MAX_VALUE)))
+                        .addGap(0, 95, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
@@ -1062,7 +1065,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(botaoRemoverTipoAtend))
                             .addComponent(tipoDeAtendimentoDosProfissionais, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 85, Short.MAX_VALUE)))
+                        .addGap(0, 95, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
@@ -1152,10 +1155,13 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             ok = false;
             message += "* Numero do endereço inválido\n";
         }
-        if (telefoneCelular.getText().isEmpty()) {
+        
+        String celular = telefoneCelular.getText().replace("(", "").replace(") ", "").replace("-", "").replace(" ", "");
+        if (celular.isEmpty()) {
             ok = false;
             message += "* Campo Telefone Celular deve ser preenchido\n";
         }
+        
         return ok;
     }
 
@@ -1195,8 +1201,19 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                     profissional.setNumero(0);
                 }
                 profissional.setTelefoneCelular(telefoneCelular.getText());
+                
                 profissional.setTelefoneResidencial(telefoneResidencial.getText());
+                String residencial = telefoneResidencial.getText().replace("(", "").replace(") ", "").replace("-", "").replace(" ", "");
+                if ( residencial.isEmpty() ) {
+                    profissional.setTelefoneResidencial(residencial);
+                }
+                
                 profissional.setTelefoneTrabalho(telefoneTrabalho.getText());
+                String trabalho = telefoneTrabalho.getText().replace("(", "").replace(") ", "").replace("-", "").replace(" ", "");
+                if ( trabalho.isEmpty() ) {
+                    profissional.setTelefoneTrabalho(trabalho);
+                }
+                
                 profissional.setEmail(email.getText());
 
                 UserAccount usuario = new UserAccount();
@@ -1211,21 +1228,13 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                 usuario.setName(nome.getText());
                 profissional.setUsuario(usuario);
 
-                DAO.getInstance().merge(profissional);
-                
-                Conjunction and = Restrictions.conjunction();
-                and.add(Restrictions.eq("nome", profissional.getNome()));
-                List<Object> novoProfissional = DAO.getInstance().findByCriteria(new Profissional(), and, Restrictions.disjunction());
-                
-                
-                int id = Integer.MIN_VALUE;
-                if(this.id.getText().isEmpty()){
-                    for(Object o : novoProfissional)
-                        if(((Profissional) o).getId() > id)
-                            id = ((Profissional) o).getId();
-                    profissional.setId(id);
+                if ( id.getText().length() > 0 ) {
+                    ProfissionalDAO.getInstance().merge(profissional);
+                } else {
+                    ProfissionalDAO.getInstance().persist(profissional);
                 }
                 
+                // Salva as dependencias do profissional.
                 salvaEspecializacoes(profissional);
                 salvaCertificacoes(profissional);
                 salvaPadroesDeAtendimento(profissional);
@@ -1524,17 +1533,16 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     }
 
     public void populaEspecializacoes(Profissional profissional) {
-        if(profissional != null){
+        if(profissional != null && profissional.getId() != 0){
             Conjunction and = Restrictions.conjunction();
             and.add(Restrictions.eq("profissional", profissional));
-            especializacoesDoProfissional = DAO.getInstance().findByCriteria(new EspecializacaoDoProfissional(), and, Restrictions.disjunction());
-        }
-        else{
+            especializacoesDoProfissional = EspecializacaoDoProfissionalDAO.getInstance().findByCriteria(new EspecializacaoDoProfissional(), and, Restrictions.disjunction());
+        }else{
             especializacoesDoProfissional = new ArrayList<>();
         }
 
         especializacaoDosProfissionais.addItem("");
-        List<Object> especializacoes = DAO.getInstance().findAll(new Especializacao());
+        List<Object> especializacoes = EspecializacaoDoProfissionalDAO.getInstance().findAll(new Especializacao());
 
         for (int i = 0; i < especializacoes.size(); i++) {
             Especializacao especializacao = (Especializacao) especializacoes.get(i);
@@ -1562,9 +1570,11 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     }
 
     private void salvaEspecializacoes(Profissional profissional) {
-        for (int g = 0; g < especializacoesDoProfissional.size(); g++) {
-            EspecializacaoDoProfissional especializacaoDoProfissional = (EspecializacaoDoProfissional) especializacoesDoProfissional.get(g);
-            DAO.getInstance().remove(especializacaoDoProfissional);
+        if ( especializacoesDoProfissional != null ) {
+            for (int g = 0; g < especializacoesDoProfissional.size(); g++) {
+                EspecializacaoDoProfissional especializacaoDoProfissional = (EspecializacaoDoProfissional) especializacoesDoProfissional.get(g);
+                EspecializacaoDoProfissionalDAO.getInstance().remove(especializacaoDoProfissional);
+            }
         }
 
         DefaultTableModel modelo = (DefaultTableModel) tabelaDeEspecializacoes.getModel();
@@ -1576,7 +1586,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             especializacaoDoProfissional.setProfissional(profissional);
             especializacaoDoProfissional.setEspecializacao(especializacao);
 
-            DAO.getInstance().merge(especializacaoDoProfissional);
+            EspecializacaoDoProfissionalDAO.getInstance().merge(especializacaoDoProfissional);
         }
     }
 
@@ -1598,17 +1608,17 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     }
 
     public void populaCertificacoes(Profissional profissional) {
-        if(profissional != null){
+        if(profissional != null && profissional.getId() != 0){
             Conjunction and = Restrictions.conjunction();
             and.add(Restrictions.eq("profissional", profissional));
-            certificacoesDoProfissional = DAO.getInstance().findByCriteria(new CertificacaoDoProfissional(), and, Restrictions.disjunction());
+            certificacoesDoProfissional = CertificacaoDoProfissionalDAO.getInstance().findByCriteria(new CertificacaoDoProfissional(), and, Restrictions.disjunction());
         }
         else{
             certificacoesDoProfissional = new ArrayList<>();
         }
 
         certificacoesDeProfissionais.addItem("");
-        List<Object> certificacoes = DAO.getInstance().findAll(new Certificacao());
+        List<Object> certificacoes = CertificacaoDoProfissionalDAO.getInstance().findAll(new Certificacao());
 
         for (int i = 0; i < certificacoes.size(); i++) {
             Certificacao certificacao = (Certificacao) certificacoes.get(i);
@@ -1648,9 +1658,13 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     }
     
     private void salvaCertificacoes(Profissional profissional) {
-        for (int g = 0; g < certificacoesDoProfissional.size(); g++) {
-            CertificacaoDoProfissional certificacaoDoProfissional = (CertificacaoDoProfissional) certificacoesDoProfissional.get(g);
-            DAO.getInstance().remove(certificacaoDoProfissional);
+        if ( certificacoesDoProfissional != null ) {
+            for (int g = 0; g < certificacoesDoProfissional.size(); g++) {
+                CertificacaoDoProfissional certificacaoDoProfissional = (CertificacaoDoProfissional) certificacoesDoProfissional.get(g);
+
+
+                CertificacaoDoProfissionalDAO.getInstance().remove(certificacaoDoProfissional);
+            }
         }
 
         DefaultTableModel modelo = (DefaultTableModel) tabelaDeCertificacoes.getModel();
@@ -1668,7 +1682,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                 certificacaoDoProfissional.setRegistro((String) modelo.getValueAt(i, 3));
                 certificacaoDoProfissional.setOrgaoExpedidor((String) modelo.getValueAt(i, 4));
 
-                DAO.getInstance().merge(certificacaoDoProfissional);
+                CertificacaoDoProfissionalDAO.getInstance().merge(certificacaoDoProfissional);
             }
             catch(ParseException err){
                 SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
@@ -1694,17 +1708,17 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     }
     
     public void populaPadroesDeAtendimento(Profissional profissional){
-        if(profissional != null){
+        if(profissional != null && profissional.getId() != 0){
             Conjunction and = Restrictions.conjunction();
             and.add(Restrictions.eq("profissional", profissional));
-            padroesDeAtendimentoDoProfissional = DAO.getInstance().findByCriteria(new PadraoDeAtendimentoDoProfissional(), and, Restrictions.disjunction());
+            padroesDeAtendimentoDoProfissional = PadraoDeAtendimentoDoProfissionalDAO.getInstance().findByCriteria(new PadraoDeAtendimentoDoProfissional(), and, Restrictions.disjunction());
         }
         else{
             padroesDeAtendimentoDoProfissional = new ArrayList<>();
         }
 
         padroesDeAtendimentoDosProfissionais.addItem("");
-        List<Object> padroesDeAtendimento = DAO.getInstance().findAll(new PadraoDeAtendimento());
+        List<Object> padroesDeAtendimento = PadraoDeAtendimentoDoProfissionalDAO.getInstance().findAll(new PadraoDeAtendimento());
 
         for (int i = 0; i < padroesDeAtendimento.size(); i++) {
             PadraoDeAtendimento padraoDeAtendimento = (PadraoDeAtendimento) padroesDeAtendimento.get(i);
@@ -1735,10 +1749,11 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     }
     
     private void salvaPadroesDeAtendimento(Profissional profissional){
-        System.out.println("Size -> " + padroesDeAtendimentoDoProfissional.size());
-        for (int g = 0; g < padroesDeAtendimentoDoProfissional.size(); g++) {
-            PadraoDeAtendimentoDoProfissional padraoDeAtendimentoDoProfissional = (PadraoDeAtendimentoDoProfissional) padroesDeAtendimentoDoProfissional.get(g);
-            DAO.getInstance().remove(padraoDeAtendimentoDoProfissional);
+        if ( padroesDeAtendimentoDoProfissional != null ) {
+            for (int g = 0; g < padroesDeAtendimentoDoProfissional.size(); g++) {
+                PadraoDeAtendimentoDoProfissional padraoDeAtendimentoDoProfissional = (PadraoDeAtendimentoDoProfissional) padroesDeAtendimentoDoProfissional.get(g);
+                PadraoDeAtendimentoDoProfissionalDAO.getInstance().remove(padraoDeAtendimentoDoProfissional);
+            }
         }
 
         DefaultTableModel modelo = (DefaultTableModel) tabelaDePadroesDeAtendimento.getModel();
@@ -1750,7 +1765,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             padraoDeAtendimentoDoProfissional.setProfissional(profissional);
             padraoDeAtendimentoDoProfissional.setPadraoDeAtendimento(padraoDeAtendimento);
 
-            DAO.getInstance().merge(padraoDeAtendimentoDoProfissional);
+            PadraoDeAtendimentoDoProfissionalDAO.getInstance().merge(padraoDeAtendimentoDoProfissional);
         }
     }
     
@@ -1772,18 +1787,18 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     }
     
     public void populaTiposDeAtendimento(Profissional profissional){
-        if(profissional != null){
+        if(profissional != null && profissional.getId() != 0){
             Conjunction and = Restrictions.conjunction();
             and.add(Restrictions.eq("profissional", profissional));
-            tiposDeAtendimentoDoProfissional = DAO.getInstance().findByCriteria(new TipoDeAtendimentoDoProfissional(), and, Restrictions.disjunction());
+            tiposDeAtendimentoDoProfissional = TipoDeAtendimentoDoProfissionalDAO.getInstance().findByCriteria(new TipoDeAtendimentoDoProfissional(), and, Restrictions.disjunction());
         }
         else{
             tiposDeAtendimentoDoProfissional = new ArrayList<>();
         }
 
         tipoDeAtendimentoDosProfissionais.addItem("");
-        List<Object> tiposDeAtendimento = DAO.getInstance().findAll(new TipoDeAtendimento());
-
+        List<Object> tiposDeAtendimento = TipoDeAtendimentoDoProfissionalDAO.getInstance().findAll(new TipoDeAtendimento());
+        
         for (int i = 0; i < tiposDeAtendimento.size(); i++) {
             TipoDeAtendimento tipoDeAtendimento = (TipoDeAtendimento) tiposDeAtendimento.get(i);
             boolean possuiTipoDeAtendimento = false;
@@ -1796,7 +1811,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                     break;
                 }
             }
-
+            
             if (!possuiTipoDeAtendimento) {
                 tipoDeAtendimentoDosProfissionais.addItem(tipoDeAtendimento);
             }
@@ -1813,9 +1828,11 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     }
     
     private void salvaTiposDeAtendimento(Profissional profissional){
-        for (int g = 0; g < tiposDeAtendimentoDoProfissional.size(); g++) {
-            TipoDeAtendimentoDoProfissional tipoDeAtendimentoDoProfissional = (TipoDeAtendimentoDoProfissional) tiposDeAtendimentoDoProfissional.get(g);
-            DAO.getInstance().remove(tipoDeAtendimentoDoProfissional);
+        if ( tiposDeAtendimentoDoProfissional != null ) {        
+            for (int g = 0; g < tiposDeAtendimentoDoProfissional.size(); g++) {
+                TipoDeAtendimentoDoProfissional tipoDeAtendimentoDoProfissional = (TipoDeAtendimentoDoProfissional) tiposDeAtendimentoDoProfissional.get(g);
+                TipoDeAtendimentoDoProfissionalDAO.getInstance().remove(tipoDeAtendimentoDoProfissional);
+            }
         }
 
         DefaultTableModel modelo = (DefaultTableModel) tabelaDeTipoDeAtendimento.getModel();
@@ -1828,7 +1845,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             tipoDeAtendimentoDoProfissional.setProfissional(profissional);
             tipoDeAtendimentoDoProfissional.setTipoDeAtendimento(tipoDeAtendimento);
 
-            DAO.getInstance().merge(tipoDeAtendimentoDoProfissional);
+            TipoDeAtendimentoDoProfissionalDAO.getInstance().merge(tipoDeAtendimentoDoProfissional);
         }
     }
 
@@ -1871,7 +1888,6 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
@@ -1926,9 +1942,9 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     private javax.swing.JTable tabelaDeEspecializacoes;
     private javax.swing.JTable tabelaDePadroesDeAtendimento;
     private javax.swing.JTable tabelaDeTipoDeAtendimento;
-    private javax.swing.JTextField telefoneCelular;
-    private javax.swing.JTextField telefoneResidencial;
-    private javax.swing.JTextField telefoneTrabalho;
+    private javax.swing.JFormattedTextField telefoneCelular;
+    private javax.swing.JFormattedTextField telefoneResidencial;
+    private javax.swing.JFormattedTextField telefoneTrabalho;
     private javax.swing.JComboBox tipoDeAtendimentoDosProfissionais;
     private javax.swing.JToolBar toolbar;
     private javax.swing.JLabel usuario_id;

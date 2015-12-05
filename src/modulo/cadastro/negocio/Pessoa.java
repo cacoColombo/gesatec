@@ -37,7 +37,7 @@ public class Pessoa implements Serializable {
     protected Date dataNascimento;
     
     @Column(length = 1)
-    protected char sexo;
+    protected char sexo = 'M';
     
     @Column
     protected String email;
