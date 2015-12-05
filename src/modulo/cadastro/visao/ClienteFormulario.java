@@ -51,10 +51,12 @@ public class ClienteFormulario extends javax.swing.JDialog {
         this.setLocation(600, 530);
         initComponents();
         
-        MaskFormatter msk = null;
         try { 
             cpf.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("###.###.###-##")));
             dataNascimento.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("##/##/####")));
+            telefoneCelular.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("(##) ####-####")));
+            telefoneResidencial.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("(##) ####-####")));
+            telefoneTrabalho.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("(##) ####-####")));
         } catch (ParseException ex) {
             Logger.getLogger(ClienteFormulario.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -73,7 +75,6 @@ public class ClienteFormulario extends javax.swing.JDialog {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
         
-        cpf = new JFormattedTextField(msk);
         botaoSalvar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/salvar.png")));
         botaoCancelar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/cancelar.png")));
         
@@ -113,7 +114,7 @@ public class ClienteFormulario extends javax.swing.JDialog {
     }
 
     public void setTelefoneCelular(JTextField telefoneCelular) {
-        this.telefoneCelular = telefoneCelular;
+        this.telefoneCelular = (JFormattedTextField) telefoneCelular;
     }
     
     public void popularCampos(Cliente cliente) {
@@ -220,12 +221,12 @@ public class ClienteFormulario extends javax.swing.JDialog {
         jLabel20 = new javax.swing.JLabel();
         email = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
-        telefoneCelular = new javax.swing.JTextField();
         jLabel23 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
-        telefoneResidencial = new javax.swing.JTextField();
         jLabel25 = new javax.swing.JLabel();
-        telefoneTrabalho = new javax.swing.JTextField();
+        telefoneCelular = new javax.swing.JFormattedTextField();
+        telefoneResidencial = new javax.swing.JFormattedTextField();
+        telefoneTrabalho = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -591,26 +592,29 @@ public class ClienteFormulario extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(telefoneTrabalho, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel24, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                             .addComponent(jLabel22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel5Layout.createSequentialGroup()
                                 .addComponent(telefoneCelular, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel23))
                             .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(telefoneResidencial, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addComponent(telefoneResidencial)
+                                .addGap(20, 20, 20))))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(telefoneTrabalho)))
+                        .addGap(0, 20, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -719,10 +723,12 @@ public class ClienteFormulario extends javax.swing.JDialog {
             ok = false;
             message += "* Numero do endereço inválido\n";
         }
-        if(telefoneCelular.getText().isEmpty()){
+        String celular = telefoneCelular.getText().replace("(", "").replace(") ", "").replace("-", "").replace(" ", "");
+        if (celular.isEmpty()) {
             ok = false;
             message += "* Campo Telefone Celular deve ser preenchido\n";
         }
+        
         return ok;
     }
     
@@ -769,7 +775,16 @@ public class ClienteFormulario extends javax.swing.JDialog {
         }
         cliente.setTelefoneCelular(telefoneCelular.getText());
         cliente.setTelefoneResidencial(telefoneResidencial.getText());
+        String residencial = telefoneResidencial.getText().replace("(", "").replace(") ", "").replace("-", "").replace(" ", "");
+        if ( residencial.isEmpty() ) {
+            cliente.setTelefoneResidencial(residencial);
+        }
+
         cliente.setTelefoneTrabalho(telefoneTrabalho.getText());
+        String trabalho = telefoneTrabalho.getText().replace("(", "").replace(") ", "").replace("-", "").replace(" ", "");
+        if ( trabalho.isEmpty() ) {
+            cliente.setTelefoneTrabalho(trabalho);
+        }
         cliente.setEmail(email.getText());
         cliente.setTipo("cliente");
 
@@ -800,11 +815,9 @@ public class ClienteFormulario extends javax.swing.JDialog {
             if ( verificaCampos() ) {
                 Cliente cliente = this.salvarCliente();
 
-                List<Object> registro = new ArrayList();
-                registro.add(cliente);
-
-                parent.atualizarGrid(cliente.getId(), registro);
+                parent.atualizarGrid(cliente.getId(), new ArrayList());
                 SOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+                
                 this.setVisible(false);
             } else {
                 throw new Exception(message);
@@ -949,9 +962,9 @@ public class ClienteFormulario extends javax.swing.JDialog {
     private javax.swing.JPasswordField senha;
     private javax.swing.JRadioButton sexoF;
     private javax.swing.JRadioButton sexoM;
-    private javax.swing.JTextField telefoneCelular;
-    private javax.swing.JTextField telefoneResidencial;
-    private javax.swing.JTextField telefoneTrabalho;
+    private javax.swing.JFormattedTextField telefoneCelular;
+    private javax.swing.JFormattedTextField telefoneResidencial;
+    private javax.swing.JFormattedTextField telefoneTrabalho;
     private javax.swing.JToolBar toolbar;
     private javax.swing.JLabel usuario_id;
     // End of variables declaration//GEN-END:variables

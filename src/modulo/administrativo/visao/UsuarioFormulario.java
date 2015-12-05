@@ -440,12 +440,9 @@ public class UsuarioFormulario extends javax.swing.JDialog {
                     GrupoDoUsuarioDAO.getInstance().merge(grupoDoUsuario);
                 }
 
+                parent.atualizarGrid(useraccount.getId(), new ArrayList());
                 JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-
-                List<Object> registro = new ArrayList();
-                registro.add(useraccount);
-
-                parent.atualizarGrid(useraccount.getId(), registro);
+                
                 this.setVisible(false);
             }
         } catch (Exception err) {

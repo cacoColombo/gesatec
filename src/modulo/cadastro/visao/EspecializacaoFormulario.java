@@ -199,12 +199,9 @@ public class EspecializacaoFormulario extends javax.swing.JDialog {
                     EspecializacaoDAO.getInstance().persist(especializacao);
                 }
 
+                parent.atualizarGrid(especializacao.getId(), new ArrayList());
                 JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-
-                List<Object> registro = new ArrayList();
-                registro.add(especializacao);
-
-                parent.atualizarGrid(especializacao.getId(), registro);
+                
                 this.setVisible(false);
             }
         } catch (Exception err) {

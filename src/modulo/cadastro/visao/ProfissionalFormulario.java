@@ -77,7 +77,6 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
         inicializaPadroesDeAtendimento();
         inicializaTiposDeAtendimento();
 
-        MaskFormatter msk = null;
         try {
             cpf.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("###.###.###-##")));
             dataNascimento.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("##/##/####")));
@@ -103,7 +102,6 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
 
-        cpf = new JFormattedTextField(msk);
         botaoSalvar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/salvar.png")));
         botaoCancelar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/cancelar.png")));
 
@@ -227,6 +225,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
         telefoneCelular = new javax.swing.JFormattedTextField();
         telefoneResidencial = new javax.swing.JFormattedTextField();
         telefoneTrabalho = new javax.swing.JFormattedTextField();
+        jLabel23 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         botaoAdicionarEspecializacao = new javax.swing.JButton();
@@ -625,6 +624,10 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
 
         jLabel25.setText("Telefone de trabalho:");
 
+        jLabel23.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        jLabel23.setForeground(java.awt.Color.red);
+        jLabel23.setText("*");
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -648,7 +651,9 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                         .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(telefoneResidencial, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel23)
+                .addContainerGap(87, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -660,7 +665,8 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel22)
-                    .addComponent(telefoneCelular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(telefoneCelular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel23))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel24)
@@ -1240,12 +1246,9 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                 salvaPadroesDeAtendimento(profissional);
                 salvaTiposDeAtendimento(profissional);
 
+                parent.atualizarGrid(profissional.getId(), new ArrayList());
                 JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-
-                List<Object> registro = new ArrayList();
-                registro.add(profissional);
-
-                parent.atualizarGrid(profissional.getId(), registro);
+                
                 this.setVisible(false);
             } else {
                 throw new Exception(message);
@@ -1888,6 +1891,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;

@@ -54,10 +54,12 @@ public class AtendenteFormulario extends javax.swing.JDialog {
         this.setLocation(600, 530);
         initComponents();
         
-        MaskFormatter msk = null;
         try { 
             cpf.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("###.###.###-##")));
             dataNascimento.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("##/##/####")));
+            telefoneCelular.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("(##) ####-####")));
+            telefoneResidencial.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("(##) ####-####")));
+            telefoneTrabalho.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("(##) ####-####")));
         } catch (ParseException ex) {
             Logger.getLogger(AtendenteFormulario.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -76,7 +78,6 @@ public class AtendenteFormulario extends javax.swing.JDialog {
             SOptionPane.showMessageDialog(this, err, "Erro!", JOptionPane.ERROR_MESSAGE);
         }
         
-        cpf = new JFormattedTextField(msk);
         botaoSalvar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/salvar.png")));
         botaoCancelar.setIcon(new ImageIcon(this.getClass().getResource("/publico/imagens/cancelar.png")));
         
@@ -187,12 +188,12 @@ public class AtendenteFormulario extends javax.swing.JDialog {
         jLabel20 = new javax.swing.JLabel();
         email = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
-        telefoneCelular = new javax.swing.JTextField();
         jLabel23 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
-        telefoneResidencial = new javax.swing.JTextField();
         jLabel25 = new javax.swing.JLabel();
-        telefoneTrabalho = new javax.swing.JTextField();
+        telefoneCelular = new javax.swing.JFormattedTextField();
+        telefoneResidencial = new javax.swing.JFormattedTextField();
+        telefoneTrabalho = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -567,13 +568,12 @@ public class AtendenteFormulario extends javax.swing.JDialog {
                             .addComponent(jLabel24, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                             .addComponent(jLabel22, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(telefoneCelular, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel23))
-                            .addComponent(telefoneResidencial, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(telefoneTrabalho, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(telefoneResidencial, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
+                            .addComponent(telefoneCelular)
+                            .addComponent(telefoneTrabalho, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel23)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
@@ -660,7 +660,6 @@ public class AtendenteFormulario extends javax.swing.JDialog {
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
         java.util.Date date = new Date((long) 0);
         try {
-            System.out.println("" + dataNascimento.getText());
             if(!dataNascimento.getText().trim().startsWith("/")){
                 date = format.parse(dataNascimento.getText());
                 java.util.Date hoje = new java.util.Date();
@@ -682,10 +681,12 @@ public class AtendenteFormulario extends javax.swing.JDialog {
             ok = false;
             message += "* Numero do endereço inválido\n";
         }
-        if(telefoneCelular.getText().isEmpty()){
+        String celular = telefoneCelular.getText().replace("(", "").replace(") ", "").replace("-", "").replace(" ", "");
+        if (celular.isEmpty()) {
             ok = false;
             message += "* Campo Telefone Celular deve ser preenchido\n";
         }
+        
         return ok;
     }
     
@@ -701,6 +702,9 @@ public class AtendenteFormulario extends javax.swing.JDialog {
                     atendente.setId(Integer.parseInt(id.getText()));
                 }
 
+                System.out.println("AQUI");
+                System.out.println(cpf.getText());
+                
                 atendente.setNome(nome.getText());
                 atendente.setRg(rg.getText());
                 atendente.setCpf(cpf.getText());
@@ -731,7 +735,16 @@ public class AtendenteFormulario extends javax.swing.JDialog {
                 }
                 atendente.setTelefoneCelular(telefoneCelular.getText());
                 atendente.setTelefoneResidencial(telefoneResidencial.getText());
+                String residencial = telefoneResidencial.getText().replace("(", "").replace(") ", "").replace("-", "").replace(" ", "");
+                if ( residencial.isEmpty() ) {
+                    atendente.setTelefoneResidencial(residencial);
+                }
+                
                 atendente.setTelefoneTrabalho(telefoneTrabalho.getText());
+                String trabalho = telefoneTrabalho.getText().replace("(", "").replace(") ", "").replace("-", "").replace(" ", "");
+                if ( trabalho.isEmpty() ) {
+                    atendente.setTelefoneTrabalho(trabalho);
+                }
                 atendente.setEmail(email.getText());
 
                 UserAccount usuario = new UserAccount();
@@ -753,12 +766,9 @@ public class AtendenteFormulario extends javax.swing.JDialog {
                     AtendenteDAO.getInstance().persist(atendente);
                 }
 
+                parent.atualizarGrid(atendente.getId(), new ArrayList());
                 JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-
-                List<Object> registro = new ArrayList();
-                registro.add(atendente);
-
-                parent.atualizarGrid(atendente.getId(), registro);
+                
                 this.setVisible(false);
             }
             else
@@ -904,9 +914,9 @@ public class AtendenteFormulario extends javax.swing.JDialog {
     private javax.swing.JPasswordField senha;
     private javax.swing.JRadioButton sexoF;
     private javax.swing.JRadioButton sexoM;
-    private javax.swing.JTextField telefoneCelular;
-    private javax.swing.JTextField telefoneResidencial;
-    private javax.swing.JTextField telefoneTrabalho;
+    private javax.swing.JFormattedTextField telefoneCelular;
+    private javax.swing.JFormattedTextField telefoneResidencial;
+    private javax.swing.JFormattedTextField telefoneTrabalho;
     private javax.swing.JToolBar toolbar;
     private javax.swing.JLabel usuario_id;
     // End of variables declaration//GEN-END:variables

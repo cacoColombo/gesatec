@@ -6,6 +6,7 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -665,15 +666,13 @@
                                       <Component id="jLabel22" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <Component id="telefoneCelular" min="-2" pref="336" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jLabel23" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Component id="telefoneResidencial" min="-2" pref="336" max="-2" attributes="0"/>
-                                      <Component id="telefoneTrabalho" alignment="0" min="-2" pref="336" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="telefoneResidencial" alignment="0" pref="336" max="32767" attributes="0"/>
+                                      <Component id="telefoneCelular" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="telefoneTrabalho" alignment="1" max="32767" attributes="0"/>
                                   </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jLabel23" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
@@ -722,8 +721,6 @@
                     <Property name="text" type="java.lang.String" value="Telefone celular:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="telefoneCelular">
-                </Component>
                 <Component class="javax.swing.JLabel" name="jLabel23">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -740,14 +737,16 @@
                     <Property name="text" type="java.lang.String" value="Telefone residencial:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="telefoneResidencial">
-                </Component>
                 <Component class="javax.swing.JLabel" name="jLabel25">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Telefone de trabalho:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="telefoneTrabalho">
+                <Component class="javax.swing.JFormattedTextField" name="telefoneCelular">
+                </Component>
+                <Component class="javax.swing.JFormattedTextField" name="telefoneResidencial">
+                </Component>
+                <Component class="javax.swing.JFormattedTextField" name="telefoneTrabalho">
                 </Component>
               </SubComponents>
             </Container>

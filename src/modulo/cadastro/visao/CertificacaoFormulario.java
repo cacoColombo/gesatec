@@ -202,12 +202,9 @@ public class CertificacaoFormulario extends javax.swing.JDialog {
                     CertificacaoDAO.getInstance().persist(certificacao);
                 }
 
+                parent.atualizarGrid(certificacao.getId(), new ArrayList());
                 JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-
-                List<Object> registro = new ArrayList();
-                registro.add(certificacao);
-
-                parent.atualizarGrid(certificacao.getId(), registro);
+                
                 this.setVisible(false);
             }
         } catch (Exception err) {

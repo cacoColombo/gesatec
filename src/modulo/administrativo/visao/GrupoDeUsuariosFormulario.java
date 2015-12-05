@@ -379,12 +379,9 @@ public final class GrupoDeUsuariosFormulario extends javax.swing.JDialog {
                     }
                 }
 
+                parent.atualizarGrid(grupoDeUsuarios.getId(), new ArrayList());
                 JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-
-                List<Object> registro = new ArrayList();
-                registro.add(grupoDeUsuarios);
-
-                parent.atualizarGrid(grupoDeUsuarios.getId(), registro);
+                
                 this.setVisible(false);
             }
         } catch (Exception err) {

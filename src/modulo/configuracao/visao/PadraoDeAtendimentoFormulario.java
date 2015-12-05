@@ -380,12 +380,9 @@ public class PadraoDeAtendimentoFormulario extends javax.swing.JDialog {
                     PadraoDeAtendimentoDAO.getInstance().persist(padraoDeAtendimento);
                 }
 
+                parent.atualizarGrid(padraoDeAtendimento.getId(), new ArrayList());
                 JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-
-                List<Object> registro = new ArrayList();
-                registro.add(padraoDeAtendimento);
-
-                parent.atualizarGrid(padraoDeAtendimento.getId(), registro);
+                
                 this.setVisible(false);
             }
         } catch (Exception err) {

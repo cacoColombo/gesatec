@@ -239,12 +239,9 @@ public class TipoDeAtendimentoFormulario extends javax.swing.JDialog {
                     DAO.getInstance().persist(tipoDeAtendimento);
                 }
 
+                parent.atualizarGrid(tipoDeAtendimento.getId(), new ArrayList());
                 JOptionPane.showMessageDialog(this, "Registro efetuado com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-
-                List<Object> registro = new ArrayList();
-                registro.add(tipoDeAtendimento);
-
-                parent.atualizarGrid(tipoDeAtendimento.getId(), registro);
+                
                 this.setVisible(false);
             }
         } catch (Exception err) {
