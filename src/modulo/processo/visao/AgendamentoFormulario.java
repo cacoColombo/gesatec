@@ -82,22 +82,26 @@ public class AgendamentoFormulario extends javax.swing.JDialog {
                     // Para novos agendamentos, status inicial é sempre AGENDADO.
                     statusAgendamento.setSelectedItem(statusAgendament);
                 }
-            }            
+            }
            
-            // Popula combo de profisisonal
+            // Popula combo de profisisonal disponíveis na data e horários selecionado.
             Profissional prof = new Profissional();
             prof.setNome(" ");
             profissional.removeAllItems();
             profissional.addItem(prof);
-            List<Object> profissionais = ProfissionalDAO.getInstance().findAll(new Profissional());
-            for ( Object object : profissionais ) { 
-                Profissional profiss = (Profissional) object;
+            AgendamentoDAO agendamentoDao = new AgendamentoDAO();
+            List<Object> horarios = agendamentoDao.obterHorariosParaAgendamento(agendamento.getDataAgendada(), 0, 0, agendamento.getId(), agendamento.getHorarioAgendado());
+            for ( int i = 0; i < horarios.size(); i ++ ) { 
+                Object[] dadosHorario = (Object[]) horarios.get(i);
+                Profissional profiss = new Profissional();
+                profiss.setId((int) dadosHorario[10]);
+                profiss.setNome((String) dadosHorario[11]);
                 profissional.addItem(profiss);
                 
                 if ( profiss.getId() == agendamento.getProfissional().getId() ) {
                     profissional.setSelectedItem(profiss);
                 }
-            }
+            }            
 
             // Popula combo de clientes.
             Cliente cli = new Cliente();

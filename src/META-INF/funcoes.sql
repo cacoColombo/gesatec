@@ -200,7 +200,7 @@ LANGUAGE 'plpgsql' IMMUTABLE;
 
 --
 DROP FUNCTION IF EXISTS obterHorariosParaAgendamento(DATE, INT, INT, INT);
-CREATE OR REPLACE FUNCTION obterHorariosParaAgendamento(p_data DATE, p_profissional_id INT DEFAULT NULL, p_tipodeatendimento_id INT DEFAULT NULL, p_agendamento_id INT DEFAULT NULL)
+CREATE OR REPLACE FUNCTION obterHorariosParaAgendamento(p_data DATE, p_profissional_id INT DEFAULT NULL, p_tipodeatendimento_id INT DEFAULT NULL, p_agendamento_id INT DEFAULT NULL, p_horario TIME DEFAULT NULL)
 RETURNS TABLE (
     descricao_horario VARCHAR,
     data DATE,
@@ -225,7 +225,7 @@ BEGIN
                horarios.horario::DATE AS data,
                horarios.horario::TIME AS horario,
                ((agendamento.id IS NULL AND horarios.horario >= NOW()::TIMESTAMP) OR 
-                (p_agendamento_id IS NOT NULL AND p_agendamento_id = agendamento.id)) AS esta_disponivel,
+                ((p_agendamento_id IS NOT NULL AND p_agendamento_id <> 0) AND p_agendamento_id = agendamento.id)) AS esta_disponivel,
 	       agendamento.id AS agendamento_id,
                (CASE WHEN statusagendamento.nome IS NOT NULL
                      THEN
@@ -273,12 +273,7 @@ BEGIN
      LEFT JOIN agendamento
 	    ON agendamento.dataagendada = horarios.horario::DATE
 	   AND agendamento.horarioagendado = horarios.horario::TIME
-	   AND (CASE WHEN p_profissional_id IS NOT NULL AND p_profissional_id <> 0
-                     THEN
-                          agendamento.profissional_id = p_profissional_id
-                     ELSE
-                          TRUE
-                END)
+	   AND agendamento.profissional_id = horarios.profissional_id
            AND (SELECT (liberaHorario IS FALSE)
                   FROM statusagendamento
                  WHERE id = agendamento.statusagendamento_id)
@@ -293,6 +288,12 @@ BEGIN
 			  (agendamento.id IS NULL OR agendamento.tipodeatendimento_id = p_tipodeatendimento_id)
 		     ELSE
 		          TRUE
+		END)
+	   AND (CASE WHEN p_horario IS NOT NULL
+		     THEN
+			  horarios.horario::TIME = p_horario
+		     ELSE
+			  TRUE
 		END)
       ORDER BY horarios.horario ASC,
 	       horarios.profissional
