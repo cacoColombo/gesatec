@@ -701,9 +701,6 @@ public class AtendenteFormulario extends javax.swing.JDialog {
                 {
                     atendente.setId(Integer.parseInt(id.getText()));
                 }
-
-                System.out.println("AQUI");
-                System.out.println(cpf.getText());
                 
                 atendente.setNome(nome.getText());
                 atendente.setRg(rg.getText());
@@ -759,6 +756,7 @@ public class AtendenteFormulario extends javax.swing.JDialog {
                 usuario.setPassword(senha.getText());
                 usuario.setName(nome.getText());
                 atendente.setUsuario(usuario);
+                atendente.setTipo("atendente");
 
                 if ( id.getText().length() > 0 ) {
                     AtendenteDAO.getInstance().merge(atendente);

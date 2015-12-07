@@ -1233,6 +1233,7 @@ public class ProfissionalFormulario extends javax.swing.JDialog {
                 usuario.setPassword(senha.getText());
                 usuario.setName(nome.getText());
                 profissional.setUsuario(usuario);
+                profissional.setTipo("profissional");
 
                 if ( id.getText().length() > 0 ) {
                     ProfissionalDAO.getInstance().merge(profissional);
