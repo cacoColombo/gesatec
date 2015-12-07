@@ -11,9 +11,12 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 import modulo.sistema.dao.ChatMessageClienteDAO;
 import modulo.sistema.negocio.ChatMessage;
 import modulo.sistema.negocio.ChatMessage.Action;
@@ -89,7 +92,6 @@ public class ChatMessageClienteVisao extends javax.swing.JFrame {
         txtAreaSend.setEnabled(true);
         btnEnviar.setEnabled(true);
         btnLimpar.setEnabled(true);
-        btnAtualizar.setEnabled(true);
         txtAreaRecived.setEnabled(true);
         txtAreaRecived.append(message.getName() + " conectado!\n");
     }
@@ -101,19 +103,27 @@ public class ChatMessageClienteVisao extends javax.swing.JFrame {
         txtAreaSend.setEnabled(false);
         btnEnviar.setEnabled(false);
         btnLimpar.setEnabled(false);
-        btnAtualizar.setEnabled(false);
         txtAreaRecived.setEnabled(false);
+        txtAreaRecived.setText("");
         txtAreaRecived.append("Você está desconectado!\n");
+        txtAreaSend.setText("");
     }
     
     private void receive(ChatMessage message) {
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm:ss a");
+        SimpleDateFormat sdf = new SimpleDateFormat("h:mm:ss");
         String formattedDate = sdf.format(date);
-        txtAreaRecived.append(formattedDate + " " + message.getName() + ": " + message.getText() + "\n");
+        txtAreaRecived.append("(" + formattedDate + ") " + message.getName() + " diz: " + message.getText() + "\n");
     }
     
     private void refreshOnlines(ChatMessage message) {
+        Set<String> names = message.getSetOnlines();
+        names.remove((String) message.getName());
+        String[] array = names.toArray(new String[names.size()]);
+        
+        listOnlines.setListData(array);
+        listOnlines.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listOnlines.setLayoutOrientation(JList.VERTICAL);
         
     }
 
@@ -131,9 +141,8 @@ public class ChatMessageClienteVisao extends javax.swing.JFrame {
         btnSair = new javax.swing.JButton();
         btnConectar = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        btnAtualizar = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        listOnlines = new javax.swing.JList<>();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtAreaRecived = new javax.swing.JTextArea();
@@ -184,20 +193,7 @@ public class ChatMessageClienteVisao extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Onlines"));
 
-        btnAtualizar.setText("Atualizar");
-        btnAtualizar.setEnabled(false);
-        btnAtualizar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAtualizarActionPerformed(evt);
-            }
-        });
-
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane3.setViewportView(jList1);
+        jScrollPane3.setViewportView(listOnlines);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -205,19 +201,13 @@ public class ChatMessageClienteVisao extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(btnAtualizar)
-                        .addGap(0, 69, Short.MAX_VALUE)))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jScrollPane3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnAtualizar)
                 .addContainerGap())
         );
 
@@ -318,12 +308,20 @@ public class ChatMessageClienteVisao extends javax.swing.JFrame {
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
         String text = txtAreaSend.getText();
         String name = message.getName();
+
+        message = new ChatMessage();
+        
+        if ( listOnlines.getSelectedIndex() > -1 ) {
+            message.setNameReserved((String) listOnlines.getSelectedValue());
+            message.setAction(Action.SEND_ONE);
+            listOnlines.clearSelection();
+        } else {
+            message.setAction(Action.SEND_ALL);
+        }
         
         if ( !text.isEmpty() ) {
-            message = new ChatMessage();
             message.setName(name);
             message.setText(text);
-            message.setAction(Action.SEND_ALL);
             service.send(message);
             txtAreaSend.setText("");
             receive(message);
@@ -358,10 +356,6 @@ public class ChatMessageClienteVisao extends javax.swing.JFrame {
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
         txtAreaSend.setText("");
     }//GEN-LAST:event_btnLimparActionPerformed
-
-    private void btnAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAtualizarActionPerformed
 
     private void btnEnviarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnEnviarKeyPressed
         if ( evt.getKeyCode() == KeyEvent.VK_ENTER ) {
@@ -406,18 +400,17 @@ public class ChatMessageClienteVisao extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAtualizar;
     private javax.swing.JButton btnConectar;
     private javax.swing.JButton btnEnviar;
     private javax.swing.JButton btnLimpar;
     private javax.swing.JButton btnSair;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JList<String> listOnlines;
     private javax.swing.JTextArea txtAreaRecived;
     private javax.swing.JTextArea txtAreaSend;
     private javax.swing.JTextField txtName;
